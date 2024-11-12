@@ -19,7 +19,7 @@ Our interpretation of what a ESB should be made of:
 
 ## 3. Platform As A Service (PaaS)
 
-Also building web-applications on PaaS infrastructure relies on a clean Service Abstraction Model.
+Also building Web-Applications on PaaS infrastructure relies on a clean Service Abstraction Model.
 
 >[!NOTE]
 > Python **micro-esb** module will help.
