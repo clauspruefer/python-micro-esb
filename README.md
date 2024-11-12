@@ -2,7 +2,9 @@
 
 ## 1. Abstract / Preface
 
-*Enterprise Service Bus*, a pretty vague term. Invented by the Gartner-Report 2002. Essential for a large SOA-Infrastructure.
+*Enterprise Service Bus*, still a pretty vague term. Invented by the Gartner-Report 2002.
+
+Essential for a large SOA-Infrastructure.
 
 ## 2. Features
 
