@@ -11,7 +11,7 @@ Our interpretation of what a ESB should be made of:
 - Service Abstraction / Metadata Definition
 - Centralized Service / API Registry containing clean XML, JSON Model
 - Centralized Service AAA (Authentication / Authorization)
-- Internal Code (Python) Class / Service XML Mapping
+- Internal Service XML / Python Class Mapping
 - OOP Relational Database Mapper
 - Service Documentation (Auto)-Generation
 
