@@ -12,3 +12,13 @@ __pycache__
 .kdev4
 .kate-swp
 .swp
+.cache
+.kdev4
+.pytest_cache
+python-micro-esb.kdev4
+python_micro_esb.egg-info
+assets
+dist
+.egg-info
+__pycache__
+report.html
