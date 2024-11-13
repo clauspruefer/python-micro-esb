@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 
 import pytest
-import microesb
+
+from microesb import microesb
 
 
 @pytest.fixture
