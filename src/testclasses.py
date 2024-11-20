@@ -1,7 +1,7 @@
 # application classes used by unit tests
 
-import handler
-import microesb
+from microesb import handler
+from microesb import microesb
 
 
 class Cert(microesb.ClassHandler):

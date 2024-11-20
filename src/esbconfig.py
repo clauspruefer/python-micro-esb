@@ -1,5 +1,5 @@
 import_classes = {
-    'testclasses': [
+    'microesb.testclasses': [
         'CertCA',
         'CertServer',
         'CertClient',

@@ -7,9 +7,7 @@
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 
-# -*- coding:utf-8 -*-
-
-import transformer
+from microesb import transformer
 
 
 class Database(object):

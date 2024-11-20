@@ -7,15 +7,13 @@
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 
-# -*- coding:utf-8 -*-
-
 import abc
 import sys
 import logging
 import importlib
 
-import esbconfig
-import handler
+from microesb import esbconfig
+from microesb import handler
 
 
 class BaseHandler(handler.ServiceProcessor):
