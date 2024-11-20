@@ -22,3 +22,6 @@ dist
 .egg-info
 __pycache__
 report.html
+*.egg-info
+doc/build
+*.*~
