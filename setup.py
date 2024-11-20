@@ -2,22 +2,19 @@ from setuptools import setup
 
 setup(
 
-    name = 'python-micro-esb',
-    version = '0.01alpha',
+    name = 'microesb',
+    version = '0.8rc1',
     author = 'Claus Prüfer',
     author_email = 'pruefer@webcodex.de',
-    maintainer = 'Claus Prüfer',
     description = 'A small OOP based Enterprise Service Bus implementation.',
-    homepage = 'http://micro-esb.python.webcodex.de',
-    license = 'GPLv3',
     long_description = open('./README.md').read(),
 
     packages = [
-        'micro-esb'
+        'microesb'
     ],
 
     package_dir = {
-        'micro-esb': 'src/'
+        'microesb': 'src/'
     },
 
     zip_safe = True
