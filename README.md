@@ -15,7 +15,7 @@ Our interpretation of what a ESB should be made of:
 - Centralized Service AAA (Authentication / Authorization / Accounting)
 - Internal Service XML / (Python) Class Mapping
 - OOP Relational Database Mapper
-- Service Model Documentation / (Auto)-Generation
+- Service Model Documentation / API (Auto)-Generation
 
 ## 3. Platform As A Service (PaaS)
 
