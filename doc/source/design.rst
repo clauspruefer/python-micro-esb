@@ -71,6 +71,7 @@ levels inside your company.
 
 - Metrics / Statistics
 - Authentication
+- Monitoring
 
 .. note::
     *Wrapping* these external services into a centralized SOA also could be a good idea.
