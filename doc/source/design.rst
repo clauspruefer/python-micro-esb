@@ -7,7 +7,8 @@ Design
 1. Overview
 ===========
 
-The following diagram shows the *Base Layout / Model* of a scalable **ESB Infrastructure**.
+The following diagram shows the *Base Layout / Model* of a **scalable**
+*SOA / ESB Infrastructure*.
 
 - Loadbalancing Layer (1)
 - Transport Layer Security Layer (1)
@@ -22,8 +23,8 @@ The following diagram shows the *Base Layout / Model* of a scalable **ESB Infras
     The **microesb** module focuses on the "Service Mapping / Abstraction Layer" (4).
 
 .. note::
-    The "Loadbalancing Layer" and the "Transport Layer Security Layer" easily can be adapted
-    using a Kubernetes Cluster / Ingress-nginX (see "Example #2").
+    The "Loadbalancing Layer" and the "Transport Layer Security Layer" easily can be
+    adapted using a Kubernetes Cluster / Ingress-nginX (see "Example #2").
 
 2. Centralized Service Management
 =================================
@@ -39,27 +40,46 @@ Service Oriented Architecture.
 
 The common workflow in a CI driven, recurring, agile Devlopment Process.
 
-1. Build
-2. Test
-3. Deploy
-4. Maintain
+1. Build Infrastructure
+2. Build Application
+3. Test
+4. Deploy
+5. Maintain
 
 2.2. Standards / Generic Aproach
 ********************************
 
-The better standards / infrastructural templates are organized, the more developers can
-focus on the Development Process. Especially in big Development Environments / Teams.
+Our goal should be to reduce the effort dependent on point 1 and the resulting
+(correspondingly high) periodic recurring costs.
+
+The better *Standards / Infrastructural Templates* are organized, the more developers can
+focus on the *Development Process*. Especially in large, agile development teams, it is
+essential to adapt the IP infrastructure to constantly changing needs without a lot of
+(sometimes even bureaucratic) effort.
+
+A well designed, documented, automatically updated, centralized, generic **Services Registry**
+component inside SOA will help developers saving a lot of headaches.
+
+.. note::
+    This needs a lot of RFC / standardization work to be done.
 
 2.3. External Service Integration
 *********************************
 
-...
+Also, don’t forget the numerous external (rented) services that need to be managed at all
+levels inside the company.
+
+- Metrics / Statistics
+- Authentication
+
+.. note::
+    *Wrapping* these external services into a centralized SOA also could be a good idea.
 
 3. Service Mapping
 ==================
 
-Service mapping between hierarchical JSON graph data and internal python classes. This is exactly
-what the **microesb** python module is capable of.
+Service mapping between hierarchical JSON graph data and internal python classes. This is
+exactly what the **microesb** python module is capable of.
 
 .. image:: images/microesb-service-mapping.png
   :alt: Image - Micro-ESB Service Mapping / Abstraction Layer

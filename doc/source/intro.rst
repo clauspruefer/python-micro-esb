@@ -53,7 +53,7 @@ To run all tests (unit and integration) after pip package installation.
 5. Current Features
 ===================
 
-- Service JSON to Python Internal Class / Object Mapping
+- JSON Service Metadata to Python Internal Class / Object Mapping
 
 6. Planned Features
 ===================

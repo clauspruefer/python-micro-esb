@@ -4,7 +4,7 @@ Python Module "microesb" Documentation
 Contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
 
    intro
    design
