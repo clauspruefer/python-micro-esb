@@ -90,4 +90,5 @@ to internal OOP based Python class instances / methods.
 4. Platform As A Service
 ========================
 
-...
+In short, the points mentioned above are basic requirements for running a PaaS infrastructure
+efficiently.
