@@ -7,6 +7,10 @@ Intro / Module Description
 The **microesb** Python Module provides basic features to build a centralized, structured
 Enterprise Service BUS / SOA architecture.
 
+.. note::
+    The **microesb** module helps building a clean OOP based Service Model to Python Class
+    Mapping, see details at Examples subsection.
+
 1. Basic Install
 ================
 
