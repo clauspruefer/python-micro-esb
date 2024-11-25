@@ -67,7 +67,7 @@ component inside SOA will help developers saving a lot of headaches.
 *********************************
 
 Also, don’t forget the numerous external (rented) services that need to be managed at all
-levels inside the company.
+levels inside your company.
 
 - Metrics / Statistics
 - Authentication
@@ -78,8 +78,8 @@ levels inside the company.
 3. Service Mapping
 ==================
 
-Service mapping between hierarchical JSON graph data and internal python classes. This is
-exactly what the **microesb** python module is capable of.
+The focus of the Python **microesb** module is to map a clean JSON metadata service schema
+to internal OOP based Python class instances / methods.
 
 .. image:: images/microesb-service-mapping.png
   :alt: Image - Micro-ESB Service Mapping / Abstraction Layer
