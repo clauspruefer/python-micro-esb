@@ -7,8 +7,8 @@ Design
 1. Overview
 ===========
 
-The following diagram shows the *Base Layout / Model* of a **scalable**
-*SOA / ESB Infrastructure*.
+The following diagram shows the *Base Layout / Model* of a **scalable
+SOA / ESB Infrastructure**.
 
 - Loadbalancing Layer (1)
 - Transport Layer Security Layer (1)
@@ -17,7 +17,7 @@ The following diagram shows the *Base Layout / Model* of a **scalable**
 - Service Mapping / (Python) OOP Abstraction Layer (4)
 
 .. image:: images/microesb-overview.png
-  :alt: Image - Micro-ESB Overview
+  :alt: image - microesb overview
 
 .. note::
     The **microesb** module focuses on the "Service Mapping / Abstraction Layer" (4).
@@ -33,7 +33,7 @@ The larger the IT infrastructure, the more important it is to build a generic, c
 Service Oriented Architecture.
 
 .. image:: images/microesb-centralized-service-mm.png
-  :alt: Image - Micro-ESB Centralized Service Management
+  :alt: image - microesb centralized service management
 
 2.1. Implementation Workflow
 ****************************
@@ -83,7 +83,7 @@ The focus of the Python **microesb** module is to map a clean JSON metadata serv
 to internal OOP based Python class instances / methods.
 
 .. image:: images/microesb-service-mapping.png
-  :alt: Image - Micro-ESB Service Mapping / Abstraction Layer
+  :alt: image - microesb service mapping / abstraction layer
 
 .. note::
     A detailed example including transactional database access see "Example #1".
