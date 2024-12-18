@@ -8,6 +8,8 @@ Contents:
 
    intro
    design
+   conf
+   apidoc
    api
    examples
 

@@ -4,12 +4,10 @@
 Intro / Module Description
 ==========================
 
-The **microesb** Python Module provides basic features to build a centralized, structured
-Enterprise Service BUS / SOA architecture.
+The **microesb** Python Module provides basic features to build a centralized,
+structured Enterprise Service BUS / SOA architecture.
 
-.. note::
-    The **microesb** module helps building a clean OOP based Service Model to Python Class
-    Mapping, see details at Examples subsection.
+Its main feature is a clean OOP based **Service Model to Python Class Mapping**.
 
 1. Basic Install
 ================
@@ -21,7 +19,8 @@ Enterprise Service BUS / SOA architecture.
 2. Dependencies
 ===============
 
-Using the microesb module in general does not require **psycopg2** PostgreSQL Python Module.
+Using the **microesb** module in general does not require **psycopg2** PostgreSQL
+Python Module.
 
 .. warning::
     Running example code does!
@@ -62,4 +61,4 @@ To run all tests (unit and integration) after pip package installation.
 6. Planned Features
 ===================
 
-- Database Abstraction on "top" of Service Model
+- Database Abstraction on "top" of Object Mapping Model

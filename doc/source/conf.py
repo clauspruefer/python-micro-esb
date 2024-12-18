@@ -3,11 +3,14 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import sys
+sys.path.append('./')
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Python microesb'
-copyright = '2018 - 2024, Claus Prüfer'
+copyright = '2016 - 2024, Claus Prüfer'
 author = 'Claus Prüfer'
 version = '1.0'
 release = '1.0rc1'

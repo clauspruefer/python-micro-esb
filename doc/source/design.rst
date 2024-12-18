@@ -24,7 +24,7 @@ SOA / ESB Infrastructure**.
 
 .. note::
     The "Loadbalancing Layer" and the "Transport Layer Security Layer" easily can be
-    adapted using a Kubernetes Cluster / Ingress-nginX (see "Example #2").
+    adapted using a Kubernetes Cluster / Ingress-nginX (see Example2).
 
 2. Centralized Service Management
 =================================
@@ -86,10 +86,10 @@ to internal OOP based Python class instances / methods.
   :alt: image - microesb service mapping / abstraction layer
 
 .. note::
-    A detailed example including transactional database access see "Example #1".
+    A detailed example including transactional database access see Example1.
 
 4. Platform As A Service
 ========================
 
-In short, the points mentioned above are basic requirements for running a PaaS infrastructure
-efficiently.
+In short, the points mentioned above are **basic requirements** for running a PaaS infrastructure
+**efficiently**.
