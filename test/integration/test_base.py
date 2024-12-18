@@ -16,10 +16,10 @@ def config_class_multiobject():
                 'children': {
                     'Palette': {
                         'property_ref': 'Palette',
-                    },
-                },
+                    }
+                }
             }
-        },
+        }
     }
     return config
 
@@ -34,8 +34,8 @@ def config_properties_multiobject():
                     'default': None,
                     'required': True,
                     'description': '',
-                },
-            },
+                }
+            }
         },
         'Palette': {
             'properties': {
@@ -50,9 +50,9 @@ def config_properties_multiobject():
                     'default': None,
                     'required': True,
                     'description': '',
-                },
-            },
-        },
+                }
+            }
+        }
     }
     return config
 
@@ -73,9 +73,9 @@ def config_service_multiobject():
                         {
                             'id': 2,
                             'label': 'label2',
-                        },
+                        }
                     ]
-                },
+                }
             }
         ]
     }
@@ -89,7 +89,7 @@ def config_class_extended_service():
             'CertCA': 'CertCA',
             'SmartcardCA': 'Smartcard',
             'SmartcardREQ': 'Smartcard',
-            'SmartcardContainer': 'SmartcardContainer',
+            'SmartcardContainer': 'SmartcardContainer'
         },
         'class_reference': {
             'CertCA': {
@@ -98,18 +98,18 @@ def config_class_extended_service():
                     'SmartcardCA': {
                         'property_ref': 'Smartcard',
                         'children': {
-                            'SmartcardContainer': {'property_ref': 'SmartcardContainer',}
+                            'SmartcardContainer': {'property_ref': 'SmartcardContainer'}
                         }
                     },
                     'SmartcardREQ': {
                         'property_ref': 'Smartcard',
                         'children': {
-                            'SmartcardContainer': {'property_ref': 'SmartcardContainer',}
+                            'SmartcardContainer': {'property_ref': 'SmartcardContainer'}
                         }
-                    },
-                },
+                    }
+                }
             }
-        },
+        }
     }
     return config
 
@@ -130,8 +130,8 @@ def config_properties_extended_service():
                     'default': 'DE',
                     'required': True,
                     'description': '',
-                },
-            },
+                }
+            }
         },
         'Smartcard': {
             'properties': {
@@ -140,8 +140,8 @@ def config_properties_extended_service():
                     'default': None,
                     'required': True,
                     'description': '',
-                },
-            },
+                }
+            }
         },
         'SmartcardContainer': {
             'properties': {
@@ -150,9 +150,9 @@ def config_properties_extended_service():
                     'default': None,
                     'required': True,
                     'description': '',
-                },
-            },
-        },
+                }
+            }
+        }
     }
     return config
 
@@ -163,7 +163,7 @@ def config_service_extended_service():
         'id': 'addCACertificate',
         'global': {
             'CertCA': {
-                'FipsMode': False,
+                'FipsMode': False
             }
         },
         'data': [
@@ -177,7 +177,7 @@ def config_service_extended_service():
                     'org_unit': 'Security',
                     'common_name': 'testcn1',
                     'email': 'pki@webcodex.de',
-                    'valid_days': 3650,
+                    'valid_days': 365,
                     'key_ref': 'Smartcard',
                     'SmartcardCA': {
                         'label': 'label1',
@@ -192,8 +192,8 @@ def config_service_extended_service():
                         'SmartcardContainer': {
                             'label': 'container_label2'
                         }
-                    },
-                },
+                    }
+                }
             }
         ]
     }
@@ -205,9 +205,9 @@ class TestMapping:
     def test_class_mapping(self, config_class_extended_service, config_properties_extended_service):
 
         i = microesb.ClassMapper(
-            class_references = config_class_extended_service['class_reference'],
-            class_mappings = config_class_extended_service['class_mapping'],
-            class_properties = config_properties_extended_service
+            class_references=config_class_extended_service['class_reference'],
+            class_mappings=config_class_extended_service['class_mapping'],
+            class_properties=config_properties_extended_service
         )
 
         cert_ca = getattr(i, 'CertCA')
@@ -222,17 +222,22 @@ class TestMapping:
         assert getattr(smartcard_container_ca, 'label') is None
         assert getattr(smartcard_container_req, 'label') is None
 
-    def test_service_mapping(self, config_service_extended_service, config_class_extended_service, config_properties_extended_service):
+    def test_service_mapping(
+        self,
+        config_service_extended_service,
+        config_class_extended_service,
+        config_properties_extended_service
+    ):
 
         class_mapper = microesb.ClassMapper(
-            class_references = config_class_extended_service['class_reference'],
-            class_mappings = config_class_extended_service['class_mapping'],
-            class_properties = config_properties_extended_service
+            class_references=config_class_extended_service['class_reference'],
+            class_mappings=config_class_extended_service['class_mapping'],
+            class_properties=config_properties_extended_service
         )
 
         s = microesb.ServiceMapper(
-            class_mapper = class_mapper,
-            service_data = config_service_extended_service
+            class_mapper=class_mapper,
+            service_data=config_service_extended_service
         )
 
         cert_ca = getattr(s._class_mapper, 'CertCA')
@@ -247,17 +252,22 @@ class TestMapping:
         assert getattr(smartcard_container_ca, 'label') == 'container_label1'
         assert getattr(smartcard_container_req, 'label') == 'container_label2'
 
-    def test_multi_item_object(self, config_service_multiobject, config_class_multiobject, config_properties_multiobject):
+    def test_multi_item_object(
+        self,
+        config_service_multiobject,
+        config_class_multiobject,
+        config_properties_multiobject
+    ):
 
         class_mapper = microesb.ClassMapper(
-            class_references = config_class_multiobject['class_reference'],
-            class_mappings = config_class_multiobject['class_mapping'],
-            class_properties = config_properties_multiobject
+            class_references=config_class_multiobject['class_reference'],
+            class_mappings=config_class_multiobject['class_mapping'],
+            class_properties=config_properties_multiobject
         )
 
         s = microesb.ServiceMapper(
-            class_mapper = class_mapper,
-            service_data = config_service_multiobject
+            class_mapper=class_mapper,
+            service_data=config_service_multiobject
         )
 
         shipment = getattr(s._class_mapper, 'Shipment')
@@ -274,6 +284,7 @@ class TestMapping:
         shipment.json_transform()
         assert shipment.json_dict == {
             'id': 'testshipment1',
+            'SYSServiceMethod': None,
             'Palette': [
                 {'id': 1, 'label': 'label1'},
                 {'id': 2, 'label': 'label2'}
