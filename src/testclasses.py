@@ -1,6 +1,3 @@
-# application classes used by unit tests
-
-from microesb import handler
 from microesb import microesb
 
 
@@ -16,14 +13,14 @@ class CertCA(Cert):
 
 class CertServer(Cert):
     def __init__(self):
-        super().__init__()
         self.type = 'server'
+        super().__init__()
 
 
 class CertClient(Cert):
     def __init__(self):
-        super().__init__()
         self.type = 'client'
+        super().__init__()
 
 
 class Smartcard(microesb.ClassHandler):
@@ -43,6 +40,4 @@ class Shipment(microesb.ClassHandler):
 
 class Palette(microesb.MultiClassHandler):
     def __init__(self):
-        # self.service_id = 'test'
-        self.retry_count = 1
         super().__init__()
