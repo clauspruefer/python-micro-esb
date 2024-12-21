@@ -170,8 +170,16 @@ Change to the example path and execute the main.py file.
 
     python3 ./main.py
 
+1.8.3. Post Excecution
+----------------------
+
 After executing you will find the new created domain inside sys_core."domain"
 table and two related host records inside sys_dns."dnsrecord" table.
+
+.. note::
+
+    There are no unique constraints which forbid multiple dns entry inserts,
+    calling the script multiple times duplicates dns records.
 
 .. _example-number2:
 
