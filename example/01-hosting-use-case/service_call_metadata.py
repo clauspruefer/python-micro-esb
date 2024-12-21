@@ -4,7 +4,9 @@ service_metadata = {
         {
             'User':
             {
-                'id': 'testuser1',
+                'SYSServiceMethod': 'init',
+                'name': 'testuser1',
+                'dbcon': None,
                 'Domain': {
                     'SYSServiceMethod': 'add',
                     'name': 'testdomain1',
@@ -18,8 +20,9 @@ service_metadata = {
                         },
                         {
                             'SYSServiceMethod': 'add',
+                            'name': 'host1',
                             'type': 'A',
-                            'value': 'host1',
+                            'value': '5.44.111.165',
                             'ttl': 36000
                         }
                     ]

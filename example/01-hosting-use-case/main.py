@@ -1,3 +1,5 @@
+import psycopg2
+
 from microesb import microesb
 
 from service_properties import service_properties
@@ -12,7 +14,25 @@ class_mapper = microesb.ClassMapper(
     class_properties=service_properties
 )
 
-res = microesb.ServiceMapper(
-    class_mapper=class_mapper,
-    service_data=service_metadata
-)
+try:
+    dbcon = psycopg2.connect("dbname='hosting-example' user='postgres' host='localdb'")
+    dbcon.autocommit = False
+except Exception as e:
+    print('DB connection error: {}'.format(e))
+    exit(0)
+
+service_metadata['data'][0]['User']['dbcon'] = dbcon
+
+try:
+    res = microesb.ServiceMapper(
+        class_mapper=class_mapper,
+        service_data=service_metadata
+    )
+except Exception as e:
+    print('Service execution error: {}'.format(e))
+
+try:
+    dbcon.commit()
+    dbcon.close()
+except Exception as e:
+    print('DB close error: {}'.format(e))

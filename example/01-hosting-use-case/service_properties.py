@@ -6,8 +6,15 @@ service_properties = {
                 'default': None,
                 'required': True,
                 'description': 'Textual UserID'
+            },
+            'dbcon': {
+                'type': 'classref',
+                'default': None,
+                'required': True,
+                'description': 'Database Connection Ref'
             }
-        }
+        },
+        'methods': ['init']
     },
     'Domain': {
         'properties': {
@@ -23,10 +30,17 @@ service_properties = {
                 'required': True,
                 'description': 'Domain Ending'
             }
-        }
+        },
+        'methods': ['add', 'delete']
     },
     'Host': {
         'properties': {
+            'name': {
+                'type': 'str',
+                'default': None,
+                'required': False,
+                'description': 'DNS Name'
+            },
             'type': {
                 'type': 'str',
                 'default': None,
@@ -51,6 +65,7 @@ service_properties = {
                 'required': False,
                 'description': 'MX Type Priority'
             }
-        }
+        },
+        'methods': ['add', 'update', 'delete']
     }
 }
