@@ -258,7 +258,9 @@ class MultiClassHandler(BaseHandler):
         new_class = globals()[self.class_name]
         instance = new_class()
         setattr(instance, '_SYSProperties', getattr(self, '_SYSProperties'))
+        setattr(instance, '_SYSParentObject', getattr(self, '_SYSParentObject'))
         setattr(instance, '_SYSType', 'multiclass_instance')
+
         self._object_container.append(instance)
         return instance
 
@@ -312,9 +314,9 @@ class ClassMapper(ClassHandler):
         :param dict class_mappings: class mappings dictionary
         :param dict class_properties: class properties dictionary
 
-        :ivar dict _class_mappings: set by class_mappings param
-        :ivar dict _class_properties: set by class_properties param
-        :ivar dict _class_references: set by class_references param
+        :ivar dict _class_mappings: set from class_mappings param
+        :ivar dict _class_properties: set from class_properties param
+        :ivar dict _class_references: set from class_references param
         :ivar dict _class_hierarchy: internally used to map parent instances
         """
         super().__init__()
@@ -490,7 +492,7 @@ class ServiceMapper(ClassHandler):
         try:
             getattr(class_instance, class_instance.SYSServiceMethod)()
         except Exception as e:
-            pass
+            self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
         for child_class_name, child_class_config in children.items():
             child_class_config['class_name'] = child_class_name
@@ -502,7 +504,7 @@ class ServiceMapper(ClassHandler):
             for ci in class_instance._object_container:
                 getattr(ci, ci.SYSServiceMethod)()
         except Exception as e:
-            pass
+            self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
 
 # import classes into current namespace
