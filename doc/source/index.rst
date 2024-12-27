@@ -9,6 +9,7 @@ Contents:
    intro
    design
    conf
+   features
    apidoc
    api
    examples
