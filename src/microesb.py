@@ -258,7 +258,9 @@ class MultiClassHandler(BaseHandler):
         new_class = globals()[self.class_name]
         instance = new_class()
         setattr(instance, '_SYSProperties', getattr(self, '_SYSProperties'))
+        setattr(instance, '_SYSParentObject', getattr(self, '_SYSParentObject'))
         setattr(instance, '_SYSType', 'multiclass_instance')
+
         self._object_container.append(instance)
         return instance
 
@@ -312,9 +314,9 @@ class ClassMapper(ClassHandler):
         :param dict class_mappings: class mappings dictionary
         :param dict class_properties: class properties dictionary
 
-        :ivar dict _class_mappings: set by class_mappings param
-        :ivar dict _class_properties: set by class_properties param
-        :ivar dict _class_references: set by class_references param
+        :ivar dict _class_mappings: set from class_mappings param
+        :ivar dict _class_properties: set from class_properties param
+        :ivar dict _class_references: set from class_references param
         :ivar dict _class_hierarchy: internally used to map parent instances
         """
         super().__init__()
@@ -425,11 +427,11 @@ class ServiceMapper(ClassHandler):
     """ Service Mapper class.
     """
 
-    def __init__(self, *, class_mapper, service_data):
+    def __init__(self, *, class_mapper, service_call_data):
         """
         :param dict *: used for passing params as **args dictionary
         :param classref class_mapper: class mapper instance reference
-        :param dict service_data: service call metadata dictionary
+        :param dict service_call_data: service call metadata dictionary
 
         :ivar classref _class_mapper: set from class_mapper param
         """
@@ -442,15 +444,26 @@ class ServiceMapper(ClassHandler):
         root_class = next(iter(class_references))
         root_index = class_references[root_class]
 
-        for item in service_data['data']:
-            call_dict = {
-                'class_name': root_class,
-                'children': root_index['children'],
-                'parent_instance': self._class_mapper,
-                'hierarchy': item
-            }
+        call_dict = {
+            'class_name': root_class,
+            'children': root_index['children'],
+            'parent_instance': self._class_mapper,
+            'hierarchy': service_call_data
+        }
 
-            self._map(**call_dict)
+        self._map(**call_dict)
+
+        try:
+            for class_ref, class_props in class_references.items():
+                for method_def in class_mapper._class_properties['SYSBackendMethods']:
+                    if method_def[1] == 'on_recursion_finish':
+                        self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
+                        try:
+                            getattr(getattr(self._class_mapper, class_ref), method_def[0])()
+                        except Exception as e:
+                            pass
+        except Exception as e:
+            self.logger.debug('SYSBackendMethods preocessing exception:{}'.format(e))
 
     def _map(
         self,
@@ -484,25 +497,52 @@ class ServiceMapper(ClassHandler):
 
         class_instance = getattr(parent_instance, class_name)
 
-        hierarchy = hierarchy[class_name]
-        class_instance.set_properties(hierarchy)
-
         try:
-            getattr(class_instance, class_instance.SYSServiceMethod)()
+            hierarchy = hierarchy[class_name]
+            class_instance.set_properties(hierarchy)
+
+            try:
+                getattr(class_instance, class_instance.SYSServiceMethod)()
+            except Exception as e:
+                self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
+
+            for child_class_name, child_class_config in children.items():
+                child_class_config['class_name'] = child_class_name
+                child_class_config['parent_instance'] = class_instance
+                child_class_config['hierarchy'] = hierarchy
+                self._map(**child_class_config)
+
+            try:
+                for ci in class_instance._object_container:
+                    getattr(ci, ci.SYSServiceMethod)()
+            except Exception as e:
+                self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
         except Exception as e:
+            self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
             pass
 
-        for child_class_name, child_class_config in children.items():
-            child_class_config['class_name'] = child_class_name
-            child_class_config['parent_instance'] = class_instance
-            child_class_config['hierarchy'] = hierarchy
-            self._map(**child_class_config)
 
-        try:
-            for ci in class_instance._object_container:
-                getattr(ci, ci.SYSServiceMethod)()
-        except Exception as e:
-            pass
+class ServiceExecuter(object):
+    """ Service Executer class.
+    """
+
+    def __init__(self):
+        pass
+
+    def execute(self, class_mapper, service_data):
+        """
+        :param classref class_mapper: class mapper instance reference
+        :param list service_data: list of service call metadata dictionary items
+        """
+
+        rlist = []
+        for item in service_data['data']:
+            res = ServiceMapper(
+                class_mapper=class_mapper,
+                service_call_data=item
+            )
+            rlist.append(res)
+        return rlist
 
 
 # import classes into current namespace
