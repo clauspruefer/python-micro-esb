@@ -1,6 +1,7 @@
 class_mapping = {
+    'CertCA': 'CertCA',
     'CertServer': 'CertServer',
-    'SmartcardCA': 'Smartcard',
-    'SmartcardREQ': 'Smartcard',
+    'CertClient': 'CertClient',
+    'Smartcard': 'Smartcard',
     'SmartcardContainer': 'SmartcardContainer'
 }
