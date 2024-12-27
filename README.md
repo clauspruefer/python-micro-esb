@@ -37,4 +37,5 @@ Also building Web-Applications on PaaS infrastructure relies on a clean Service 
 
 ## 5. Documentation / Examples
 
-See documentation [./doc](./doc) for detailed explanation / illustrative examples.
+Documentation including detailed examples can be found at either ./doc or
+https://pythondocs.webcodex.de/micro-esb.
