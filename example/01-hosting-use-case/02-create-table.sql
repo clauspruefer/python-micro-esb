@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS sys_dns."dnsrecord"
 (
     id integer NOT NULL DEFAULT nextval('sys_dns.dnsrecord_id_seq'::regclass),
     domain_id integer NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying(255) NULL,
     type character varying(10) NOT NULL,
     content character varying(65535) NOT NULL,
     ttl integer,

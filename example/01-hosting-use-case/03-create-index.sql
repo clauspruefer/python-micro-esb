@@ -7,7 +7,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS "sys_core.domain_name_ending"
     ON sys_core."domain" USING btree
     (name ASC NULLS LAST, ending ASC NULLS LAST);
 
-    -- Index: domain_id
+-- Index: domain_user_name_ending
+DROP INDEX IF EXISTS "sys_core.domain_user_name_ending_index";
+
+CREATE UNIQUE INDEX IF NOT EXISTS "sys_core.domain_user_name_ending_index"
+    ON sys_core."domain" USING btree
+    (creator_user_id ASC NULLS LAST, name ASC NULLS LAST, ending ASC NULLS LAST);
+
+-- Index: domain_id
 DROP INDEX IF EXISTS "sys_dns.domain_id";
 
 CREATE INDEX IF NOT EXISTS "sys_dns.domain_id"
