@@ -10,9 +10,9 @@ setup.
 
 .. note::
 
-    **As a tip**, you *should* read further to get a better understanding how
-    internal processing works, especially *Multi Class Handling* before you continue
-    to the example section.
+    You **should** read further to get a better understanding how internal
+    processing works, especially *Multi Class Handling* before you continue to
+    the example section.
 
 1. Base Handler
 ===============
@@ -261,9 +261,9 @@ The ClassMapper class is responsible to hierarchical map / connect the desired
 The ClassMapper class must be invoked at initialization / before ServiceMapper.
 It takes the following config dictionaries as input parameter.
 
-- Class Reference Dictionary (see :ref:`class-reference-config`)
-- Class Mapping Dictionary (see :ref:`class-mapping-config`)
-- Service Properties Dictionary (see :ref:`service-properties-config`)
+- Class Reference Dictionary (see "Configuration / :ref:`class-reference-config`")
+- Class Mapping Dictionary (see "Configuration / :ref:`class-mapping-config`")
+- Service Properties Dictionary (see "Configuration / :ref:`service-properties-config`")
 
 .. code-block:: python
 
@@ -286,7 +286,7 @@ ClassMapper with given *service call metadata*.
 It needs the following config dictionaries as input parameter.
 
 - ClassMapper reference
-- Service Call Metadata Dictionary (see see :ref:`service-call-metadata-config`)
+- Service Call Metadata Dictionary (see "Configuration / :ref:`service-call-metadata-config`")
 
 .. code-block:: python
 
