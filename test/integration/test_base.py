@@ -235,12 +235,12 @@ class TestMapping:
             class_properties=config_properties_extended_service
         )
 
-        s = microesb.ServiceMapper(
+        s = microesb.ServiceExecuter().execute(
             class_mapper=class_mapper,
             service_data=config_service_extended_service
         )
 
-        cert_ca = getattr(s._class_mapper, 'CertCA')
+        cert_ca = getattr(s[0]._class_mapper, 'CertCA')
         smartcard_ca = getattr(cert_ca, 'SmartcardCA')
         smartcard_container_ca = getattr(smartcard_ca, 'SmartcardContainer')
         smartcard_req = getattr(cert_ca, 'SmartcardREQ')
@@ -265,12 +265,12 @@ class TestMapping:
             class_properties=config_properties_multiobject
         )
 
-        s = microesb.ServiceMapper(
+        s = microesb.ServiceExecuter().execute(
             class_mapper=class_mapper,
             service_data=config_service_multiobject
         )
 
-        shipment = getattr(s._class_mapper, 'Shipment')
+        shipment = getattr(s[0]._class_mapper, 'Shipment')
         palette = getattr(shipment, 'Palette')
 
         p1 = palette._object_container[0]
