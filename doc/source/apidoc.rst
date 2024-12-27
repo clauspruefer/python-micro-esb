@@ -8,7 +8,7 @@ Internal Structure
 =======================
 
 .. automodule:: microesb.microesb
-   :members: BaseHandler, ClassHandler, MultiClassHandler, ClassMapper, ServiceMapper, JSONTransformer
+   :members: BaseHandler, ClassHandler, MultiClassHandler, ClassMapper, ServiceMapper, ServiceExecuter, JSONTransformer
    :exclude-members: __dict__, __repr__, __weakref__
    :special-members: __init__, __add__, __iter__
    :private-members:
