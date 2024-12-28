@@ -40,6 +40,8 @@ in background.
 
 ## 4. Execute Examples
 
+After the examples container has been started, the examples can be executed inside.
+
 ```bash
 # run example 1 and print out db tables content
 ./exec-example1.sh
