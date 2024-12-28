@@ -17,6 +17,12 @@ Or build the image by yourself: just continue with step 2.
 
 ## 2. Build Image
 
+To build the image, execute the following command.
+
+```bash
+./build-examples.sh
+```
+
 The `build-examples.sh` script will do the following.
 
 - Build Python micro-esb Module (sdist) inside ../dist/
@@ -24,10 +30,6 @@ The `build-examples.sh` script will do the following.
 - Put dependencies inside Docker Container
 - Init postgres database
 - Setup Example Number 1 database (hosting-example)
-
-```bash
-./build-examples.sh
-```
 
 ## 3. Run Container
 
