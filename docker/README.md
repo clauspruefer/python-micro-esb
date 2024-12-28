@@ -7,7 +7,7 @@ A running docker installation is required.
 You can either download the working docker examples container here:
 https://docker.webcodex.de/microesb-examples-latest.tar
 
-Import with the following command, afterwars continue with step 3.
+Import with the following command, afterwards continue with step 3.
 
 ```bash
 docker image load < microesb-examples-latest.tar
