@@ -2,10 +2,18 @@
 
 ## 1. Docker
 
-If you want to build the docker examples image on your own, a running docker
-installation is needed.
+A running docker installation is required.
 
-The working docker examples container can be downloaded here:
+You can either download the working docker examples container here:
+https://docker.webcodex.de/microesb-examples-latest.tar
+
+Import with the following command, afterwars continue with step 3.
+
+```bash
+docker image load < microesb-examples-latest.tar
+```
+
+Or build the image by yourself: just continue with step 2.
 
 ## 2. Build Image
 
@@ -32,10 +40,13 @@ in background.
 
 ## 4. Execute Examples
 
-When the container is running successfully, run `exec-example1.sh` to execute
-example number 1. Also the inserted database records will be printed out when
-execution was successful.
+```bash
+# run example 1 and print out db tables content
+./exec-example1.sh
+```
 
-Run `exec-example2.sh` to execute all 3 examples
-(cert-ca, cert-server and cert-client).
+```bash
+# run example 2, cert-ca, cert-server and cert-client
+./exec-example2.sh
+```
 
