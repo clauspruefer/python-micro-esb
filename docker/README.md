@@ -33,8 +33,8 @@ The `build-examples.sh` script will do the following.
 
 ## 3. Run Container
 
-Start container by the following command. This will start postgresql database
-in background.
+Start container by the following command (this will start postgresql database
+in background).
 
 ```bash
 ./start-examples-container.sh
