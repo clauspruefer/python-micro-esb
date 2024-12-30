@@ -17,7 +17,8 @@ Example Implementation Code.
 .. literalinclude:: ../../example/02-pki-management/service_implementation.py
     :linenos:
 
-Example Service Call Metadata.
+2. Structured Service Call Metadata
+===================================
 
 .. code-block:: python
 
@@ -55,7 +56,7 @@ Example Service Call Metadata.
 
 Full example see :ref:`example-number2`.
 
-2. Multi Object Abstraction
+3. Multi Object Abstraction
 ===========================
 
 Process multiple hierarchical input metadata elements at once.
@@ -65,8 +66,8 @@ Process multiple hierarchical input metadata elements at once.
 
 Full example see :ref:`example-number1`.
 
-3. Structured Service Call Metadata
-===================================
+4. Structured Service Property Definition
+=========================================
 
 Define structured service call properties.
 
@@ -75,7 +76,7 @@ Define structured service call properties.
 
 Full example see :ref:`example-number2`.
 
-4. Planned Features
+5. Planned Features
 ===================
 
 - Service Registry
