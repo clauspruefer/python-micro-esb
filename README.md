@@ -1,5 +1,7 @@
 # Python Micro-Enterprise-Service-Bus Module
 
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+
 ## 1. Abstract / Preface
 
 *Enterprise Service Bus*, still a pretty vague term. Invented by the Gartner-Report 2002.
