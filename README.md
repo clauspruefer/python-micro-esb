@@ -41,3 +41,6 @@ Also building Web-Applications on PaaS infrastructure relies on a clean Service 
 
 Documentation including detailed examples can be found at either ./doc or
 https://pythondocs.webcodex.de/micro-esb.
+
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
+
