@@ -29,7 +29,7 @@ Also building Web-Applications on PaaS infrastructure relies on a clean Service 
 ## 4. Current Implementation
 
 - Service Abstraction / Metadata Definition
-- Internal Code (Python) Class / Service Propeties Mapping
+- Internal Code (Python) Class / Service Properties Mapping
 - Graph Based / Recursive JSON Result Abstraction
 
 ### 4.1. Working On
