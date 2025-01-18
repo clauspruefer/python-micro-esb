@@ -1,6 +1,6 @@
 # Python Micro-Enterprise-Service-Bus Module
 
-![build main](https://github.com/clauspruefer/python-micro-esb/actions/workflows/pylint.yaml/badge.svg)
+![push main](https://github.com/clauspruefer/python-micro-esb/actions/workflows/pylint.yaml/badge.svg)
 
 ## 1. Abstract / Preface
 
