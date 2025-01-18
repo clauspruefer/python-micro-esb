@@ -6,7 +6,7 @@
 
 *Enterprise Service Bus*, still a pretty vague term. Invented by the Gartner-Report 2002.
 
-Essential for a large SOA-Infrastructure.
+Essential for running a large SOA-Infrastructure.
 
 ## 2. Features
 
