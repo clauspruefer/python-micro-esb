@@ -26,7 +26,7 @@ class BaseHandler(JSONTransformer):
         :ivar classref logger: logging logger reference
         :ivar dict[SYSProperties] _SYSProperties: internal properties processing dict
         :ivar classref _SYSParentObject: internal (hierarchical) class instance ref
-        :ivar list[classref] _SYSClassNames: internal class refs dict (should be renamed to _SYSClassRefs)
+        :ivar list[classref] _SYSClassNames: internal class refs dict
         """
 
         self.logger = logging.getLogger(__name__)
