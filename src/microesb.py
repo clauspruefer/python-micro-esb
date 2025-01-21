@@ -282,14 +282,14 @@ class MultiClassHandler(BaseHandler):
         Preprare self.json_dict from self (self._object_container)).
         """
         self.logger.debug('Object container:{}'.format(self._object_container))
-        class_name = self.class_name
-        self.json_dict[class_name] = []
+        clsname = self.class_name
+        self.json_dict[clsname] = []
         for class_instance in self:
             self.logger.debug('Loop class instance:{}'.format(dir(class_instance)))
             class_instance.set_instance_json_dict()
-            self.json_dict[class_name].append(class_instance.json_dict)
-        if len(self.json_dict[class_name]) == 0:
-            del self.json_dict[class_name]
+            self.json_dict[clsname].append(class_instance.json_dict)
+        if len(self.json_dict[clsname]) == 0:
+            del self.json_dict[clsname]
 
     def set_instance_json_dict(self):
         """ set_instance_json_dict() method.
