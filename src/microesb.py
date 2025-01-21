@@ -146,7 +146,7 @@ class BaseHandler(JSONTransformer):
         """
         return self.__class__.__name__
 
-    def get_value_by_property_id(self, id):
+    def get_value_by_property_id(self, property_id):
         raise NotImplementedError
 
 
