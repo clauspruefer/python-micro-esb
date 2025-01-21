@@ -181,8 +181,8 @@ class ClassHandler(BaseHandler):
 
         Overloaded for using iter() on class references.
         """
-        for class_name in self._SYSClassNames:
-            yield getattr(self, class_name)
+        for clsname in self._SYSClassNames:
+            yield getattr(self, clsname)
 
     def _add_class(self, *, class_name, class_ref):
         """ _add_class() method.
