@@ -299,8 +299,8 @@ class MultiClassHandler(BaseHandler):
         for property_id, property_value in self._SYSProperties.items():
             try:
                 self.json_dict[property_id] = getattr(self, property_id)
-            except Exception as e:
-                pass
+            except AttributeError as e:
+                self.logger.info('Attribute error:{}'.format(e))
 
 
 class ClassMapper(ClassHandler):
@@ -453,17 +453,14 @@ class ServiceMapper(ClassHandler):
 
         self._map(**call_dict)
 
-        try:
-            for class_ref, class_props in class_references.items():
-                for method_def in class_mapper._class_properties['SYSBackendMethods']:
-                    if method_def[1] == 'on_recursion_finish':
-                        self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
-                        try:
-                            getattr(getattr(self._class_mapper, class_ref), method_def[0])()
-                        except Exception as e:
-                            pass
-        except Exception as e:
-            self.logger.debug('SYSBackendMethods preocessing exception:{}'.format(e))
+        for class_ref, class_props in class_references.items():
+            for method_def in class_mapper._class_properties['SYSBackendMethods']:
+                if method_def[1] == 'on_recursion_finish':
+                    self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
+                    try:
+                        getattr(getattr(self._class_mapper, class_ref), method_def[0])()
+                    except AttributeError as e:
+                        self.logger.debug('SYSBackendMethods cr:{} cprops:{} exception:{}'.format(class_ref, class_props, e))
 
     def _map(
         self,
@@ -503,7 +500,7 @@ class ServiceMapper(ClassHandler):
 
             try:
                 getattr(class_instance, class_instance.SYSServiceMethod)()
-            except Exception as e:
+            except AttributeError as e:
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
             for child_class_name, child_class_config in children.items():
@@ -515,11 +512,10 @@ class ServiceMapper(ClassHandler):
             try:
                 for ci in class_instance._object_container:
                     getattr(ci, ci.SYSServiceMethod)()
-            except Exception as e:
+            except AttributeError as e:
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
         except Exception as e:
             self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
-            pass
 
 
 class ServiceExecuter(object):
