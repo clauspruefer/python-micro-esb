@@ -454,13 +454,16 @@ class ServiceMapper(ClassHandler):
         self._map(**call_dict)
 
         for class_ref, class_props in class_references.items():
-            for method_def in class_mapper._class_properties['SYSBackendMethods']:
-                if method_def[1] == 'on_recursion_finish':
-                    self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
-                    try:
-                        getattr(getattr(self._class_mapper, class_ref), method_def[0])()
-                    except AttributeError as e:
-                        self.logger.debug('SYSBackendMethods cr:{} cprops:{} exception:{}'.format(class_ref, class_props, e))
+            try:
+                for method_def in class_mapper._class_properties['SYSBackendMethods']:
+                    if method_def[1] == 'on_recursion_finish':
+                        self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
+                        try:
+                            getattr(getattr(self._class_mapper, class_ref), method_def[0])()
+                        except AttributeError as e:
+                            self.logger.debug('SYSBackendMethods cr:{} cprops:{} exception:{}'.format(class_ref, class_props, e))
+            except KeyError:
+                pass
 
     def _map(
         self,
