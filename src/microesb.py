@@ -220,7 +220,7 @@ class ClassHandler(BaseHandler):
         Preprare self.json_dict from self._SYSProperties (used by JSONTransformer).
         """
         self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
-        for property_id in self._SYSProperties:
+        for property_id, property_value in self._SYSProperties.items():
             self.logger.debug('processing property:{}'.format(property_id))
             self.json_dict[property_id] = getattr(self, property_id)
 
@@ -296,7 +296,7 @@ class MultiClassHandler(BaseHandler):
 
         Preprare self.json_dict from self._SYSProperties (used by JSONTransformer).
         """
-        for property_id in self._SYSProperties:
+        for property_id, property_value in self._SYSProperties.items():
             try:
                 self.json_dict[property_id] = getattr(self, property_id)
             except Exception as e:
