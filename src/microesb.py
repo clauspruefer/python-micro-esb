@@ -514,7 +514,7 @@ class ServiceMapper(ClassHandler):
 
         try:
             getattr(class_instance, class_instance.SYSServiceMethod)()
-        except Exception as e:
+        except (TypeError) as e:
             self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
         for child_class_name, child_class_config in children.items():
@@ -526,7 +526,7 @@ class ServiceMapper(ClassHandler):
         try:
             for ci in class_instance.get_object_container():
                 getattr(ci, ci.SYSServiceMethod)()
-        except Exception as e:
+        except (AttributeError) as e:
             self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
 
