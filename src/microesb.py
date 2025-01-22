@@ -461,7 +461,9 @@ class ServiceMapper(ClassHandler):
                         try:
                             getattr(getattr(self._class_mapper, class_ref), method_def[0])()
                         except AttributeError as e:
-                            self.logger.debug('SYSBackendMethods cr:{} cprops:{} exception:{}'.format(class_ref, class_props, e))
+                            self.logger.debug('SYSBackendMethods cr:{} cprops:{} e:{}'.format(
+                                class_ref, class_props, e
+                            ))
             except KeyError:
                 pass
 
