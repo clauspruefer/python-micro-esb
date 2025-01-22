@@ -181,8 +181,8 @@ class ClassHandler(BaseHandler):
 
         Overloaded for using iter() on class references.
         """
-        for clsname in self._SYSClassNames:
-            yield getattr(self, clsname)
+        for cls_name in self._SYSClassNames:
+            yield getattr(self, cls_name)
 
     def _add_class(self, *, class_name, class_ref):
         """ _add_class() method.
@@ -282,14 +282,14 @@ class MultiClassHandler(BaseHandler):
         Preprare self.json_dict from self (self._object_container)).
         """
         self.logger.debug('Object container:{}'.format(self._object_container))
-        clsname = self.class_name
-        self.json_dict[clsname] = []
+        cls_name = self.class_name
+        self.json_dict[cls_name] = []
         for class_instance in self:
             self.logger.debug('Loop class instance:{}'.format(dir(class_instance)))
             class_instance.set_instance_json_dict()
-            self.json_dict[clsname].append(class_instance.json_dict)
-        if len(self.json_dict[clsname]) == 0:
-            del self.json_dict[clsname]
+            self.json_dict[cls_name].append(class_instance.json_dict)
+        if len(self.json_dict[cls_name]) == 0:
+            del self.json_dict[cls_name]
 
     def set_instance_json_dict(self):
         """ set_instance_json_dict() method.
@@ -503,7 +503,7 @@ class ServiceMapper(ClassHandler):
 
             try:
                 getattr(class_instance, class_instance.SYSServiceMethod)()
-            except AttributeError as e:
+            except Exception as e:
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
             for child_class_name, child_class_config in children.items():
@@ -515,7 +515,7 @@ class ServiceMapper(ClassHandler):
             try:
                 for ci in class_instance._object_container:
                     getattr(ci, ci.SYSServiceMethod)()
-            except AttributeError as e:
+            except Exception as e:
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
         except Exception as e:
             self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
