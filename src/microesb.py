@@ -470,7 +470,7 @@ class ServiceMapper(ClassHandler):
     def _map(
         self,
         *,
-        class_name,
+        cls_name,
         parent_instance,
         hierarchy,
         children={},
@@ -490,17 +490,17 @@ class ServiceMapper(ClassHandler):
 
         self.logger.debug(
             'class_name:{} parent_instance:{} children:{} hierarchy:{}'.format(
-                class_name,
+                cls_name,
                 parent_instance,
                 children,
                 hierarchy
             )
         )
 
-        class_instance = getattr(parent_instance, class_name)
+        class_instance = getattr(parent_instance, cls_name)
 
         try:
-            hierarchy = hierarchy[class_name]
+            hierarchy = hierarchy[cls_name]
             class_instance.set_properties(hierarchy)
 
             try:
@@ -509,7 +509,7 @@ class ServiceMapper(ClassHandler):
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
             for child_class_name, child_class_config in children.items():
-                child_class_config['class_name'] = child_class_name
+                child_class_config['cls_name'] = child_class_name
                 child_class_config['parent_instance'] = class_instance
                 child_class_config['hierarchy'] = hierarchy
                 self._map(**child_class_config)
