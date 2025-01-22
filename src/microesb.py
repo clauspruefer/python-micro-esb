@@ -300,7 +300,9 @@ class MultiClassHandler(BaseHandler):
             try:
                 self.json_dict[property_id] = getattr(self, property_id)
             except AttributeError as e:
-                self.logger.info('Attribute error:{}'.format(e))
+                self.logger.info('Attribute pid:{} pvalue:{} exception:{}'.format(
+                    property_id, proerty_value, e)
+                )
 
 
 class ClassMapper(ClassHandler):
