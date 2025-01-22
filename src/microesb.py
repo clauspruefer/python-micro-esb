@@ -481,7 +481,7 @@ class ServiceMapper(ClassHandler):
         """ _map() method.
 
         :param dict *: used for passing params as **args dictionary
-        :param str class_name: (root) class name
+        :param str cls_name: (root) class name
         :param classref parent_instance: property reference dictionary
         :param dict hierarchy: (root) class setup item
         :param dict children: children definition dictionary
