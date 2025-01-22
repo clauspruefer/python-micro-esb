@@ -509,28 +509,25 @@ class ServiceMapper(ClassHandler):
 
         class_instance = getattr(parent_instance, cls_name)
 
+        hierarchy = hierarchy[cls_name]
+        class_instance.set_properties(hierarchy)
+
         try:
-            hierarchy = hierarchy[cls_name]
-            class_instance.set_properties(hierarchy)
-
-            try:
-                getattr(class_instance, class_instance.SYSServiceMethod)()
-            except Exception as e:
-                self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
-
-            for child_class_name, child_class_config in children.items():
-                child_class_config['cls_name'] = child_class_name
-                child_class_config['parent_instance'] = class_instance
-                child_class_config['hierarchy'] = hierarchy
-                self._map(**child_class_config)
-
-            try:
-                for ci in class_instance.get_object_container():
-                    getattr(ci, ci.SYSServiceMethod)()
-            except Exception as e:
-                self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
+            getattr(class_instance, class_instance.SYSServiceMethod)()
         except Exception as e:
-            self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
+            self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
+
+        for child_class_name, child_class_config in children.items():
+            child_class_config['cls_name'] = child_class_name
+            child_class_config['parent_instance'] = class_instance
+            child_class_config['hierarchy'] = hierarchy
+            self._map(**child_class_config)
+
+        try:
+            for ci in class_instance.get_object_container():
+                getattr(ci, ci.SYSServiceMethod)()
+        except Exception as e:
+            self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
 
 class ServiceExecuter(object):
