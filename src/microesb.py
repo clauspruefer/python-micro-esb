@@ -2,7 +2,7 @@
 #  .                         Micro ESB Python Module                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 #  .                                                                         .
-#  .  Copyright Claus Prüfer (2016 - 2024)                                   .
+#  .  Copyright Claus Prüfer (2016 - 2025)                                   .
 #  .                                                                         .
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
@@ -92,8 +92,8 @@ class BaseHandler(JSONTransformer):
         }
         return properties
 
-    def _set_property(self, key, value):
-        """ _set_property() method.
+    def set_property(self, key, value):
+        """ set_property() method.
 
         :param str key: property key name
         :param str value: property value
@@ -146,7 +146,7 @@ class BaseHandler(JSONTransformer):
         """
         return self.__class__.__name__
 
-    def get_value_by_property_id(self, id):
+    def get_value_by_property_id(self, property_id):
         raise NotImplementedError
 
 
@@ -169,8 +169,8 @@ class ClassHandler(BaseHandler):
         _add_class() "wrapper" primary used for ClassMapper.
 
         >>> args = {
-        >>>     'class_name': class_name,
-        >>>     'class_ref': class_ref
+        >>>     'cls_name': cls_name,
+        >>>     'cls_ref': cls_ref
         >>> }
         >>> parent_instance + args
         """
@@ -181,15 +181,15 @@ class ClassHandler(BaseHandler):
 
         Overloaded for using iter() on class references.
         """
-        for class_name in self._SYSClassNames:
-            yield getattr(self, class_name)
+        for cls_name in self._SYSClassNames:
+            yield getattr(self, cls_name)
 
-    def _add_class(self, *, class_name, class_ref):
+    def _add_class(self, *, cls_name, cls_ref):
         """ _add_class() method.
 
         :param dict *: used for passing params as **args dictionary
-        :param str class_name: class name
-        :param classref class_ref: class instance reference
+        :param str cls_name: class name
+        :param classref cls_ref: class instance reference
 
         Append class_name to self._SYSClassNames. Setup new class instance
         in global namespace.
@@ -197,22 +197,22 @@ class ClassHandler(BaseHandler):
         Primary called by overloaded __add__() method.
         """
 
-        self._SYSClassNames.append(class_ref)
+        self._SYSClassNames.append(cls_ref)
 
-        new_class = globals()[class_ref]
+        new_class = globals()[cls_ref]
         instance = new_class()
-        setattr(self, class_name, instance)
+        setattr(self, cls_name, instance)
 
     def set_properties(self, item_dict):
         """ set_properties() method.
 
         :param dict item_dict: properties dictionary
 
-        Iterates over item_dict and calls self._set_property(property_id, value)
+        Iterates over item_dict and calls self.set_property(property_id, value)
         foreach item.
         """
         for property_id, value in item_dict.items():
-            self._set_property(property_id, value)
+            self.set_property(property_id, value)
 
     def set_json_dict(self):
         """ set_json_dict() method.
@@ -220,8 +220,8 @@ class ClassHandler(BaseHandler):
         Preprare self.json_dict from self._SYSProperties (used by JSONTransformer).
         """
         self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
-        for property_id in self._SYSProperties:
-            self.logger.debug('processing property:{}'.format(property_id))
+        for property_id, property_value in self._SYSProperties.items():
+            self.logger.debug('processing pid:{} pvalue:{}'.format(property_id, property_value))
             self.json_dict[property_id] = getattr(self, property_id)
 
 
@@ -264,6 +264,14 @@ class MultiClassHandler(BaseHandler):
         self._object_container.append(instance)
         return instance
 
+    def get_object_container(self):
+        """ get_object_container() method.
+
+        :return: self._object_container
+        :rtype: list
+        """
+        return self._object_container
+
     def set_properties(self, property_list):
         """ set_properties() method.
 
@@ -274,7 +282,7 @@ class MultiClassHandler(BaseHandler):
         for class_config in property_list:
             instance = self._add_class()
             for var, value in class_config.items():
-                instance._set_property(var, value)
+                instance.set_property(var, value)
 
     def set_json_dict(self):
         """ set_json_dict() method.
@@ -282,25 +290,27 @@ class MultiClassHandler(BaseHandler):
         Preprare self.json_dict from self (self._object_container)).
         """
         self.logger.debug('Object container:{}'.format(self._object_container))
-        class_name = self.class_name
-        self.json_dict[class_name] = []
+        cls_name = self.class_name
+        self.json_dict[cls_name] = []
         for class_instance in self:
             self.logger.debug('Loop class instance:{}'.format(dir(class_instance)))
             class_instance.set_instance_json_dict()
-            self.json_dict[class_name].append(class_instance.json_dict)
-        if len(self.json_dict[class_name]) == 0:
-            del self.json_dict[class_name]
+            self.json_dict[cls_name].append(class_instance.json_dict)
+        if len(self.json_dict[cls_name]) == 0:
+            del self.json_dict[cls_name]
 
     def set_instance_json_dict(self):
         """ set_instance_json_dict() method.
 
         Preprare self.json_dict from self._SYSProperties (used by JSONTransformer).
         """
-        for property_id in self._SYSProperties:
+        for property_id, property_value in self._SYSProperties.items():
             try:
                 self.json_dict[property_id] = getattr(self, property_id)
-            except Exception as e:
-                pass
+            except AttributeError as e:
+                self.logger.info('Attribute pid:{} pvalue:{} exception:{}'.format(
+                    property_id, property_value, e)
+                )
 
 
 class ClassMapper(ClassHandler):
@@ -331,7 +341,7 @@ class ClassMapper(ClassHandler):
         self._class_hierarchy = {}
 
         call_dict = {
-            'class_name': root_class,
+            'cls_name': root_class,
             'children': root_index['children'],
             'property_ref': root_index['property_ref'],
             'parent_instance': self,
@@ -350,7 +360,7 @@ class ClassMapper(ClassHandler):
             self._class_references
         )
 
-    def _get_mapping(self, class_name):
+    def _get_mapping(self, cls_name):
         """ _get_mapping() method.
 
         :param str class_name: mapping class_name
@@ -359,7 +369,7 @@ class ClassMapper(ClassHandler):
 
         Get class name from class_mappings dictionary by class_name.
         """
-        return self._class_mappings[class_name]
+        return self._class_mappings[cls_name]
 
     def get_references(self):
         """ get_references() method.
@@ -374,7 +384,7 @@ class ClassMapper(ClassHandler):
     def _map(
         self,
         *,
-        class_name,
+        cls_name,
         property_ref,
         parent_instance,
         children={}
@@ -392,25 +402,25 @@ class ClassMapper(ClassHandler):
 
         self.logger.debug(
             'class_name:{} property_ref:{} parent_instance:{} children:{}'.format(
-                class_name,
+                cls_name,
                 property_ref,
                 parent_instance,
                 children,
             )
         )
 
-        class_ref = self._get_mapping(class_name)
+        cls_ref = self._get_mapping(cls_name)
 
-        self._class_hierarchy[class_name] = parent_instance
+        self._class_hierarchy[cls_name] = parent_instance
 
         args = {
-            'class_name': class_name,
-            'class_ref': class_ref
+            'cls_name': cls_name,
+            'cls_ref': cls_ref
         }
 
         parent_instance + args
 
-        child_instance = getattr(parent_instance, class_name)
+        child_instance = getattr(parent_instance, cls_name)
 
         child_instance.add_properties(
             self._class_properties[property_ref]['properties'],
@@ -418,7 +428,7 @@ class ClassMapper(ClassHandler):
         )
 
         for child_class_name, child_class_config in children.items():
-            child_class_config['class_name'] = child_class_name
+            child_class_config['cls_name'] = child_class_name
             child_class_config['parent_instance'] = child_instance
             self._map(**child_class_config)
 
@@ -445,7 +455,7 @@ class ServiceMapper(ClassHandler):
         root_index = class_references[root_class]
 
         call_dict = {
-            'class_name': root_class,
+            'cls_name': root_class,
             'children': root_index['children'],
             'parent_instance': self._class_mapper,
             'hierarchy': service_call_data
@@ -453,22 +463,24 @@ class ServiceMapper(ClassHandler):
 
         self._map(**call_dict)
 
-        try:
-            for class_ref, class_props in class_references.items():
+        for class_ref, class_props in class_references.items():
+            try:
                 for method_def in class_mapper._class_properties['SYSBackendMethods']:
                     if method_def[1] == 'on_recursion_finish':
                         self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
                         try:
                             getattr(getattr(self._class_mapper, class_ref), method_def[0])()
-                        except Exception as e:
-                            pass
-        except Exception as e:
-            self.logger.debug('SYSBackendMethods preocessing exception:{}'.format(e))
+                        except AttributeError as e:
+                            self.logger.debug('SYSBackendMethods cr:{} cprops:{} e:{}'.format(
+                                class_ref, class_props, e
+                            ))
+            except KeyError:
+                pass
 
     def _map(
         self,
         *,
-        class_name,
+        cls_name,
         parent_instance,
         hierarchy,
         children={},
@@ -477,7 +489,7 @@ class ServiceMapper(ClassHandler):
         """ _map() method.
 
         :param dict *: used for passing params as **args dictionary
-        :param str class_name: (root) class name
+        :param str cls_name: (root) class name
         :param classref parent_instance: property reference dictionary
         :param dict hierarchy: (root) class setup item
         :param dict children: children definition dictionary
@@ -488,38 +500,34 @@ class ServiceMapper(ClassHandler):
 
         self.logger.debug(
             'class_name:{} parent_instance:{} children:{} hierarchy:{}'.format(
-                class_name,
+                cls_name,
                 parent_instance,
                 children,
                 hierarchy
             )
         )
 
-        class_instance = getattr(parent_instance, class_name)
+        class_instance = getattr(parent_instance, cls_name)
+
+        hierarchy = hierarchy[cls_name]
+        class_instance.set_properties(hierarchy)
 
         try:
-            hierarchy = hierarchy[class_name]
-            class_instance.set_properties(hierarchy)
+            getattr(class_instance, class_instance.SYSServiceMethod)()
+        except (TypeError) as e:
+            self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
-            try:
-                getattr(class_instance, class_instance.SYSServiceMethod)()
-            except Exception as e:
-                self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
+        for child_class_name, child_class_config in children.items():
+            child_class_config['cls_name'] = child_class_name
+            child_class_config['parent_instance'] = class_instance
+            child_class_config['hierarchy'] = hierarchy
+            self._map(**child_class_config)
 
-            for child_class_name, child_class_config in children.items():
-                child_class_config['class_name'] = child_class_name
-                child_class_config['parent_instance'] = class_instance
-                child_class_config['hierarchy'] = hierarchy
-                self._map(**child_class_config)
-
-            try:
-                for ci in class_instance._object_container:
-                    getattr(ci, ci.SYSServiceMethod)()
-            except Exception as e:
-                self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
-        except Exception as e:
-            self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
-            pass
+        try:
+            for ci in class_instance.get_object_container():
+                getattr(ci, ci.SYSServiceMethod)()
+        except (AttributeError) as e:
+            self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
 
 
 class ServiceExecuter(object):
