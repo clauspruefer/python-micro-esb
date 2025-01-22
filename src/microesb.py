@@ -221,7 +221,7 @@ class ClassHandler(BaseHandler):
         """
         self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
         for property_id, property_value in self._SYSProperties.items():
-            self.logger.debug('processing property:{}'.format(property_id))
+            self.logger.debug('processing pid:{} pvalue:{}'.format(property_id, property_value))
             self.json_dict[property_id] = getattr(self, property_id)
 
 
