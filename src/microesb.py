@@ -264,6 +264,14 @@ class MultiClassHandler(BaseHandler):
         self._object_container.append(instance)
         return instance
 
+    def get_object_container(self):
+        """ get_object_container() method.
+
+        :return: self._object_container
+        :rtype: list
+        """
+        return self._object_container
+ 
     def set_properties(self, property_list):
         """ set_properties() method.
 
@@ -517,7 +525,7 @@ class ServiceMapper(ClassHandler):
                 self._map(**child_class_config)
 
             try:
-                for ci in class_instance._object_container:
+                for ci in class_instance.get_object_container():
                     getattr(ci, ci.SYSServiceMethod)()
             except Exception as e:
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
