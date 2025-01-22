@@ -350,7 +350,7 @@ class ClassMapper(ClassHandler):
             self._class_references
         )
 
-    def _get_mapping(self, class_name):
+    def _get_mapping(self, cls_name):
         """ _get_mapping() method.
 
         :param str class_name: mapping class_name
@@ -359,7 +359,7 @@ class ClassMapper(ClassHandler):
 
         Get class name from class_mappings dictionary by class_name.
         """
-        return self._class_mappings[class_name]
+        return self._class_mappings[cls_name]
 
     def get_references(self):
         """ get_references() method.
