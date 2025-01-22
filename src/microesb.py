@@ -331,7 +331,7 @@ class ClassMapper(ClassHandler):
         self._class_hierarchy = {}
 
         call_dict = {
-            'class_name': root_class,
+            'cls_name': root_class,
             'children': root_index['children'],
             'property_ref': root_index['property_ref'],
             'parent_instance': self,
