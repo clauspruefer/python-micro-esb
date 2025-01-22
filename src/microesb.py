@@ -271,7 +271,7 @@ class MultiClassHandler(BaseHandler):
         :rtype: list
         """
         return self._object_container
- 
+
     def set_properties(self, property_list):
         """ set_properties() method.
 
