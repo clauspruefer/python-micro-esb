@@ -3,7 +3,7 @@ name: Pylint
 on:
   push:
     branches:
-      - fix-pylint-errors
+      - main
 
 jobs:
   build:
