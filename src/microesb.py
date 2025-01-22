@@ -184,12 +184,12 @@ class ClassHandler(BaseHandler):
         for cls_name in self._SYSClassNames:
             yield getattr(self, cls_name)
 
-    def _add_class(self, *, class_name, class_ref):
+    def _add_class(self, *, cls_name, cls_ref):
         """ _add_class() method.
 
         :param dict *: used for passing params as **args dictionary
-        :param str class_name: class name
-        :param classref class_ref: class instance reference
+        :param str cls_name: class name
+        :param classref cls_ref: class instance reference
 
         Append class_name to self._SYSClassNames. Setup new class instance
         in global namespace.
@@ -197,11 +197,11 @@ class ClassHandler(BaseHandler):
         Primary called by overloaded __add__() method.
         """
 
-        self._SYSClassNames.append(class_ref)
+        self._SYSClassNames.append(cls_ref)
 
-        new_class = globals()[class_ref]
+        new_class = globals()[cls_ref]
         instance = new_class()
-        setattr(self, class_name, instance)
+        setattr(self, cls_name, instance)
 
     def set_properties(self, item_dict):
         """ set_properties() method.
