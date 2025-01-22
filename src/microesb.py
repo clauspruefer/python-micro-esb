@@ -92,8 +92,8 @@ class BaseHandler(JSONTransformer):
         }
         return properties
 
-    def _set_property(self, key, value):
-        """ _set_property() method.
+    def set_property(self, key, value):
+        """ set_property() method.
 
         :param str key: property key name
         :param str value: property value
@@ -208,11 +208,11 @@ class ClassHandler(BaseHandler):
 
         :param dict item_dict: properties dictionary
 
-        Iterates over item_dict and calls self._set_property(property_id, value)
+        Iterates over item_dict and calls self.set_property(property_id, value)
         foreach item.
         """
         for property_id, value in item_dict.items():
-            self._set_property(property_id, value)
+            self.set_property(property_id, value)
 
     def set_json_dict(self):
         """ set_json_dict() method.
@@ -274,7 +274,7 @@ class MultiClassHandler(BaseHandler):
         for class_config in property_list:
             instance = self._add_class()
             for var, value in class_config.items():
-                instance._set_property(var, value)
+                instance.set_property(var, value)
 
     def set_json_dict(self):
         """ set_json_dict() method.
