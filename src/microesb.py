@@ -169,8 +169,8 @@ class ClassHandler(BaseHandler):
         _add_class() "wrapper" primary used for ClassMapper.
 
         >>> args = {
-        >>>     'class_name': class_name,
-        >>>     'class_ref': class_ref
+        >>>     'cls_name': cls_name,
+        >>>     'cls_ref': cls_ref
         >>> }
         >>> parent_instance + args
         """
@@ -404,8 +404,8 @@ class ClassMapper(ClassHandler):
         self._class_hierarchy[cls_name] = parent_instance
 
         args = {
-            'class_name': cls_name,
-            'class_ref': cls_ref
+            'cls_name': cls_name,
+            'cls_ref': cls_ref
         }
 
         parent_instance + args
@@ -418,7 +418,7 @@ class ClassMapper(ClassHandler):
         )
 
         for child_class_name, child_class_config in children.items():
-            child_class_config['class_name'] = child_class_name
+            child_class_config['cls_name'] = child_class_name
             child_class_config['parent_instance'] = child_instance
             self._map(**child_class_config)
 
@@ -445,7 +445,7 @@ class ServiceMapper(ClassHandler):
         root_index = class_references[root_class]
 
         call_dict = {
-            'class_name': root_class,
+            'cls_name': root_class,
             'children': root_index['children'],
             'parent_instance': self._class_mapper,
             'hierarchy': service_call_data
