@@ -374,7 +374,7 @@ class ClassMapper(ClassHandler):
     def _map(
         self,
         *,
-        class_name,
+        cls_name,
         property_ref,
         parent_instance,
         children={}
@@ -392,25 +392,25 @@ class ClassMapper(ClassHandler):
 
         self.logger.debug(
             'class_name:{} property_ref:{} parent_instance:{} children:{}'.format(
-                class_name,
+                cls_name,
                 property_ref,
                 parent_instance,
                 children,
             )
         )
 
-        class_ref = self._get_mapping(class_name)
+        cls_ref = self._get_mapping(cls_name)
 
-        self._class_hierarchy[class_name] = parent_instance
+        self._class_hierarchy[cls_name] = parent_instance
 
         args = {
-            'class_name': class_name,
-            'class_ref': class_ref
+            'class_name': cls_name,
+            'class_ref': cls_ref
         }
 
         parent_instance + args
 
-        child_instance = getattr(parent_instance, class_name)
+        child_instance = getattr(parent_instance, cls_name)
 
         child_instance.add_properties(
             self._class_properties[property_ref]['properties'],
