@@ -16,10 +16,9 @@ import esbconfig
 from microesb.transformer import JSONTransformer
 
 
-class BaseHandler(JSONTransformer):
+class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
     """ Abstract Base Class (ABC) Meta Class.
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         """
