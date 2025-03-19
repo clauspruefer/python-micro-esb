@@ -1,7 +1,6 @@
 # Python Micro-Enterprise-Service-Bus Module
 
 ![push main](https://github.com/clauspruefer/python-micro-esb/actions/workflows/pylint.yaml/badge.svg)
-[![PyPI version](https://badge.fury.io/py/microesb.svg)](https://badge.fury.io/py/microesb)
 
 ## 1. Abstract / Preface
 
