@@ -316,9 +316,9 @@ design aspects have been selected.
 
 .. code-block:: python
 
-    class Cert(microesb.ClassHandler):
+    import abc
 
-        __metaclass__ = abc.ABCMeta
+    class Cert(microesb.ClassHandler,  metaclass=abc.ABCMeta):
 
         def __init__(self):
             super().__init__()

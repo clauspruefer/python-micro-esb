@@ -3,9 +3,7 @@ import abc
 from microesb import microesb
 
 
-class Cert(microesb.ClassHandler):
-
-    __metaclass__ = abc.ABCMeta
+class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
 
     def __init__(self):
         super().__init__()
