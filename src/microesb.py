@@ -16,11 +16,18 @@ import importlib
 from microesb.transformer import JSONTransformer
 
 try:
+    esb_python_path = os.environ['esbpythonpath']
+    os.environ['PYTHONPATH'] = esb_python_pyth
+except KeyError as e:
+    pass
+
+try:
     esbconf_mod_name = os.environ['esbconfig']
 except KeyError as e:
     esbconf_mod_name = 'esbconfig'
 
 esbconf_mod_ref = importlib.import_module(esbconf_mod_name)
+
 
 
 class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
