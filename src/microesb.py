@@ -7,13 +7,20 @@
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 
+import os
 import abc
 import sys
 import logging
 import importlib
-import esbconfig
 
 from microesb.transformer import JSONTransformer
+
+try:
+    esbconf_mod_name = os.environ['esbconfig']
+except KeyError as e:
+    esbconf_mod_name = 'esbconfig'
+
+esbconf_mod_ref = importlib.import_module(esbconf_mod_name)
 
 
 class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
@@ -546,7 +553,7 @@ class ServiceExecuter(object):
 
 # import classes into current namespace
 current_mod = sys.modules[__name__]
-import_classes = esbconfig.import_classes
+import_classes = esbconf_mod_ref.import_classes
 
 for module_name in import_classes:
     mod_ref = importlib.import_module(module_name)
