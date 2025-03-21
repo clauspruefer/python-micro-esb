@@ -28,6 +28,14 @@ except KeyError as e:
 
 esbconf_mod_ref = importlib.import_module(esbconf_mod_name)
 
+logging_enabled = True
+try:
+    logging_enabled = esbconf_mod_ref.config['logging_enabled']
+except AttributeError as e:
+    pass
+
+if logging_enabled == False:
+    logging.getLogger(__name__).propagate = False
 
 
 class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
