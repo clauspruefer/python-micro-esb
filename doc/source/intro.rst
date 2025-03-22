@@ -48,7 +48,7 @@ Python Module.
 4. Build Dependencies
 =====================
 
-On current Debian 12 / Ubuntu 22.04.3, 24.04.1 install the following additional packages (Documentation Rendering & Testing).
+On current Debian 12 / Ubuntu 22.04.3, 24.04.1 install the following additional packages (documentation rendering & testing).
 
 .. code-block:: bash
 
