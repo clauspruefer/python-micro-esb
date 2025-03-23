@@ -34,7 +34,7 @@ try:
 except AttributeError as e:
     pass
 
-if logging_enabled == False:
+if logging_enabled is False:
     logging.getLogger(__name__).propagate = False
 
 
