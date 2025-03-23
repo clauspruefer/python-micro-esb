@@ -17,7 +17,7 @@ from microesb.transformer import JSONTransformer
 
 try:
     esb_python_path = os.environ['esbpythonpath']
-    os.environ['PYTHONPATH'] = esb_python_pyth
+    os.environ['PYTHONPATH'] = esb_python_path
 except KeyError as e:
     pass
 
