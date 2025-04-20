@@ -5,13 +5,13 @@
 
 ## 1. Abstract / Preface
 
-*Enterprise Service Bus*, still a pretty vague term. Invented by the Gartner-Report 2002.
+*Enterprise Service Bus* is still a pretty vague term, first introduced in the Gartner Report of 2002.
 
-Essential for running a large SOA-Infrastructure.
+It is essential for running a large SOA infrastructure.
 
 ## 2. Features
 
-Our interpretation of what a ESB should be made of:
+Our interpretation of what an ESB should consist of:
 
 - Service Abstraction / Metadata Definition
 - Centralized Service / API Registry containing clean XML, JSON Model
@@ -22,26 +22,25 @@ Our interpretation of what a ESB should be made of:
 
 ## 3. Platform As A Service (PaaS)
 
-Also building Web-Applications on PaaS infrastructure relies on a clean Service Abstraction Model.
+Building web applications on PaaS infrastructure also relies on a clean Service Abstraction Model.
 
->[!NOTE]
-> Python **micro-esb** module will help.
+> **Note**
+> The Python **micro-esb** module will help.
 
 ## 4. Current Implementation
 
 - Service Abstraction / Metadata Definition
 - Internal Code (Python) Class / Service Properties Mapping
-- Graph Based / Recursive JSON Result Abstraction
+- Graph-Based / Recursive JSON Result Abstraction
 
-### 4.1. Working On
+### 4.1. In Progress
 
 - OOP Relational Database Mapper
 - Service Documentation (Auto)-Generation
 
 ## 5. Documentation / Examples
 
-Documentation including detailed examples can be found at either ./doc or
-https://pythondocs.webcodex.de/micro-esb.
+Documentation, including detailed examples, can be found either in the `./doc` directory or at:
+[https://pythondocs.webcodex.de/micro-esb](https://pythondocs.webcodex.de/micro-esb)
 
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
-
