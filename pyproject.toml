@@ -5,19 +5,23 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "microesb"
 version = "1.0rc2"
+
 authors = [
   { name="Claus Prüfer", email="pruefer@webcodex.de" },
 ]
+
 description = "A Small OOP Based Enterprise Service Bus Implementation."
 readme = "README.md"
 requires-python = ">=3.8"
+
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Operating System :: OS Independent",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Operating System :: OS Independent"
 ]
 
 [project.urls]
 Homepage = "https://github.com/clauspruefer/python-micro-esb"
 Issues = "https://github.com/clauspruefer/python-micro-esb"
 Documentation = "https://pythondocs.webcodex.de/micro-esb"
+Changelog = "https://github.com/clauspruefer/python-micro-esb/CHANGELOG.md"
