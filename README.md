@@ -20,25 +20,44 @@ Our interpretation of what an ESB should consist of:
 - OOP Relational Database Mapper
 - Service Model Documentation / API (Auto)-Generation
 
-## 3. Platform As A Service (PaaS)
+## 3. Install
+
+```bash
+# setup virtual-env
+python3 -m venv .micro-esb
+
+# activate virtual-env
+source .micro-esb/bin/activate
+
+# upgrade pip
+python3 -m pip install --upgrade pip
+
+# install microesb module
+pip3 install microesb
+
+# install dependencies
+pip3 install pytest pytest-pep8
+```
+
+## 4. Platform As A Service (PaaS)
 
 Building web applications on PaaS infrastructure also relies on a clean Service Abstraction Model.
 
 > **Note**
 > The Python **micro-esb** module will help.
 
-## 4. Current Implementation
+## 5. Current Features
 
 - Service Abstraction / Metadata Definition
 - Internal Code (Python) Class / Service Properties Mapping
 - Graph-Based / Recursive JSON Result Abstraction
 
-### 4.1. In Progress
+### 5.1. In Progress
 
 - OOP Relational Database Mapper
 - Service Documentation (Auto)-Generation
 
-## 5. Documentation / Examples
+## 6. Documentation / Examples
 
 Documentation, including detailed examples, can be found either in the `./doc` directory or at:
 [https://pythondocs.webcodex.de/micro-esb](https://pythondocs.webcodex.de/micro-esb)
