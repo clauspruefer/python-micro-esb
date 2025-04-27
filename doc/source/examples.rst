@@ -191,7 +191,3 @@ After execution, the newly created domain will be in the `sys_core."domain"` tab
 .. note::
 
     There are no unique constraints preventing duplicate DNS entries. Running the script multiple times will duplicate records.
-
----
-
-This is a partial improvement and correction for the `examples.rst` file. Would you like me to continue with other sections, or focus on specific areas? Let me know!
