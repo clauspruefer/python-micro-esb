@@ -7,18 +7,20 @@ Features
 1. Clean OOP Abstraction / Models
 =================================
 
-Very clean OOP object abstraction, including database and exception handling.
+The framework features a clean Object-Oriented Programming (OOP) abstraction, including comprehensive database and exception handling support.
 
-- Clean hierarchical Implementation Code
-- Clean hierarchical Service Call Metadata
+- Clean hierarchical implementation code
+- Clean hierarchical service call metadata
 
-Example Implementation Code.
+**Example Implementation Code:**
 
 .. literalinclude:: ../../example/02-pki-management/service_implementation.py
     :linenos:
 
 2. Structured Service Call Metadata
 ===================================
+
+The service call metadata is well-structured, as demonstrated in the following example:
 
 .. code-block:: python
 
@@ -54,33 +56,39 @@ Example Implementation Code.
         ]
     }
 
-Full example see :ref:`example-number2`.
+For the full example, see :ref:`example-number2`.
 
-3. Multi Object Abstraction
+3. Multi-Object Abstraction
 ===========================
 
-Process multiple hierarchical input metadata elements at once.
+Process multiple hierarchical input metadata elements simultaneously.
+
+**Example Service Call Metadata:**
 
 .. literalinclude:: ../../example/01-hosting-use-case/service_call_metadata.py
     :linenos:
 
-Full example see :ref:`example-number1`.
+For the full example, see :ref:`example-number1`.
 
 4. Structured Service Property Definition
 =========================================
 
-Define structured service call properties.
+Define structured service call properties easily and efficiently.
+
+**Example Service Property Definition:**
 
 .. literalinclude:: ../../example/02-pki-management/service_properties.py
     :linenos:
 
-Full example see :ref:`example-number2`.
+For the full example, see :ref:`example-number2`.
 
 5. Planned Features
-===================
+====================
+
+The following features are planned for future releases:
 
 - Service Registry
 - Service Registry Management
-- Service Based AAA (HSM / Smartcard)
+- Service-Based AAA (HSM / Smartcard)
 - Automatic Service Interface Documentation Generation
-- x0 JavaScript Framework Integration
+- Integration with the x0 JavaScript Framework
