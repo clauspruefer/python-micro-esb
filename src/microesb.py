@@ -540,7 +540,6 @@ class ServiceMapper(ClassHandler):
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
         except Exception as e:
             self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
-            pass
 
 
 class ServiceExecuter(object):
