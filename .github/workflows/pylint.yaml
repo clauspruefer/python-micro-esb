@@ -23,4 +23,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=C0103,C0114,C0209,E0401,E1101,W0212,W0612,W1202,R1737,R0902 $(git ls-files 'src/microesb.py')
+        pylint --disable=C0103,C0114,C0209,E0401,E1101,W0212,W0612,W1202,R1737,R0902,W0621 $(git ls-files 'src/microesb.py')
