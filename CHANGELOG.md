@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.0
+
+- Working pylint checks
+- Adapt documentation
+
 ## Version 1.0rc2
 
 - Add CHANGELOG.md

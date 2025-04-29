@@ -11,6 +11,7 @@ Its primary feature is a clean, OOP-based **Service Model to Python Class Mappin
 
 A Docker example container can be downloaded here:
 `microesb-examples-latest.tar <https://docker.webcodex.de/microesb-examples-latest.tar>`_.
+Refer to ``/docker/README.md``.
 
 1. Basic System Installation
 ============================
@@ -70,7 +71,7 @@ To build and install the local package (also for testing), follow these steps.
     python3 setup.py sdist
 
     # install system-wide
-    pip3 install --break-system-packages ./dist/microesb-1.0rc1.tar.gz
+    pip3 install --break-system-packages ./dist/microesb-1.0.tar.gz
 
 6. Tests
 ========
