@@ -168,6 +168,7 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         return self.__class__.__name__
 
     def get_value_by_property_id(self, id):
+        """ get_value_by_property_id() method."""
         raise NotImplementedError
 
 
