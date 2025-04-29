@@ -11,7 +11,7 @@ import json
 import copy
 
 
-class JSONTransformer(object):
+class JSONTransformer():
     """ JSON transfomer class.
     """
 
