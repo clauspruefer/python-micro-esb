@@ -70,7 +70,7 @@ To build and install the local package (also for testing), follow these steps.
     python3 setup.py sdist
 
     # install system-wide
-    pip3 install --break-system-packages ./dist/microesb-1.0rc1.tar.gz
+    pip3 install --break-system-packages ./dist/microesb-1.0.tar.gz
 
 6. Tests
 ========
