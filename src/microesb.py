@@ -321,7 +321,7 @@ class MultiClassHandler(BaseHandler):
         for property_id in self._SYSProperties:
             try:
                 self.json_dict[property_id] = getattr(self, property_id)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 pass
 
 
