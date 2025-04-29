@@ -543,7 +543,7 @@ class ServiceMapper(ClassHandler):
         #    self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
 
 
-class ServiceExecuter(object):
+class ServiceExecuter():
     """ Service Executer class.
     """
 
