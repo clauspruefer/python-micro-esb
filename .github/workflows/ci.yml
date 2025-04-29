@@ -1,7 +1,7 @@
 name: Run tests and upload coverage
 
 on: 
-  pull_request
+  [push, pull_request]
 
 jobs:
   test:
