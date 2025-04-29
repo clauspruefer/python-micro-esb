@@ -11,6 +11,7 @@ Its primary feature is a clean, OOP-based **Service Model to Python Class Mappin
 
 A Docker example container can be downloaded here:
 `microesb-examples-latest.tar <https://docker.webcodex.de/microesb-examples-latest.tar>`_.
+Refer to ``/docker/README.md``.
 
 1. Basic System Installation
 ============================
