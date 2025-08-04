@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+import copy
+
 from pgdbpool import pool
 from microesb import microesb
 
@@ -42,7 +44,7 @@ except Exception as e:
 # first pool connection 1
 
 class_mapper_ref = microesb.ClassMapper(
-    class_references=class_reference,
+    class_references=copy.deepcopy(class_reference),
     class_mappings=class_mapping,
     class_properties=service_properties
 )
@@ -61,7 +63,7 @@ with pool.Handler('hosting') as dbcon:
 # use (next) pool connection 2
 
 class_mapper_ref = microesb.ClassMapper(
-    class_references=class_reference,
+    class_references=copy.deepcopy(class_reference),
     class_mappings=class_mapping,
     class_properties=service_properties
 )
@@ -80,7 +82,7 @@ with pool.Handler('hosting') as dbcon:
 # use (next) pool connection 3
 
 class_mapper_ref = microesb.ClassMapper(
-    class_references=class_reference,
+    class_references=copy.deepcopy(class_reference),
     class_mappings=class_mapping,
     class_properties=service_properties
 )
