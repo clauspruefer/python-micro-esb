@@ -11,25 +11,6 @@ from service_call_metadata import service_metadata2
 from service_call_metadata import service_metadata3
 
 
-class_mapper1 = microesb.ClassMapper(
-    class_references=class_reference,
-    class_mappings=class_mapping,
-    class_properties=service_properties
-)
-
-class_mapper2 = microesb.ClassMapper(
-    class_references=class_reference,
-    class_mappings=class_mapping,
-    class_properties=service_properties
-)
-
-class_mapper3 = microesb.ClassMapper(
-    class_references=class_reference,
-    class_mappings=class_mapping,
-    class_properties=service_properties
-)
-
-
 try:
     dbconfig = {
         'db': {
@@ -58,37 +39,58 @@ except Exception as e:
     exit(0)
 
 
-# use pool connection 1
+# first pool connection 1
+
+class_mapper_ref = microesb.ClassMapper(
+    class_references=class_reference,
+    class_mappings=class_mapping,
+    class_properties=service_properties
+)
+
 with pool.Handler('hosting') as dbcon:
 
     service_metadata1['data'][0]['User']['dbcon'] = dbcon
 
     microesb.ServiceExecuter().execute(
-        class_mapper=class_mapper1,
+        class_mapper=class_mapper_ref,
         service_data=service_metadata1
     )
 
     dbcon.commit()
 
 # use (next) pool connection 2
+
+class_mapper_ref = microesb.ClassMapper(
+    class_references=class_reference,
+    class_mappings=class_mapping,
+    class_properties=service_properties
+)
+
 with pool.Handler('hosting') as dbcon:
 
     service_metadata2['data'][0]['User']['dbcon'] = dbcon
 
     microesb.ServiceExecuter().execute(
-        class_mapper=class_mapper2,
+        class_mapper=class_mapper_ref,
         service_data=service_metadata2
     )
 
     dbcon.commit()
 
 # use (next) pool connection 3
+
+class_mapper_ref = microesb.ClassMapper(
+    class_references=class_reference,
+    class_mappings=class_mapping,
+    class_properties=service_properties
+)
+
 with pool.Handler('hosting') as dbcon:
 
     service_metadata2['data'][0]['User']['dbcon'] = dbcon
 
     microesb.ServiceExecuter().execute(
-        class_mapper=class_mapper3,
+        class_mapper=class_mapper_ref,
         service_data=service_metadata2
     )
 
