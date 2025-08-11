@@ -2,7 +2,7 @@
 
 ![push main](https://github.com/clauspruefer/python-micro-esb/actions/workflows/pylint.yaml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/microesb.svg)](https://badge.fury.io/py/microesb)
-[![codecov](https://codecov.io/gh/clauspruefer/python-xml-microparser/graph/badge.svg?token=KZBQACTCOO)](https://codecov.io/gh/clauspruefer/python-xml-microparser)
+[![codecov](https://codecov.io/gh/clauspruefer/python-micro-esb/graph/badge.svg?token=03VPTCG8YI)](https://codecov.io/gh/clauspruefer/python-micro-esb)
 
 ## 1. Abstract / Preface
 
