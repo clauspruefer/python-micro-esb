@@ -14,12 +14,12 @@ It is essential for running a large SOA infrastructure.
 
 Our interpretation of what an ESB should consist of:
 
-- Service Abstraction / Metadata Definition
-- Centralized Service / API Registry containing clean XML, JSON Model
-- Centralized Service AAA (Authentication / Authorization / Accounting)
-- Internal Service XML / (Python) Class Mapping
-- OOP Relational Database Mapper
-- Service Model Documentation / API (Auto)-Generation
+- ✅ Service Abstraction / Metadata Definition
+- ✅ Centralized Service / API Registry containing clean XML, JSON Model
+- ✅ Centralized Service AAA (Authentication / Authorization / Accounting)
+- ✅ Internal Service XML / (Python) Class Mapping
+- ✅ OOP Relational Database Mapper
+- ✅ Service Model Documentation / API (Auto)-Generation
 
 ## 3. Install
 
@@ -49,14 +49,14 @@ Building web applications on PaaS infrastructure also relies on a clean Service 
 
 ## 5. Current Features
 
-- Service Abstraction / Metadata Definition
-- Internal Code (Python) Class / Service Properties Mapping
-- Graph-Based / Recursive JSON Result Abstraction
+- ✅ Service Abstraction / Metadata Definition
+- ✅ Internal Code (Python) Class / Service Properties Mapping
+- ✅ Graph-Based / Recursive JSON Result Abstraction
 
 ### 5.1. In Progress
 
-- OOP Relational Database Mapper
-- Service Documentation (Auto)-Generation
+- :hourglass: OOP Relational Database Mapper
+- :hourglass: Service Documentation (Auto)-Generation
 
 ## 6. Documentation / Examples
 
