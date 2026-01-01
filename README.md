@@ -55,7 +55,7 @@ Building web applications on PaaS infrastructure also relies on a clean Service 
 
 ### 5.1. In Progress
 
-- :hourglass: OOP Relational ODM Mapper (MongoDB)
+- :hourglass: OOP Relational ODM Mapper
 - :hourglass: Service Documentation (Auto)-Generation
 
 ## 6. Documentation / Examples
