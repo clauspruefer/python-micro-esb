@@ -18,7 +18,7 @@ Our interpretation of what an ESB should consist of:
 - ✅ Centralized Service / API Registry containing clean XML, JSON Model
 - ✅ Centralized Service AAA (Authentication / Authorization / Accounting)
 - ✅ Internal Service XML / (Python) Class Mapping
-- ✅ OOP Relational Database Mapper
+- ✅ Relational Backend OOP / ORM / ODM Mapper
 - ✅ Service Model Documentation / API (Auto)-Generation
 
 ## 3. Install
@@ -55,7 +55,7 @@ Building web applications on PaaS infrastructure also relies on a clean Service 
 
 ### 5.1. In Progress
 
-- :hourglass: OOP Relational Database Mapper
+- :hourglass: OOP Relational ODM Mapper (MongoDB)
 - :hourglass: Service Documentation (Auto)-Generation
 
 ## 6. Documentation / Examples
