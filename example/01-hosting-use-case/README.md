@@ -59,7 +59,7 @@ The following example service call metadata instructs the backend to perform the
 3. Get the user ID by username.
 4. Insert the domain "testdomain1.com" if it does not exist.
 5. Insert a Hostname (MX type) with value "mx01.mailserver.com" and priority 1.
-6. Insert a Hostname (A type) with value "mx01.mailserver.com" and TTL of 36,000 seconds.
+6. Insert a Hostname (A type) with value "5.44.111.165" and TTL of 36,000 seconds.
 7. Commit on success or roll back the database transaction on failure.
 
 See: [service_call_metadata.py](service_call_metadata.py)
