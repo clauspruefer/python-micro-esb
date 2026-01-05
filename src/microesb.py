@@ -580,7 +580,7 @@ class ServiceExecuter():
     """
 
     def __init__(self):
-        pass
+        self._con_ref_dict = None
 
     def execute_result(self, class_mapper, service_data):
         """
