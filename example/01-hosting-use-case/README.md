@@ -6,7 +6,7 @@ The company's customer data, including a) Internet Domains and b) DNS Hostnames,
 
 > **Note:** Example number 1 will only cover Local Service Mapping **without** *Python Application Server* / *Multi-Tier* abstraction.
 
-> **Note:** In example number 4, we will explore these aspects further, including *Service Scaling* and *Load Balancing*.
+> **Note:** In example number 4, we will explore these aspects further, including *Service Scaling*, *Load Balancing* and *Service Authentication*.
 
 ## 1.1. Basic OOP Relations
 
