@@ -127,8 +127,9 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         :param str property_id: property id (internal class attribute name)
         :param dict property_item: property item to be registered for internal processing only
 
-        Modifying data internally (inside a Service-Implementation) requires setting additional properties
-        not defined in Service-Properties, e.g. generated data,  time-stamps or similar.
+        Modifying data internally (inside a Service-Implementation) requires setting
+        additional properties not defined in Service-Properties, e.g. generated data,
+        time-stamps or similar.
 
         Use this private method for this purpose.
         """
