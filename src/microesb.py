@@ -639,7 +639,7 @@ class ServiceExecuter():
 
         Count children nodes recursive and return sum.
         """
-        self.child_count = 0
+        self._child_count = 0
         for key, value in reference_dict.items():
             if key == 'children':
                 self.child_count += 1
