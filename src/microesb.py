@@ -582,6 +582,7 @@ class ServiceExecuter():
 
     def __init__(self):
         self._con_ref_dict = None
+        self._child_count = 0
 
     def execute_result(self, class_mapper, service_data):
         """
