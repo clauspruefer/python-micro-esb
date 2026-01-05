@@ -610,12 +610,14 @@ class ServiceExecuter():
         :param list service_data: list of service call metadata dictionary items
         """
 
+        rlist = []
         for item in service_data['data']:
             class_mapper_copy = copy.deepcopy(class_mapper)
-            ServiceMapper(
+            sm_ref = ServiceMapper(
                 class_mapper=class_mapper_copy,
                 service_call_data=item
             )
+            rlist.append(sm_ref)
 
     def _connect_hierarchy(self, reference_dict):
         """ _connect_hierarchy() method.
