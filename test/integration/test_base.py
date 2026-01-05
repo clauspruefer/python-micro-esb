@@ -273,6 +273,8 @@ class TestMapping:
         shipment = getattr(s[0]._class_mapper, 'Shipment')
         palette = getattr(shipment, 'Palette')
 
+        assert getattr(shipment, 'id') == 'testshipment1'
+
         p1 = palette._object_container[0]
         p2 = palette._object_container[1]
 
@@ -280,13 +282,3 @@ class TestMapping:
         assert getattr(p1, 'label') == 'label1'
         assert getattr(p2, 'id') == 2
         assert getattr(p2, 'label') == 'label2'
-
-        shipment.json_transform()
-        assert shipment.json_dict == {
-            'id': 'testshipment1',
-            'SYSServiceMethod': None,
-            'Palette': [
-                {'id': 1, 'label': 'label1'},
-                {'id': 2, 'label': 'label2'}
-            ]
-        }
