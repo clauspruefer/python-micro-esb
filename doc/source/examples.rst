@@ -17,8 +17,7 @@ The company's customer data, including a) Internet Domains and b) DNS Hostnames,
 
 .. note::
 
-    Example number 1 will only cover Local Service Mapping **without**
-    *Python Application Server* / *Multi-Tier* abstraction.
+    Example number 1 will only cover Local Service Mapping **without** *Python Application Server* encapsulation.
 
 .. note::
 
