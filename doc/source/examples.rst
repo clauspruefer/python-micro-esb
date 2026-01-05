@@ -21,7 +21,7 @@ The company's customer data, including a) Internet Domains and b) DNS Hostnames,
 
 .. note::
 
-    In example number 4, we will explore these aspects further, including *Service Scaling* and *Load Balancing*.
+    In example number 4, we will explore these aspects further, including *Service Scaling*, *Load Balancing* and *Service Authentication*.
 
 1.1. Basic OOP Relations
 *************************
