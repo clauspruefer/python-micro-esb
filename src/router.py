@@ -12,7 +12,10 @@ import importlib
 
 logger = logging.getLogger(__name__)
 
-mod_ref = importlib.import_module('user_routing')
+try:
+    mod_ref = importlib.import_module('user_routing')
+except ImportError as e:
+    pass
 
 
 class ServiceRouter():
