@@ -618,6 +618,7 @@ class ServiceExecuter():
                 service_call_data=item
             )
             rlist.append(sm_ref)
+        return rlist
 
     def _connect_hierarchy(self, reference_dict):
         """ _connect_hierarchy() method.
