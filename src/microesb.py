@@ -572,7 +572,7 @@ class ServiceMapper(ClassHandler):
                     getattr(ci, ci.SYSServiceMethod)()
             except (TypeError, AttributeError) as e:
                 self.logger.debug('SYSServiceMethod call exception:{}'.format(e))
-        except KeyError as e:
+        except (KeyError, TypeError, AttributeError) as e:
             self.logger.debug('Class reference in service call metadata not set:{}'.format(e))
 
 
