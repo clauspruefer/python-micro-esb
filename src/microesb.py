@@ -609,7 +609,6 @@ class ServiceExecuter():
         :param list service_data: list of service call metadata dictionary items
         """
 
-        rlist = []
         for item in service_data['data']:
             class_mapper_copy = copy.deepcopy(class_mapper)
             ServiceMapper(
