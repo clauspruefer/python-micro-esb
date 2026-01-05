@@ -631,7 +631,7 @@ class ServiceExecuter():
 
         Recursive connect all generated json_dicts.
         """
-        for key, value in reference_dict:
+        for key, value in reference_dict.items():
             pass
 
     def _get_sum_child_count(self, reference_dict):
@@ -640,7 +640,7 @@ class ServiceExecuter():
         Count children nodes recursive and return sum.
         """
         self.child_count = 0
-        for key, value in reference_dict:
+        for key, value in reference_dict.items():
             if key == 'children':
                 self.child_count += 1
         return self.child_count
