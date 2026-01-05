@@ -145,9 +145,9 @@ class CertClient(Cert):
         self.json_transform()
 
         srv_metadata = {
-            "CertClient": self.json,
-            "CertServer": self.CertServer.json,
-            "CertCA": self.CertCA.json
+            "CertClient": self.json_dict,
+            "CertServer": self.CertServer.json_dict,
+            "CertCA": self.CertCA.json_dict
         }
 
         logger.info('Generating cert with metadata:{}'.format(srv_metadata))
