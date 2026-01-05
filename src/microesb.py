@@ -625,7 +625,7 @@ class ServiceExecuter():
         while self._get_sum_child_count(self._con_ref_dict) > 0:
             self._connect_hierarchy_recursive(self._con_ref_dict)
 
-    def _connect_hierarchy_rescursive(self, reference_dict):
+    def _connect_hierarchy_recursive(self, reference_dict):
         """ _connect_hierarchy_recursive() method.
 
         Recursive connect all generated json_dicts.
