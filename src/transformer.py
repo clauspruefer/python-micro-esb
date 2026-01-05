@@ -2,13 +2,12 @@
 #  .                  Micro ESB transformer Python Module                    .
 # ]*[ --------------------------------------------------------------------- ]*[
 #  .                                                                         .
-#  .  Copyright Claus Prüfer 2016-2025                                       .
+#  .  Copyright Claus Prüfer 2016-2026                                       .
 #  .                                                                         .
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 
 import json
-import copy
 
 
 class JSONTransformer():
@@ -27,27 +26,14 @@ class JSONTransformer():
         Recursive generate _json_dict for complete object hierarchy.
         """
 
-        root_instance = copy.copy(self)
-
-        for element in root_instance.iterate():
+        for element in self.iterate():
             element.set_json_dict()
-            self.logger.debug('JSON:{} properties:{}'.format(
+            self.logger.debug(
+                'JSON:{} properties:{}'.format(
                     element.json_dict,
                     element._SYSProperties
                 )
             )
-
-        while root_instance.class_count > 0:
-            for element in root_instance.iterate():
-                if element.class_count == 0 and element._SYSType != 'multiclass_instance':
-                    cname = element.class_name
-                    parent_element = element.parent_object
-                    parent_element._json_dict[cname] = element.json_dict[cname]
-                    class_names_list = parent_element._SYSClassNames
-                    del class_names_list[class_names_list.index(cname)]
-
-        self._json_dict = root_instance.json_dict
-        del root_instance
 
     @property
     def json(self):

@@ -2,7 +2,7 @@
 #  .                         Micro ESB Python Module                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 #  .                                                                         .
-#  .  Copyright Claus Prüfer (2016 - 2025)                                   .
+#  .  Copyright Claus Prüfer (2016 - 2026)                                   .
 #  .                                                                         .
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
@@ -10,10 +10,13 @@
 import os
 import abc
 import sys
+import copy
 import logging
 import importlib
 
+from microesb.router import ServiceRouter
 from microesb.transformer import JSONTransformer
+
 
 try:
     esb_python_path = os.environ['esbpythonpath']
@@ -53,6 +56,7 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         self.logger = logging.getLogger(__name__)
 
         self._SYSProperties = None
+        self._SYSPropertiesRegister = {}
         self._SYSParentObject = None
         self._SYSClassNames = []
 
@@ -86,9 +90,13 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         add_properties() method on initialization for each existing class instance.
         """
         properties = self._add_sys_default_properties(properties)
+        properties.update(self._SYSPropertiesRegister)
+
         self.logger.debug('add properties:{}'.format(properties))
+
         self._SYSParentObject = parent_instance
         setattr(self, '_SYSProperties', properties)
+
         for p_key, p_value in properties.items():
             setattr(self, p_key, p_value['default'])
 
@@ -112,6 +120,19 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
             'description': 'System Service Method'
         }
         return properties
+
+    def _register_property(self, property_id, property_item):
+        """ _register_property() method.
+
+        :param str property_id: property id (internal class attribute name)
+        :param dict property_item: property item to be registered for internal processing only
+
+        Modifying data internally (inside a Service-Implementation) requires setting additional properties
+        not defined in Service-Properties, e.g. generated data,  time-stamps or similar.
+
+        Use this private method for this purpose.
+        """
+        self._SYSPropertiesRegister[property_id] = property_item
 
     def _set_property(self, key, value):
         """ _set_property() method.
@@ -169,7 +190,7 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
 
     def get_value_by_property_id(self, property_id):
         """ get_value_by_property_id() method."""
-        raise NotImplementedError
+        return getattr(self, property_id)
 
 
 class ClassHandler(BaseHandler):
@@ -182,6 +203,7 @@ class ClassHandler(BaseHandler):
         """
         super().__init__()
         self._SYSType = 'class_instance'
+        self._ServiceRouter = ServiceRouter()
 
     def __add__(self, args):
         """ overloaded internal __add__() method (+ operator).
@@ -194,7 +216,7 @@ class ClassHandler(BaseHandler):
         >>>     'class_name': class_name,
         >>>     'class_ref': class_ref
         >>> }
-        >>> parent_instance + args
+        >>> class_instance + args
         """
         self._add_class(**args)
 
@@ -393,6 +415,16 @@ class ClassMapper(ClassHandler):
         """
         return self._class_references
 
+    def get_class_hierarchy(self):
+        """ get_class_hierarchy() method.
+
+        :return: self._class_hierarchy
+        :rtype: dict
+
+        Get class hierarchy dictionary.
+        """
+        return self._class_hierarchy
+
     def _map(
         self,
         *,
@@ -406,7 +438,7 @@ class ClassMapper(ClassHandler):
         :param dict *: used for passing params as **args dictionary
         :param str class_name: (root) class name
         :param dict property_ref: property reference dictionary
-        :param classref parent_instance: property reference dictionary
+        :param classref parent_instance: object reference
         :param dict children: children definition dictionary
 
         Recursive map class hierarchy / class instances.
@@ -550,6 +582,26 @@ class ServiceExecuter():
     def __init__(self):
         pass
 
+    def execute_result(self, class_mapper, service_data):
+        """
+        :param classref class_mapper: class mapper instance reference
+        :param list service_data: list of service call metadata dictionary items
+        """
+
+        rlist = []
+        for item in service_data['data']:
+            class_mapper_copy = copy.deepcopy(class_mapper)
+            sm_ref = ServiceMapper(
+                class_mapper=class_mapper_copy,
+                service_call_data=item
+            )
+            rlist.append(
+                self._connect_hierarchy(
+                    class_mapper_copy.get_references()
+                )
+            )
+        return rlist
+
     def execute(self, class_mapper, service_data):
         """
         :param classref class_mapper: class mapper instance reference
@@ -558,13 +610,39 @@ class ServiceExecuter():
 
         rlist = []
         for item in service_data['data']:
-            res = ServiceMapper(
-                class_mapper=class_mapper,
+            class_mapper_copy = copy.deepcopy(class_mapper)
+            ServiceMapper(
+                class_mapper=class_mapper_copy,
                 service_call_data=item
             )
-            rlist.append(res)
-        return rlist
 
+    def _connect_hierarchy(self, reference_dict):
+        """ _connect_hierarchy() method.
+
+        Init method for connecting all generated json_dicts.
+        """
+        self._con_ref_dict = reference_dict
+        while self._get_sum_child_count(self._con_ref_dict) > 0:
+            self._connect_hierarchy_recursive(self._con_ref_dict)
+
+    def _connect_hierarchy_rescursive(self, reference_dict):
+        """ _connect_hierarchy_recursive() method.
+
+        Recursive connect all generated json_dicts.
+        """
+        for key, value in reference_dict:
+            pass
+
+    def _get_sum_child_count(self, reference_dict):
+        """ _get_sum_child_count() method.
+
+        Count children nodes recursive and return sum.
+        """
+        self.child_count = 0
+        for key, value in reference_dict:
+            if key == 'children':
+                self.child_count += 1
+        return self.child_count
 
 # import classes into current namespace
 current_mod = sys.modules[__name__]
