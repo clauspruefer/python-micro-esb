@@ -8,7 +8,7 @@ This example will demonstrate how to integrate Python MicroESB with the **NLAP (
 
 ## NLAP Proxy
 
-The NLAP Proxy is an advanced authentication and security layer for HTTP communication. For more information, see the NLAP Proxy project:
+The NLAP Proxy is an advanced authentication and security layer for NLAP protocol communication. For more information, see the NLAP (Next Level Application Protocol) project:
 
 **External Link:** [https://github.com/WEBcodeX1/http-1.2](https://github.com/WEBcodeX1/http-1.2)
 
