@@ -10,7 +10,7 @@ from service_call_metadata import service_metadata_server as service_metadata
 
 from pymongo import MongoClient
 
-client = MongoClient('mongodb://192.168.61.248/')
+client = MongoClient('mongodb://127.0.0.1/')
 mongodb = client.get_database('microesb')
 
 
