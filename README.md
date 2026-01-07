@@ -8,16 +8,16 @@
 
 *Enterprise Service Bus* is still a pretty vague term, first introduced in the Gartner Report of 2002.
 
-It is essential for running a large SOA infrastructure.
+It is essential for maintaining large SOA infrastructures.
 
 ## 2. Features
 
 Our interpretation of what an ESB should consist of:
 
-- ✅ Service Abstraction / Metadata Definition
-- ✅ Centralized Service / API Registry containing clean XML, JSON Model
+- ✅ Service Abstraction / Declarative Metadata Modeling
+- ✅ Centralized Service / API Registry providing clean XML, JSON Models
 - ✅ Centralized Service AAA (Authentication / Authorization / Accounting)
-- ✅ Internal Service XML / (Python) Class Mapping
+- ✅ Service Metadata XML, JSON / Internal (Python) Class Abstraction
 - ✅ Relational Backend OOP / ORM / ODM Mapper
 - ✅ Service Model Documentation / API (Auto)-Generation
 
@@ -40,23 +40,24 @@ pip3 install microesb
 pip3 install pytest pytest-pep8
 ```
 
-## 4. Platform As A Service (PaaS)
+## 4. Platform As A Service (PaaS) / Microservices
 
-Building web applications on PaaS infrastructure also relies on a clean Service Abstraction Model.
-
-> **Note**
-> The Python **micro-esb** module will help.
+The NoSQL conform JSON abstraction / data transformation capabilities make the micro-esb
+suitable for modern, scalable Next-Level applications.
 
 ## 5. Current Features
 
 - ✅ Service Abstraction / Metadata Definition
 - ✅ Internal Code (Python) Class / Service Properties Mapping
 - ✅ Graph-Based / Recursive JSON Result Abstraction
+- ✅ OOP Relational ODM Mapper / MongoDB Integration
 
 ### 5.1. In Progress
 
-- :hourglass: OOP Relational ODM Mapper
 - :hourglass: Service Documentation (Auto)-Generation
+- :hourglass: Service Registry / Encapsulated Service Routing
+- :hourglass: YANG Model Export / Transformation
+- :hourglass: Web-Interface / Dashboard
 
 ## 6. Documentation / Examples
 
