@@ -79,8 +79,7 @@ class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
 
     def _store_cert_data(self):
         logger.info('Store {} cert metadata.'.format(self.type))
-        self.json_transform()
-        self._ServiceRouter.send('CertStore', metadata=self.json_dict)
+        self._ServiceRouter.send('CertStore', metadata=self.property_dict)
 
 
 class CertCA(Cert):
@@ -95,14 +94,12 @@ class CertCA(Cert):
     def _gen_openssl_cert(self):
         logger.info('Generating {} cert.'.format(self.type))
 
-        self.json_transform()
-
         srv_metadata = {
-            "CertCA": self.json_dict
+            "CertCA": self.property_dict
         }
 
         self.cert_data = 'dummy_cacert_data'
-        logger.info('Generating cert with metadata:{}'.format(self.json))
+        logger.info('Generating cert with metadata:{}'.format(srv_metadata))
 
 
 class CertServer(Cert):
@@ -117,11 +114,9 @@ class CertServer(Cert):
     def _gen_openssl_cert(self):
         logger.info('Generating {} cert.'.format(self.type))
 
-        self.json_transform()
-
         srv_metadata = {
-            "CertServer": self.json_dict,
-            "CertCA": self.CertCA.json_dict
+            "CertServer": self.property_dict,
+            "CertCA": self.CertCA.property_dict
         }
 
         logger.info('Generating cert with metadata:{}'.format(srv_metadata))
@@ -140,14 +135,12 @@ class CertClient(Cert):
         self.CertServer._get_cert_data_by_id()
 
     def _gen_openssl_cert(self):
-        logger.info('Route {} cert gen request (rel to CA and Server) to ESB external service.'.format(self.type))
-
-        self.json_transform()
+        logger.info('Generating {} cert.'.format(self.type))
 
         srv_metadata = {
-            "CertClient": self.json_dict,
-            "CertServer": self.CertServer.json_dict,
-            "CertCA": self.CertCA.json_dict
+            "CertClient": self.property_dict,
+            "CertServer": self.CertServer.property_dict,
+            "CertCA": self.CertCA.property_dict
         }
 
         logger.info('Generating cert with metadata:{}'.format(srv_metadata))

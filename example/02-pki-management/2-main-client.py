@@ -3,10 +3,15 @@ import logging
 
 from microesb import microesb
 
-from class_reference import class_reference_server as class_reference
+from class_reference import class_reference_client as class_reference
 from service_properties import service_properties
 from class_mapping import class_mapping
-from service_call_metadata import service_metadata_server as service_metadata
+from service_call_metadata import service_metadata_client as service_metadata
+
+from pymongo import MongoClient
+
+client = MongoClient('mongodb://192.168.61.248/')
+mongodb = client.get_database('microesb')
 
 
 logging.getLogger().addHandler(
@@ -24,9 +29,13 @@ class_mapper = microesb.ClassMapper(
 )
 
 try:
-    microesb.ServiceExecuter().execute(
+    res = microesb.ServiceExecuter().execute_get_hierarchy(
         class_mapper=class_mapper,
         service_data=service_metadata
     )
 except Exception as e:
     print('Service execution error: {}'.format(e))
+
+root_object = res[0]['CertClient']['object_instance']
+
+mongodb.cert_hierarchy.insert_one(root_object.json_dict)
