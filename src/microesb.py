@@ -708,7 +708,7 @@ class ServiceExecuter():
             if 'children' in class_properties:
 
                 child_dict = class_properties['children']
-                first_child_key = next(iter(children_dict))
+                first_child_key = next(iter(child_dict))
                 first_child_elm = child_dict[first_child_key]
                 reference_dict[class_name]['object_instance'] = first_child_elm['parent_instance']
 
