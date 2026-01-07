@@ -56,7 +56,7 @@ suitable for modern, scalable Next-Level applications.
 
 - :hourglass: Service Documentation (Auto)-Generation
 - :hourglass: Service Registry / Encapsulated Service Routing
-- :hourglass: YANG Model Export / Transformation
+- :hourglass: YANG Model Import / Export / Transformation
 - :hourglass: Web-Interface / Dashboard
 
 ## 6. Documentation / Examples
