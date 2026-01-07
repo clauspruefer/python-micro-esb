@@ -663,8 +663,7 @@ class ServiceExecuter():
         Init method for connecting all generated json_dicts.
         """
 
-        self.logger.debug('Processed class_mapper references dict (containing service hierarchy data):{}'.format(cm_ref_dict))
-
+        self.logger.debug('Processing class_mapper references dict:{}'.format(cm_ref_dict))
         self.logger.debug('Mapping parent_object instances to child instances')
 
         self._map_hierarchy_level = -1
@@ -682,7 +681,10 @@ class ServiceExecuter():
 
             self._connect_hierarchy_recursive(cm_ref_dict)
 
-            self.logger.debug('Class hierarchy list:{} plain:{}'.format(self._class_hierarchy_list, self._class_hierarchy_list_plain))
+            self.logger.debug('Class hierarchy list:{} plain:{}'.format(
+                self._class_hierarchy_list,
+                self._class_hierarchy_list_plain)
+            )
 
             for class_hierarchy_item in self._class_hierarchy_list:
 
@@ -705,9 +707,10 @@ class ServiceExecuter():
 
             if 'children' in class_properties:
 
-                children_dict = class_properties['children']
+                child_dict = class_properties['children']
                 first_child_key = next(iter(children_dict))
-                reference_dict[class_name]['object_instance'] = children_dict[first_child_key]['parent_instance']
+                first_child_elm = child_dict[first_child_key]
+                reference_dict[class_name]['object_instance'] = first_child_elm['parent_instance']
 
                 self._map_hierarchy_level += 1
                 self._map_object_instances(class_properties['children'])
@@ -732,7 +735,11 @@ class ServiceExecuter():
 
             if 'children' in class_properties:
                 self._hierarchy_level += 1
-                self._connect_hierarchy_recursive(class_properties['children'], class_name, reference_dict)
+                self._connect_hierarchy_recursive(
+                    class_properties['children'],
+                    class_name,
+                    reference_dict
+                )
                 del self._class_hierarchy[self._hierarchy_level]
                 self._hierarchy_level -= 1
             else:
@@ -741,7 +748,9 @@ class ServiceExecuter():
                 src_instance = getattr(parent_instance, class_name)
                 parent_instance.json_dict[class_name] = src_instance.json_dict
 
-                self.logger.debug('Mapping class_name:{} parent_class_name:{}'.format(class_name, parent_class_name))
+                self.logger.debug('Mapping class_name:{} parent_class_name:{}'.format(
+                    class_name,
+                    parent_class_name))
 
                 tmp_class_hierarchy = copy.deepcopy(self._class_hierarchy)
                 new_class_hierarchy = {}
@@ -749,7 +758,9 @@ class ServiceExecuter():
 
                 insert_index = 1
                 for i in range(1, len(tmp_class_hierarchy)+1):
-                    self.logger.debug('Reorder hierarchy tmp:{} new:{}'.format(tmp_class_hierarchy, new_class_hierarchy))
+                    self.logger.debug('Reorder hierarchy tmp:{} new:{}'.format(
+                        tmp_class_hierarchy,
+                        new_class_hierarchy))
                     reorder_index = insert_index+1
                     try:
                         new_class_hierarchy[reorder_index] = tmp_class_hierarchy[i]
@@ -777,7 +788,9 @@ class ServiceExecuter():
             if ChildCounter().get_sum_child_count(dict(rename_dict)) == 0:
                 parent_dict['children_processed'] = parent_dict.pop('children')
 
-        self.logger.info('Hierarchy comp:{} orig:{}'.format(self._class_hierarchy, self._class_hierarchy_comp))
+        self.logger.info('Hierarchy comp:{} orig:{}'.format(
+            self._class_hierarchy,
+            self._class_hierarchy_comp))
 
         for key in list(rename_dict.keys()):
             self.logger.info('Processing dict key:{} value:{}'.format(key, rename_dict[key]))
