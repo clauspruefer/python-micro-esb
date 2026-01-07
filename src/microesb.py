@@ -135,15 +135,15 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         """
         self._SYSPropertiesRegister[property_id] = property_item
 
-    def _set_property(self, key, value):
+    def _set_property(self, property_id, value):
         """ _set_property() method.
 
-        :param str key: property key name
+        :param str property_id: property dict key
         :param str value: property value
 
         """
-        if key in self._SYSProperties:
-            setattr(self, key, value)
+        if property_id in self._SYSProperties:
+            setattr(self, property_id, value)
 
     @property
     def parent_object(self):
@@ -166,6 +166,19 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         Decorated with @property so direct property access possible
         """
         return self._SYSProperties
+
+    @property
+    def property_dict(self):
+        """ property_dict() method.
+
+        Return all classes self._SYSProperties property_id, value dictionary.
+        """
+
+        return_dict = {}
+        for property_id in self._SYSProperties:
+            if property_id != 'SYSServiceMethod':
+                return_dict[property_id] = self.get_value_by_property_id(property_id)
+        return return_dict
 
     @property
     def class_count(self):
@@ -256,18 +269,32 @@ class ClassHandler(BaseHandler):
         Iterates over item_dict and calls self._set_property(property_id, value)
         foreach item.
         """
+
         for property_id, value in item_dict.items():
             self._set_property(property_id, value)
 
     def set_json_dict(self):
         """ set_json_dict() method.
 
-        Preprare self.json_dict from self._SYSProperties (used by JSONTransformer).
+        Propagate self.json_dict with current class instance attribute values (self._SYSProperties)
+        and with empty (None) class instance references (processed from JSONTransformer).
         """
-        self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
+
         for property_id in self._SYSProperties:
             self.logger.debug('processing property:{}'.format(property_id))
             self.json_dict[property_id] = getattr(self, property_id)
+
+        try:
+            del self.json_dict['SYSServiceMethod']
+        except KeyError as e:
+            pass
+
+        self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
+
+        for class_ref in self._SYSClassNames:
+            self.json_dict[class_name] = None
+
+        self.logger.debug('JSONDict:{}'.format(self.json_dict))
 
 
 class MultiClassHandler(BaseHandler):
@@ -581,28 +608,17 @@ class ServiceExecuter():
     """
 
     def __init__(self):
+
+        self.logger = logging.getLogger(__name__)
+
         self._con_ref_dict = None
-        self._child_count = 0
-
-    def execute_result(self, class_mapper, service_data):
-        """
-        :param classref class_mapper: class mapper instance reference
-        :param list service_data: list of service call metadata dictionary items
-        """
-
-        rlist = []
-        for item in service_data['data']:
-            class_mapper_copy = copy.deepcopy(class_mapper)
-            sm_ref = ServiceMapper(
-                class_mapper=class_mapper_copy,
-                service_call_data=item
-            )
-            rlist.append(
-                self._connect_hierarchy(
-                    class_mapper_copy.get_references()
-                )
-            )
-        return rlist
+        self._class_hierarchy = None
+        self._class_hierarchy_list = None
+        self._class_hierarchy_list_plain = None
+        self._hierarchy_level = None
+        self._map_hierarchy_level = None
+        self._class_hierarchy_comp = None
+        self._hierarchy_level_comp = None
 
     def execute(self, class_mapper, service_data):
         """
@@ -620,33 +636,181 @@ class ServiceExecuter():
             rlist.append(sm_ref)
         return rlist
 
-    def _connect_hierarchy(self, reference_dict):
+    def execute_get_hierarchy(self, class_mapper, service_data):
+        """
+        :param classref class_mapper: class mapper instance reference
+        :param list service_data: list of service call metadata dictionary items
+        """
+
+        rlist = []
+        for item in service_data['data']:
+            class_mapper_copy = copy.deepcopy(class_mapper)
+            sm_ref = ServiceMapper(
+                class_mapper=class_mapper_copy,
+                service_call_data=item
+            )
+
+            rlist.append(
+                self._connect_hierarchy(
+                    class_mapper_copy.get_references()
+                )
+            )
+        return rlist
+
+    def _connect_hierarchy(self, cm_ref_dict):
         """ _connect_hierarchy() method.
 
         Init method for connecting all generated json_dicts.
         """
-        self._con_ref_dict = reference_dict
-        while self._get_sum_child_count(self._con_ref_dict) > 0:
-            self._connect_hierarchy_recursive(self._con_ref_dict)
 
-    def _connect_hierarchy_recursive(self, reference_dict):
+        self.logger.debug('Processed class_mapper references dict (containing service hierarchy data):{}'.format(cm_ref_dict))
+
+        self.logger.debug('Mapping parent_object instances to child instances')
+
+        self._map_hierarchy_level = -1
+        self._map_object_instances(cm_ref_dict)
+
+        sum_children = ChildCounter().get_sum_child_count(cm_ref_dict)
+        self.logger.debug('Sum children:{}'.format(sum_children))
+
+        while sum_children > 0:
+
+            self._hierarchy_level = -1
+            self._class_hierarchy = {}
+            self._class_hierarchy_list = []
+            self._class_hierarchy_list_plain = []
+
+            self._connect_hierarchy_recursive(cm_ref_dict)
+
+            self.logger.debug('Class hierarchy list:{} plain:{}'.format(self._class_hierarchy_list, self._class_hierarchy_list_plain))
+
+            for class_hierarchy_item in self._class_hierarchy_list:
+
+                self._class_hierarchy_comp = {}
+                self._hierarchy_level_comp = -1
+
+                self._class_hierarchy = class_hierarchy_item
+
+                self._rename_dict_key(cm_ref_dict)
+                self.logger.debug('Renamed children dict:{}'.format(cm_ref_dict))
+
+            sum_children = ChildCounter().get_sum_child_count(cm_ref_dict)
+            self.logger.debug('Sum children:{}'.format(sum_children))
+
+        return cm_ref_dict
+
+    def _map_object_instances(self, reference_dict):
+
+        for class_name, class_properties in reference_dict.items():
+
+            if 'children' in class_properties:
+
+                children_dict = class_properties['children']
+                first_child_key = next(iter(children_dict))
+                reference_dict[class_name]['object_instance'] = children_dict[first_child_key]['parent_instance']
+
+                self._map_hierarchy_level += 1
+                self._map_object_instances(class_properties['children'])
+                self._map_hierarchy_level -= 1
+
+            if self._map_hierarchy_level == -1:
+                self.logger.debug('Root object JSON transform:{}'.format(class_name))
+                class_properties['object_instance'].json_transform()
+
+    def _connect_hierarchy_recursive(self, reference_dict, parent_class=None, parent_dict=None):
         """ _connect_hierarchy_recursive() method.
 
-        Recursive connect all generated json_dicts.
+        Recursive connect all generated json_dicts to its parents.
         """
-        for key, value in reference_dict.items():
-            pass
 
-    def _get_sum_child_count(self, reference_dict):
-        """ _get_sum_child_count() method.
+        self.logger.info('Parent dict:{}'.format(parent_dict))
+
+        if parent_class is not None:
+            self._class_hierarchy[self._hierarchy_level] = parent_class
+
+        for class_name, class_properties in reference_dict.items():
+
+            if 'children' in class_properties:
+                self._hierarchy_level += 1
+                self._connect_hierarchy_recursive(class_properties['children'], class_name, reference_dict)
+                del self._class_hierarchy[self._hierarchy_level]
+                self._hierarchy_level -= 1
+            else:
+                parent_instance = class_properties['parent_instance']
+                parent_class_name = parent_instance.class_name
+                src_instance = getattr(parent_instance, class_name)
+                parent_instance.json_dict[class_name] = src_instance.json_dict
+
+                self.logger.debug('Mapping class_name:{} parent_class_name:{}'.format(class_name, parent_class_name))
+
+                tmp_class_hierarchy = copy.deepcopy(self._class_hierarchy)
+                new_class_hierarchy = {}
+                new_class_hierarchy[0] = tmp_class_hierarchy[0]
+
+                insert_index = 1
+                for i in range(1, len(tmp_class_hierarchy)+1):
+                    self.logger.debug('Reorder hierarchy tmp:{} new:{}'.format(tmp_class_hierarchy, new_class_hierarchy))
+                    reorder_index = insert_index+1
+                    try:
+                        new_class_hierarchy[reorder_index] = tmp_class_hierarchy[i]
+                    except KeyError as e:
+                        pass
+                    new_class_hierarchy[insert_index] = 'children'
+                    insert_index +=2
+
+                self.logger.debug('Append hierarchy:{}'.format(new_class_hierarchy))
+                self._class_hierarchy_list.append(new_class_hierarchy)
+                self._class_hierarchy_list_plain.append(tmp_class_hierarchy)
+
+    def _rename_dict_key(self, rename_dict, parent_dict=None, parent_class=None):
+
+        self.logger.debug('Parent class:{}'.format(parent_class))
+        self.logger.debug('RenameDict:{}'.format(rename_dict))
+
+        if parent_class is not None:
+            self._class_hierarchy_comp[self._hierarchy_level_comp] = parent_class
+
+        if self._class_hierarchy == self._class_hierarchy_comp:
+            self.logger.info('Match rename_dict:{}'.format(rename_dict))
+
+            # only remove when all children have been altered to children_processed
+            if ChildCounter().get_sum_child_count(dict(rename_dict)) == 0:
+                parent_dict['children_processed'] = parent_dict.pop('children')
+
+        self.logger.info('Hierarchy comp:{} orig:{}'.format(self._class_hierarchy, self._class_hierarchy_comp))
+
+        for key in list(rename_dict.keys()):
+            self.logger.info('Processing dict key:{} value:{}'.format(key, rename_dict[key]))
+            if isinstance(rename_dict[key], dict) and key != 'hierarchy':
+                self._hierarchy_level_comp += 1
+                self._rename_dict_key(rename_dict[key], rename_dict, key)
+                del self._class_hierarchy_comp[self._hierarchy_level_comp]
+                self._hierarchy_level_comp -= 1
+
+
+class ChildCounter():
+    """ Child node counter class.
+    """
+
+    def __init__(self):
+        self._children_occurences = 0
+        self.logger = logging.getLogger(__name__)
+
+    def get_sum_child_count(self, reference_dict):
+        """ get_sum_child_count() method.
 
         Count children nodes recursive and return sum.
         """
-        self._child_count = 0
-        for key, value in reference_dict.items():
-            if key == 'children':
-                self.child_count += 1
-        return self.child_count
+
+        self.logger.info('Sum count ref-dict:{}'.format(reference_dict))
+
+        for class_name, class_properties in reference_dict.items():
+            if 'children' in class_properties:
+                self._children_occurences += 1
+                self.get_sum_child_count(class_properties['children'])
+
+        return self._children_occurences
+
 
 # import classes into current namespace
 current_mod = sys.modules[__name__]
