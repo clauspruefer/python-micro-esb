@@ -291,7 +291,7 @@ class ClassHandler(BaseHandler):
 
         self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
 
-        for class_ref in self._SYSClassNames:
+        for class_name in self._SYSClassNames:
             self.json_dict[class_name] = None
 
         self.logger.debug('JSONDict:{}'.format(self.json_dict))
