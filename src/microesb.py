@@ -615,7 +615,6 @@ class ServiceExecuter():
         self._con_ref_dict = None
         self._class_hierarchy = None
         self._class_hierarchy_list = None
-        self._class_hierarchy_list_plain = None
         self._hierarchy_level = None
         self._map_hierarchy_level = None
         self._class_hierarchy_comp = None
@@ -748,34 +747,15 @@ class ServiceExecuter():
                 parent_instance = class_properties['parent_instance']
                 parent_class_name = parent_instance.class_name
                 src_instance = getattr(parent_instance, class_name)
-                #cn_mapped = self._cm_ref._get_mapping(class_name)
                 parent_instance.json_dict[class_name] = src_instance.json_dict
-                #parent_instance.json_dict[cn_mapped] = src_instance.json_dict
 
                 self.logger.debug('Mapping class_name:{} parent_class_name:{}'.format(
                     class_name,
                     parent_class_name))
 
-                tmp_class_hierarchy = copy.deepcopy(self._class_hierarchy)
-                new_class_hierarchy = {}
-                new_class_hierarchy[0] = tmp_class_hierarchy[0]
-
-                insert_index = 1
-                for i in range(1, len(tmp_class_hierarchy)+1):
-                    self.logger.debug('Reorder hierarchy tmp:{} new:{}'.format(
-                        tmp_class_hierarchy,
-                        new_class_hierarchy))
-                    reorder_index = insert_index+1
-                    try:
-                        new_class_hierarchy[reorder_index] = tmp_class_hierarchy[i]
-                    except KeyError as e:
-                        pass
-                    new_class_hierarchy[insert_index] = 'children'
-                    insert_index +=2
-
-                self.logger.debug('Append hierarchy:{}'.format(new_class_hierarchy))
-                self._class_hierarchy_list.append(new_class_hierarchy)
-                self._class_hierarchy_list_plain.append(tmp_class_hierarchy)
+                self._class_hierarchy_list.append(
+                    copy.deepcopy(self._class_hierarchy)
+                )
 
     def _rename_dict_key(self, rename_dict, parent_dict=None, parent_class=None):
 
@@ -788,19 +768,19 @@ class ServiceExecuter():
         if self._class_hierarchy == self._class_hierarchy_comp:
             self.logger.info('Match rename_dict:{}'.format(rename_dict))
 
-            # only remove when all children have been altered to children_processed
+            # only remove when all 'children' keys have been altered to 'children_processed'
             if ChildCounter().get_sum_child_count(dict(rename_dict)) == 0:
-                parent_dict['children_processed'] = parent_dict.pop('children')
+                self.logger.info('Parent dict:{}'.format(parent_dict))
+                parent_dict[parent_class]['children_processed'] = parent_dict[parent_class].pop('children')
 
-        self.logger.info('Hierarchy comp:{} orig:{}'.format(
-            self._class_hierarchy,
-            self._class_hierarchy_comp))
-
-        for key in list(rename_dict.keys()):
-            self.logger.info('Processing dict key:{} value:{}'.format(key, rename_dict[key]))
-            if isinstance(rename_dict[key], dict) and key != 'hierarchy':
+        for class_name, class_properties in rename_dict.items():
+            if 'children' in class_properties:
                 self._hierarchy_level_comp += 1
-                self._rename_dict_key(rename_dict[key], rename_dict, key)
+                self._rename_dict_key(
+                    class_properties['children'],
+                    rename_dict,
+                    class_name
+                )
                 del self._class_hierarchy_comp[self._hierarchy_level_comp]
                 self._hierarchy_level_comp -= 1
 
