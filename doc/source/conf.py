@@ -12,8 +12,8 @@ sys.path.append('./')
 project = 'Python microesb'
 copyright = '2016 - 2024, Claus Prüfer'
 author = 'Claus Prüfer'
-version = '1.0'
-release = '1.0'
+version = '1.1'
+release = '1.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

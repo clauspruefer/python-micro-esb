@@ -15,6 +15,10 @@ In this example, assume our "virtual" company runs a **Hosting Business**.
 
 The company's customer data, including a) Internet Domains and b) DNS Hostnames, should be manageable by different subsystems.
 
+This example demonstrates the integration with **PostgreSQL database transactions**, showcasing
+how the microesb framework handles atomic operations across multiple related entities while
+maintaining data integrity through commit/rollback mechanisms.
+
 .. note::
 
     Example number 1 will only cover Local Service Mapping **without** *Python Application Server* encapsulation.
@@ -194,6 +198,22 @@ After execution, the newly created domain will be in the `sys_core."domain"` tab
 2. PKI Provisioning / Class Types
 =================================
 
+This example demonstrates PKI (Public Key Infrastructure) certificate provisioning with a focus
+on class type hierarchies and **NoSQL MongoDB backend integration**.
+
+Unlike Example 1's relational database approach, this example showcases how the microesb framework
+seamlessly integrates with document-based NoSQL databases. MongoDB is used for storing and retrieving
+certificate metadata, demonstrating the framework's flexibility in handling both traditional and
+modern database paradigms.
+
+The example implements a complete certificate generation workflow for:
+- **Certificate Authority (CA)** certificates
+- **Server** certificates
+- **Client** certificates
+
+Each certificate type can optionally use Hardware Security Module (HSM) / Smartcard integration
+for secure key pair generation. The implementation uses user-defined routing functions to interact
+with MongoDB for certificate storage and retrieval operations.
 
 2.1. CA Certificate Relations
 ******************************
