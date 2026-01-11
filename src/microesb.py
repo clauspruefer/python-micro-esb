@@ -747,9 +747,9 @@ class ServiceExecuter():
                 parent_instance = class_properties['parent_instance']
                 parent_class_name = parent_instance.class_name
                 src_instance = getattr(parent_instance, class_name)
-                cn_mapped = self._cm_ref._get_mapping(class_name)
-                #parent_instance.json_dict[class_name] = src_instance.json_dict
-                parent_instance.json_dict[cn_mapped] = src_instance.json_dict
+                #cn_mapped = self._cm_ref._get_mapping(class_name)
+                parent_instance.json_dict[class_name] = src_instance.json_dict
+                #parent_instance.json_dict[cn_mapped] = src_instance.json_dict
 
                 self.logger.debug('Mapping class_name:{} parent_class_name:{}'.format(
                     class_name,
