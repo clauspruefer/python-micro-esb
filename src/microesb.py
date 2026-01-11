@@ -651,17 +651,18 @@ class ServiceExecuter():
             )
 
             rlist.append(
-                self._connect_hierarchy(
-                    class_mapper_copy.get_references()
-                )
+                self._connect_hierarchy(class_mapper_copy)
             )
         return rlist
 
-    def _connect_hierarchy(self, cm_ref_dict):
+    def _connect_hierarchy(self, class_mapper_ref):
         """ _connect_hierarchy() method.
 
         Init method for connecting all generated json_dicts.
         """
+
+        self._cm_ref = class_mapper_ref
+        cm_ref_dict = self._cm_ref.get_references()
 
         self.logger.debug('Processing class_mapper references dict:{}'.format(cm_ref_dict))
         self.logger.debug('Mapping parent_object instances to child instances')
@@ -701,24 +702,26 @@ class ServiceExecuter():
 
         return cm_ref_dict
 
-    def _map_object_instances(self, reference_dict):
+    def _map_object_instances(self, ref_dict):
 
-        for class_name, class_properties in reference_dict.items():
+        for class_name, class_props in ref_dict.items():
 
-            if 'children' in class_properties:
+            if 'children' in class_props:
 
-                child_dict = class_properties['children']
-                first_child_key = next(iter(child_dict))
-                first_child_elm = child_dict[first_child_key]
-                reference_dict[class_name]['object_instance'] = first_child_elm['parent_instance']
+                child_dict = class_props['children']
+                key_first = next(iter(child_dict))
+                elm_first = child_dict[key_first]
+                cn_mapped = self._cm_ref._get_mapping(class_name)
+                #ref_dict[class_name]['object_instance'] = elm_first['parent_instance']
+                ref_dict[cn_mapped]['object_instance'] = elm_first['parent_instance']
 
                 self._map_hierarchy_level += 1
-                self._map_object_instances(class_properties['children'])
+                self._map_object_instances(class_props['children'])
                 self._map_hierarchy_level -= 1
 
             if self._map_hierarchy_level == -1:
                 self.logger.debug('Root object JSON transform:{}'.format(class_name))
-                class_properties['object_instance'].json_transform()
+                class_props['object_instance'].json_transform()
 
     def _connect_hierarchy_recursive(self, reference_dict, parent_class=None, parent_dict=None):
         """ _connect_hierarchy_recursive() method.
@@ -746,7 +749,9 @@ class ServiceExecuter():
                 parent_instance = class_properties['parent_instance']
                 parent_class_name = parent_instance.class_name
                 src_instance = getattr(parent_instance, class_name)
-                parent_instance.json_dict[class_name] = src_instance.json_dict
+                cn_mapped = self._cm_ref._get_mapping(class_name)
+                #parent_instance.json_dict[class_name] = src_instance.json_dict
+                parent_instance.json_dict[cn_mapped] = src_instance.json_dict
 
                 self.logger.debug('Mapping class_name:{} parent_class_name:{}'.format(
                     class_name,
