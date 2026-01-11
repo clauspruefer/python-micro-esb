@@ -369,4 +369,6 @@ Example:
         service_mapper=service_mapper
     )
     
-    result = service_executer.execute()
+    result = service_executer.execute_get_hierarchy()
+    root_object = r[0]['RootObjectID']['object_instance']
+    print(root_object.json_dict)
