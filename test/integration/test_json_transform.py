@@ -197,7 +197,12 @@ def config_service_pki():
 
 class TestJSONTransform:
 
-    def test_transform_pki(self, config_class_pki_service, config_properties_pki_service):
+    def test_transform_pki(
+            self,
+            config_class_pki_service,
+            config_properties_pki_service,
+            config_service_pki
+        ):
 
         class_mapper = microesb.ClassMapper(
             class_references=config_class_pki_service['class_reference'],
