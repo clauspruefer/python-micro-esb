@@ -51,10 +51,10 @@ Example usage:
 
 .. code-block:: python
 
-    # Access all user-defined properties
+    # access all user-defined properties
     properties = instance.property_dict
-    # Returns: {'id': 'value', 'name': 'test', ...}
-    # Excludes: 'SYSServiceMethod' and internal references
+    # returns: {'id': 'value', 'name': 'test', ...}
+    # excludes: 'SYSServiceMethod' and internal references
 
 1.2. Property Registration
 ***************************
@@ -361,8 +361,8 @@ Example:
 
 .. code-block:: python
 
-    # Hierarchical structure: CertClient -> CertServer -> CertCA
-    # The framework automatically deserializes all levels
+    # hierarchical structure: CertClient -> CertServer -> CertCA
+    # the framework automatically deserializes all levels
     
     service_executer = microesb.ServiceExecuter(
         class_mapper=class_mapper,
