@@ -194,11 +194,6 @@ After execution, the newly created domain will be in the `sys_core."domain"` tab
 2. PKI Provisioning / Class Types
 =================================
 
-Example number 1 only covers a "plain" database model without local (e.g., bash) or remote (web service) invocations.
-
-.. note::
-
-    Example number 2 is a stripped-down excerpt from PKI management to demonstrate how *virtual class types* and a *clean OOP model setup* work.
 
 2.1. CA Certificate Relations
 ******************************
