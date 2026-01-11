@@ -711,9 +711,7 @@ class ServiceExecuter():
                 child_dict = class_props['children']
                 key_first = next(iter(child_dict))
                 elm_first = child_dict[key_first]
-                cn_mapped = self._cm_ref._get_mapping(class_name)
-                #ref_dict[class_name]['object_instance'] = elm_first['parent_instance']
-                ref_dict[cn_mapped]['object_instance'] = elm_first['parent_instance']
+                ref_dict[class_name]['object_instance'] = elm_first['parent_instance']
 
                 self._map_hierarchy_level += 1
                 self._map_object_instances(class_props['children'])
