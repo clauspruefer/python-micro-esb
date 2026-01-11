@@ -50,7 +50,7 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         :ivar classref logger: logging logger reference
         :ivar dict[SYSProperties] _SYSProperties: internal properties processing dict
         :ivar classref _SYSParentObject: internal (hierarchical) class instance ref
-        :ivar list[classref] _SYSClassNames: internal class refs dict
+        :ivar list[classname] _SYSClassNames: internal class names dict
         """
 
         self.logger = logging.getLogger(__name__)
@@ -247,7 +247,7 @@ class ClassHandler(BaseHandler):
 
         :param dict *: used for passing params as **args dictionary
         :param str class_name: class name
-        :param classref class_ref: class instance reference
+        :param classref class_ref: class instance reference name
 
         Append class_name to self._SYSClassNames. Setup new class instance
         in global namespace.
@@ -255,7 +255,7 @@ class ClassHandler(BaseHandler):
         Primary called by overloaded __add__() method.
         """
 
-        self._SYSClassNames.append(class_ref)
+        self._SYSClassNames.append(class_name)
 
         new_class = globals()[class_ref]
         instance = new_class()
