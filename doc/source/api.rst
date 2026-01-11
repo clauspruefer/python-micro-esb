@@ -30,10 +30,47 @@ Example test case (`/test/integration/test_base.py`, test: `test_multi_item_obje
         'id': 'testshipment1',
         'SYSServiceMethod': None,
         'Palette': [
-            {'id': 1, 'label': 'label1'},
-            {'id': 2, 'label': 'label2'}
+            {'id': 1, 'label': 'label2'}
         ]
     }
+
+1.1. Property Dict
+******************
+
+The ``property_dict`` property (decorated with ``@property``) provides access to all class instance
+properties excluding internal system properties like ``SYSServiceMethod`` and class references.
+
+This enables clean property access for serialization, logging, or external API integration without
+exposing internal framework properties.
+
+Example usage:
+
+.. code-block:: python
+
+    # Access all user-defined properties
+    properties = instance.property_dict
+    # Returns: {'id': 'value', 'name': 'test', ...}
+    # Excludes: 'SYSServiceMethod' and internal references
+
+1.2. Property Registration
+***************************
+
+Properties can be registered with metadata using the ``register_property()`` method. This is
+useful for defining internal system properties that should be handled specially by the framework.
+
+Example from ``/example/02-pki-management/service_implementation.py``:
+
+.. code-block:: python
+
+    self.register_property(
+        property_id='is_ca_cert',
+        property_data={
+            'type': 'bool',
+            'default': True,
+            'required': False,
+            'description': 'Is CA Certificate'
+        }
+    )
 
 2. Class Handler
 ================
@@ -251,3 +288,81 @@ Example:
         class_mapper=class_mapper,
         service_data=service_metadata
     )
+
+7. Service Router
+=================
+
+The `ServiceRouter` class provides user-defined service call routing capabilities. It enables
+direct routing of service calls to user-defined functions in a ``user_routing.py`` module.
+
+This is particularly useful for:
+- Database CRUD operations (MongoDB, PostgreSQL, etc.)
+- External API integrations
+- Custom business logic execution
+- Decoupling service orchestration from implementation
+
+7.1. Usage
+**********
+
+.. code-block:: python
+
+    from microesb.router import ServiceRouter
+    
+    router = ServiceRouter()
+    result = router.send('FunctionName', metadata)
+
+The ``send()`` method dynamically invokes the specified function from the ``user_routing`` module
+and passes the metadata as the first argument.
+
+7.2. User Routing Module
+*************************
+
+Create a ``user_routing.py`` file in your project with functions that handle specific routing targets:
+
+.. code-block:: python
+
+    from pymongo import MongoClient
+    
+    client = MongoClient('mongodb://127.0.0.1/')
+    mongodb = client.get_database('mydb')
+    
+    def GetDataById(metadata):
+        return mongodb.collection.find_one({"id": metadata})
+    
+    def StoreData(metadata):
+        mongodb.collection.insert_one(metadata)
+        return True
+
+See the :ref:`routing` section for detailed routing documentation.
+
+8. Service Executer
+===================
+
+The `ServiceExecuter` class handles the execution of service methods and manages recursive class
+hierarchy object deserialization. This enables complex hierarchical data structures to be properly
+reconstructed from JSON representations.
+
+8.1. Recursive Deserialization
+*******************************
+
+The framework automatically deserializes nested class hierarchies, ensuring that:
+- Child class instances are properly instantiated
+- Parent-child relationships are maintained
+- JSON data is correctly mapped to class properties
+
+This is particularly useful when working with complex domain models that include multiple levels
+of nested objects.
+
+Example:
+
+.. code-block:: python
+
+    # Hierarchical structure: CertClient -> CertServer -> CertCA
+    # The framework automatically deserializes all levels
+    
+    service_executer = microesb.ServiceExecuter(
+        class_mapper=class_mapper,
+        service_mapper=service_mapper
+    )
+    
+    result = service_executer.execute()

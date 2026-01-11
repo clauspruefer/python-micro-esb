@@ -12,6 +12,7 @@ Contents:
    features
    apidoc
    api
+   routing
    examples
 
 Indices and tables
