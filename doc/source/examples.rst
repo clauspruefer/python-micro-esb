@@ -526,10 +526,3 @@ Here is an example configuration for Alias Class Mapping:
     }
 
 .. _example-number4:
-
-4. SOA on Kubernetes
-====================
-
-This example includes a working Docker container and Kubernetes Minikube setup. It will be implemented after the FalconAS milestone *HTTP/1.1 implementation* is completed.
-
-For more information, see: https://github.com/WEBcodeX1/http-1.2.
