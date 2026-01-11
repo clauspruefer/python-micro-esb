@@ -22,16 +22,20 @@ It provides template functions described in the *Internal Classes / Class Repres
 
 It inherits `transformer.JSONTransformer` to enable a generic, recursive dictionary representation of the class instance hierarchy. This feature allows for efficient assertions on complex object hierarchies.
 
-Example test case (`/test/integration/test_base.py`, test: `test_multi_item_object`):
+Example test case (`/test/integration/test_json_transform.py`, test: `test_list_object`):
 
 .. code-block:: python
 
-    assert shipment.json_dict == {
+    root_object = r[0]['Shipment']['object_instance']
+
+    assert root_object.json_dict == {
         'id': 'testshipment1',
-        'SYSServiceMethod': None,
-        'Palette': [
-            {'id': 1, 'label': 'label1'}
-        ]
+        'Palette': {
+            'Palette': [
+                { 'id': 1, 'label': 'label1' },
+                { 'id': 2, 'label': 'label2' }
+            ]
+        }
     }
 
 1.1. Property Dict
