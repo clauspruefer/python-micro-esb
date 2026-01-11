@@ -77,7 +77,7 @@ The primary focus of the Python **microesb** module is to map a clean JSON metad
 
 .. note::
 
-    For a detailed example that includes transactional database access, refer to Example 1.
+    For a detailed example that includes transactional database access, refer to Example 1. Example 2 demonstrates a NoSQL approach using MongoDB.
 
 4. Platform As A Service
 ========================
