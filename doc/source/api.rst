@@ -30,7 +30,7 @@ Example test case (`/test/integration/test_base.py`, test: `test_multi_item_obje
         'id': 'testshipment1',
         'SYSServiceMethod': None,
         'Palette': [
-            {'id': 1, 'label': 'label2'}
+            {'id': 1, 'label': 'label1'}
         ]
     }
 
