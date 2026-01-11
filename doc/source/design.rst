@@ -22,10 +22,6 @@ The following diagram illustrates the *Base Layout / Model* of a **scalable SOA 
 
     The **microesb** module focuses on the "Service Mapping / Abstraction Layer" (4).
 
-.. note::
-
-    The "Load Balancing Layer" and the "Transport Layer Security Layer" can be easily adapted using a Kubernetes Cluster / Ingress-nginx (see Example 2).
-
 2. Centralized Service Management
 =================================
 
