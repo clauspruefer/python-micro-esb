@@ -207,7 +207,7 @@ class TestJSONTransform:
 
         r = microesb.ServiceExecuter().execute_get_hierarchy(
             class_mapper=class_mapper,
-            service_data=config_service_pki_service
+            service_data=config_service_pki
         )
 
         root_object = r[0]['CertCA']['object_instance']
