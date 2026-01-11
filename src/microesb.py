@@ -678,13 +678,11 @@ class ServiceExecuter():
             self._hierarchy_level = -1
             self._class_hierarchy = {}
             self._class_hierarchy_list = []
-            self._class_hierarchy_list_plain = []
 
             self._connect_hierarchy_recursive(cm_ref_dict)
 
-            self.logger.debug('Class hierarchy list:{} plain:{}'.format(
-                self._class_hierarchy_list,
-                self._class_hierarchy_list_plain)
+            self.logger.debug('Class hierarchy list:{}'.format(
+                self._class_hierarchy_list)
             )
 
             for class_hierarchy_item in self._class_hierarchy_list:
@@ -771,7 +769,8 @@ class ServiceExecuter():
             # only remove when all 'children' keys have been altered to 'children_processed'
             if ChildCounter().get_sum_child_count(dict(rename_dict)) == 0:
                 self.logger.info('Parent dict:{}'.format(parent_dict))
-                parent_dict[parent_class]['children_processed'] = parent_dict[parent_class].pop('children')
+                set_dict = parent_dict[parent_class].pop('children')
+                parent_dict[parent_class]['children_processed'] = set_dict
 
         for class_name, class_properties in rename_dict.items():
             if 'children' in class_properties:
