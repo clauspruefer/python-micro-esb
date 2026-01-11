@@ -611,6 +611,7 @@ class ServiceExecuter():
 
         self.logger = logging.getLogger(__name__)
 
+        self._cm_ref = None
         self._con_ref_dict = None
         self._class_hierarchy = None
         self._class_hierarchy_list = None
