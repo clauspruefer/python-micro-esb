@@ -200,9 +200,9 @@ class TestJSONTransform:
     def test_transform_pki(self, config_class_pki_service, config_properties_pki_service):
 
         class_mapper = microesb.ClassMapper(
-            class_references=config_class_extended_service['class_reference'],
-            class_mappings=config_class_extended_service['class_mapping'],
-            class_properties=config_properties_extended_service
+            class_references=config_class_pki_service['class_reference'],
+            class_mappings=config_class_pki_service['class_mapping'],
+            class_properties=config_properties_pki_service
         )
 
         r = microesb.ServiceExecuter().execute_get_hierarchy(
