@@ -15,7 +15,7 @@ def config_class_listobject():
                 'property_ref': 'Shipment',
                 'children': {
                     'Palette': {
-                        'property_ref': 'Palette',
+                        'property_ref': 'Palette'
                     }
                 }
             }
@@ -33,7 +33,7 @@ def config_properties_listobject():
                     'type': 'int',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': ''
                 }
             }
         },
@@ -43,13 +43,13 @@ def config_properties_listobject():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': ''
                 },
                 'label': {
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': ''
                 }
             }
         }
@@ -68,11 +68,11 @@ def config_service_listobject():
                     'Palette': [
                         {
                             'id': 1,
-                            'label': 'label1',
+                            'label': 'label1'
                         },
                         {
                             'id': 2,
-                            'label': 'label2',
+                            'label': 'label2'
                         }
                     ]
                 }
@@ -123,13 +123,19 @@ def config_properties_pki_service():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': 'cert id'
                 },
                 'country': {
                     'type': 'str',
                     'default': 'DE',
                     'required': True,
-                    'description': '',
+                    'description': 'country'
+                },
+                'state': {
+                    'type': 'str',
+                    'default': None,
+                    'required': True,
+                    'description': ''
                 }
             }
         },
@@ -139,7 +145,13 @@ def config_properties_pki_service():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': 'label'
+                },
+                'user_pin': {
+                    'type': 'str',
+                    'default': None,
+                    'required': True,
+                    'description': 'user pin'
                 }
             }
         },
@@ -149,7 +161,7 @@ def config_properties_pki_service():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': 'label'
                 }
             }
         }
@@ -195,7 +207,7 @@ def config_service_pki():
     return config
 
 
-class TestJSONTransform:
+class TestExecuteGetHierarchy:
 
     def test_transform_pki(
             self,
@@ -218,30 +230,57 @@ class TestJSONTransform:
         root_object = r[0]['CertCA']['object_instance']
 
         assert root_object.json_dict == {
-            'CertCA': {
-                'id': 'testid1',
-                'country': 'DE',
-                'state': 'Berlin',
-                'locality': 'Berlin',
-                'org': 'WEBcodeX',
-                'org_unit': 'Security',
-                'common_name': 'testcn1',
-                'email': 'pki@webcodex.de',
-                'valid_days': 365,
-                'key_ref': 'Smartcard',
-                'SmartcardCA': {
-                    'label': 'label1',
-                    'user_pin': 'pin1',
-                    'SmartcardContainer': {
-                        'label': 'container_label1'
-                    }
-                },
-                'SmartcardREQ': {
-                    'label': 'label2',
-                    'user_pin': 'pin2',
-                    'SmartcardContainer': {
-                        'label': 'container_label2'
-                    }
+            'id': 'testid1',
+            'country': 'DE',
+            'state': 'Berlin',
+            'SmartcardCA': {
+                'label': 'label1',
+                'user_pin': 'pin1',
+                'SmartcardContainer': {
+                    'label': 'container_label1'
                 }
+            },
+            'SmartcardREQ': {
+                'label': 'label2',
+                'user_pin': 'pin2',
+                'SmartcardContainer': {
+                    'label': 'container_label2'
+                }
+            }
+        }
+
+    def test_list_object(
+        self,
+        config_service_listobject,
+        config_class_listobject,
+        config_properties_listobject
+    ):
+
+        class_mapper = microesb.ClassMapper(
+            class_references=config_class_listobject['class_reference'],
+            class_mappings=config_class_listobject['class_mapping'],
+            class_properties=config_properties_listobject
+        )
+
+        r = microesb.ServiceExecuter().execute_get_hierarchy(
+            class_mapper=class_mapper,
+            service_data=config_service_listobject
+        )
+
+        root_object = r[0]['Shipment']['object_instance']
+
+        assert root_object.json_dict == {
+            'id': 'testshipment1',
+            'Palette': {
+                'Palette': [
+                    {
+                        'id': 1,
+                        'label': 'label1'
+                    },
+                    {
+                        'id': 2,
+                        'label': 'label2'
+                    }
+                ]
             }
         }
