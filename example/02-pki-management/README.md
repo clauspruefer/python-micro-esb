@@ -27,8 +27,10 @@ This example requires a running MongoDB instance.
 ```bash
 # Install MongoDB (varies by OS)
 # For Ubuntu/Debian - install official MongoDB package:
-wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | \
+   sudo gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | \
+   sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 sudo apt-get update
 sudo apt-get install -y mongodb-org
 
@@ -153,8 +155,8 @@ See: [service_implementation.py](service_implementation.py)
 After executing all three scripts, you can verify the data in MongoDB:
 
 ```bash
-# Connect to MongoDB
-mongo
+# Connect to MongoDB (using mongosh for MongoDB 5.0+)
+mongosh
 
 # Switch to microesb database
 use microesb
