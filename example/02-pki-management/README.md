@@ -22,24 +22,13 @@ The example demonstrates:
 
 This example requires a running MongoDB instance.
 
-**Local MongoDB Installation:**
+**Local MongoDB Community Edition Installation:**
 
-```bash
-# Install MongoDB (varies by OS)
-# For Ubuntu/Debian - install official MongoDB package:
-curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | \
-   sudo gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | \
-   sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-sudo apt-get update
-sudo apt-get install -y mongodb-org
+https://www.mongodb.com/docs/manual/administration/install-community/#std-label-install-mdb-community-edition
 
-# Start MongoDB service
-sudo systemctl start mongod
-sudo systemctl enable mongod
-```
+**Docker Example Container:**
 
-**Note:** Integration of example 2 into the docker example container with MongoDB support is planned for a future release.
+The docker example container contains both an installed MongoDB instance and the example code.
 
 ### Python Dependencies
 
