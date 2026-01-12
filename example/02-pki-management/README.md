@@ -20,27 +20,24 @@ The example demonstrates:
 
 ### MongoDB Requirement
 
-This example requires a running MongoDB instance. You have two options:
+This example requires a running MongoDB instance.
 
-1. **Local MongoDB Installation:**
-   ```bash
-   # Install MongoDB (varies by OS)
-   # For Ubuntu/Debian:
-   sudo apt-get install mongodb
-   
-   # Start MongoDB service
-   sudo systemctl start mongodb
-   ```
+**Local MongoDB Installation:**
 
-2. **Docker Example Container (Recommended):**
-   Use the shipped docker example container which includes MongoDB pre-installed and pre-configured:
-   ```bash
-   # Navigate to the docker example directory
-   cd docker/example
-   
-   # Build and run the container
-   docker-compose up -d
-   ```
+```bash
+# Install MongoDB (varies by OS)
+# For Ubuntu/Debian - install official MongoDB package:
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+# Start MongoDB service
+sudo systemctl start mongod
+sudo systemctl enable mongod
+```
+
+**Note:** Integration of example 2 into the docker example container with MongoDB support is planned for a future release.
 
 ### Python Dependencies
 
