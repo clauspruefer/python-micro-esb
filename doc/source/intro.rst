@@ -4,13 +4,9 @@
 Intro / Module Description
 ==========================
 
-The **microesb** Python module provides the foundational features to build a centralized,
-structured Enterprise Service Bus (ESB) / Service-Oriented Architecture (SOA).
+The **microesb** Python module provides the foundational features to build a centralized, structured Enterprise Service Bus (ESB) / Service-Oriented Architecture (SOA).
 
-It enables clean **Service Model to Python Class Mapping** with support for both traditional
-relational databases and modern NoSQL backends. The module features user-based service call
-routing, recursive class hierarchy object deserialization, and graph-based JSON result abstraction,
-making it suitable for scalable Next-Level Platform-as-a-Service (PaaS) and Microservices architectures.
+It enables clean **Service Model to Python Class Mapping** with support for both traditional relational databases and modern NoSQL backends. The module features user-based service call routing, recursive class hierarchy object deserialization, and graph-based JSON result abstraction, making it suitable for scalable Next-Level Platform-as-a-Service (PaaS) and Microservices architectures.
 
 A Docker example container can be downloaded here:
 `microesb-examples-latest.tar <https://docker.webcodex.de/microesb-examples-latest.tar>`_.
@@ -38,8 +34,7 @@ Refer to ``/docker/README.md``.
 3. Dependencies
 ===============
 
-Using the **microesb** module generally does not require the **psycopg2** PostgreSQL
-Python module.
+Using the **microesb** module generally does not require the **psycopg2** PostgreSQL Python module.
 
 .. warning::
     Running example code requires **psycopg2** for Example 1 and **pymongo** for Example 2.
@@ -50,15 +45,12 @@ Python module.
     apt-get install python3-psycopg2
 
 .. note::
-    Example 2 uses MongoDB as a NoSQL backend. MongoDB cannot be installed via apt on all
-    systems and is preinstalled in the Docker example container. For local development,
-    install MongoDB separately or use the provided Docker container.
+    Example 2 uses MongoDB as a NoSQL backend. MongoDB cannot be installed via apt on all systems and is preinstalled in the Docker example container. For local development, install MongoDB separately or use the provided Docker container.
 
 4. Build Dependencies
 =====================
 
-On current Debian 12 / Ubuntu 22.04.3 or 24.04.1, install the following additional packages
-(for documentation rendering and testing purposes).
+On current Debian 12 / Ubuntu 22.04.3 or 24.04.1, install the following additional packages (for documentation rendering and testing purposes).
 
 .. code-block:: bash
 

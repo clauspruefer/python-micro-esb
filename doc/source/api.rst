@@ -206,19 +206,10 @@ All *implementation classes* must be imported into the global Python namespace.
 
     from microesb import microesb
 
-Importing the main `microesb` module will call `import esbconfig` (see the following code, line 14).
+Importing the main `microesb` module will call `import esbconfig` (see the following code, line 5).
 
 .. code-block:: python
     :linenos:
-
-    # ]*[ --------------------------------------------------------------------- ]*[
-    #  .                         Micro ESB Python Module                         .
-    # ]*[ --------------------------------------------------------------------- ]*[
-    #  .                                                                         .
-    #  .  Copyright Claus Prüfer (2016 - 2024)                                   .
-    #  .                                                                         .
-    #  .                                                                         .
-    # ]*[ --------------------------------------------------------------------- ]*[
 
     import abc
     import sys
@@ -226,11 +217,11 @@ Importing the main `microesb` module will call `import esbconfig` (see the follo
     import importlib
     import esbconfig
 
-The **microesb** standard installation will include an empty `esbconfig.py` in the global Python dist-packages or in the active Python environment.
+The **microesb** default installation will include an empty `esbconfig.py` in the global Python dist-packages for working pytest tests.
 
 .. warning::
 
-    If you do not provide an `esbconfig.py` in your project folder, the default installation file will be used.
+    If you do not provide an `esbconfig.py` in your project folder, the default installation file will be imported.
 
 The following **esbconfig.py** tells the `microesb` importer to use the file **service_classes.py** and import *implementation classes* `Class1`, `Class2`, and `Class3` into the global namespace. These classes will then be usable by `ClassMapper` and `ServiceMapper` during internal processing.
 
@@ -296,10 +287,10 @@ Example:
 7. Service Router
 =================
 
-The `ServiceRouter` class provides user-defined service call routing capabilities. It enables
-direct routing of service calls to user-defined functions in a ``user_routing.py`` module.
+The `ServiceRouter` class provides user-defined service call routing capabilities. It enables direct routing of service calls to user-defined functions in a ``user_routing.py`` module.
 
 This is particularly useful for:
+
 - Database CRUD operations (MongoDB, PostgreSQL, etc.)
 - External API integrations
 - Custom business logic execution
@@ -342,9 +333,7 @@ See the :ref:`routing` section for detailed routing documentation.
 8. Service Executer
 ===================
 
-The `ServiceExecuter` class handles the execution of service methods and manages recursive class
-hierarchy object deserialization. This enables complex hierarchical data structures to be properly
-reconstructed from JSON representations.
+The `ServiceExecuter` class handles the execution of service methods and manages recursive class hierarchy object deserialization. This enables complex hierarchical data structures to be properly reconstructed from JSON representations.
 
 8.1. Recursive Deserialization
 *******************************
@@ -354,8 +343,7 @@ The framework automatically deserializes nested class hierarchies, ensuring that
 - Parent-child relationships are maintained
 - JSON data is correctly mapped to class properties
 
-This is particularly useful when working with complex domain models that include multiple levels
-of nested objects.
+This is particularly useful when working with complex domain models that include multiple levels of nested objects.
 
 Example:
 
@@ -370,5 +358,5 @@ Example:
     )
     
     result = service_executer.execute_get_hierarchy()
-    root_object = r[0]['RootObjectID']['object_instance']
+    root_object = r[0]['RootObjectName']['object_instance']
     print(root_object.json_dict)

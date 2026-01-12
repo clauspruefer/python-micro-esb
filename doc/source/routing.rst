@@ -4,66 +4,47 @@
 Routing
 =======
 
-The **microesb** module provides flexible routing capabilities to direct service calls to
-appropriate backend implementations. This enables separation of concerns between service
-orchestration and business logic implementation.
+The **microesb** module provides flexible routing capabilities to direct service calls to appropriate backend implementations. This enables data aggregation (routing) to multiple data-sources like traditional relational databases or modern NoSQL platforms.
 
 1. Simple Routing
 =================
 
-Simple Routing allows direct, unencapsulated routing of service calls to user-defined functions.
-This approach is suitable for straightforward use cases where service calls map directly to
-backend operations without complex orchestration requirements.
+Simple Routing allows **direct**, **unencapsulated** routing of service calls to user-defined functions. This approach is suitable for straightforward use cases where service calls map directly to backend operations without complex orchestration requirements.
+
+**Encapsulated Routing** is a methodology to abstract / handle each single service entity as an external callable service, encapsulated inside a network-callable container (e.g. application server) with scaling and AAA functionality like using "Kubernetes / NginX / https" or "FalconAS / NLAMP".
 
 1.1. Overview
 *************
 
-Simple routing uses the ``ServiceRouter`` class to dynamically invoke functions defined in a
-``user_routing.py`` module. Each routing function receives metadata from the service call and
-returns the result of the backend operation.
+Simple routing uses the ``ServiceRouter`` class to dynamically invoke functions defined in a ``user_routing.py`` module. Each routing function receives metadata from the service call and returns the result of the backend operation.
 
 1.2. Implementation
 *******************
 
-To implement simple routing, create a ``user_routing.py`` module in your project with functions
-that match the routing identifiers used in your service calls.
+To implement simple routing, create a ``user_routing.py`` module in your project with functions that match the routing identifiers used in your service calls (see next chapter).
 
 Example from ``/example/02-pki-management/user_routing.py``:
 
 .. literalinclude:: ../../example/02-pki-management/user_routing.py
     :linenos:
 
-1.3. Usage Pattern
-******************
+1.3. Implementation
+*******************
 
-The routing functions are invoked automatically by the framework when a service call specifies
-a routing target. Each function receives the relevant metadata and can interact with databases,
-external services, or other backend systems.
+Simply insert
 
-**Key characteristics:**
-
-- Direct function mapping: Service routing IDs map to function names in ``user_routing.py``
-- Flexible return values: Functions can return data structures that match service requirements
-- Database integration: Common pattern for MongoDB, PostgreSQL, or other data stores
-- Stateless operations: Each routing function operates independently
+self._ServiceRouter.send(
+'CertGetById', metadata=self.id)` inside the service_implementation.py class definitions.
 
 1.4. Common Use Cases
 *********************
 
-Simple routing is ideal for:
-
-- Database CRUD operations (Create, Read, Update, Delete)
-- External API integrations
-- File system operations
-- Cache management
-- Message queue interactions
+Simple routing should be used for net-internal trusted operations / systems where no authentication security is required.
 
 1.5. Error Handling
 *******************
 
-The ``ServiceRouter`` class provides basic error handling for missing routing targets. For
-production deployments, implement appropriate error handling within your routing functions
-to manage database connection failures, validation errors, and other exceptional conditions.
+The ``ServiceRouter`` class provides no error handling, the user is responsible implementing error / exception handling by himself.
 
 2. Encapsulated Routing
 =======================

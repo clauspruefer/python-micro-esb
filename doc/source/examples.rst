@@ -15,9 +15,7 @@ In this example, assume our "virtual" company runs a **Hosting Business**.
 
 The company's customer data, including a) Internet Domains and b) DNS Hostnames, should be manageable by different subsystems.
 
-This example demonstrates the integration with **PostgreSQL database transactions**, showcasing
-how the microesb framework handles atomic operations across multiple related entities while
-maintaining data integrity through commit/rollback mechanisms.
+This example demonstrates the integration with **PostgreSQL database transactions**, showcasing how the microesb framework handles atomic operations across multiple related entities while maintaining data integrity through commit/rollback mechanisms.
 
 .. note::
 
@@ -198,22 +196,16 @@ After execution, the newly created domain will be in the `sys_core."domain"` tab
 2. PKI Provisioning / Class Types
 =================================
 
-This example demonstrates PKI (Public Key Infrastructure) certificate provisioning with a focus
-on class type hierarchies and **NoSQL MongoDB backend integration**.
+This example demonstrates PKI (Public Key Infrastructure) certificate provisioning with a focus on class type hierarchies and **NoSQL MongoDB backend integration**.
 
-Unlike Example 1's relational database approach, this example showcases how the microesb framework
-seamlessly integrates with document-based NoSQL databases. MongoDB is used for storing and retrieving
-certificate metadata, demonstrating the framework's flexibility in handling both traditional and
-modern database paradigms.
+Unlike Example 1's relational database approach, this example showcases how the microesb framework seamlessly integrates with document-based NoSQL databases. MongoDB is used for storing and retrieving certificate metadata, demonstrating the framework's flexibility in handling both traditional and modern database paradigms.
 
 The example implements a complete certificate generation workflow for:
 - **Certificate Authority (CA)** certificates
 - **Server** certificates
 - **Client** certificates
 
-Each certificate type can optionally use Hardware Security Module (HSM) / Smartcard integration
-for secure key pair generation. The implementation uses user-defined routing functions to interact
-with MongoDB for certificate storage and retrieval operations.
+Each certificate type can optionally use Hardware Security Module (HSM) / Smartcard integration for secure key pair generation. The implementation uses user-defined routing functions to interact with MongoDB for certificate storage and retrieval operations.
 
 2.1. CA Certificate Relations
 ******************************
@@ -503,46 +495,23 @@ The following is an example of the *Service Call Metadata* for all certificate t
 
 .. _example-number3:
 
-3. Alias Class Mapping
-======================
+3. Hosting Use Case (Using DBPool)
+==================================
 
-Alias Class Mapping **must** be used when setting up multiple *Child Class Instances*.
+Example number 3 is an exact copy of example number 1 with the difference that a database pooling mechanism `python-dbpool` is used.
 
-3.1. Requirements
-*****************
+Project information:
 
-The *Alias Definition* must exist in the *Class Mapping Config* and map to an existing *Implementation Class*.
-
-Children of classes defined in the *Class Reference Config* must map to the *Alias Class(es)*.
-
-The *Alias Class* `property_ref` property in the *Class Reference Config* must always reference an existing *Implementation Class*.
-
-3.2. Example
-************
-
-Here is an example configuration for Alias Class Mapping:
-
-.. code-block:: python
-
-    config = {
-        'class_mapping': {
-            'Test': 'Test',
-            'Test2Ref1': 'Test2',
-            'Test2Ref2': 'Test2'
-        },
-        'class_reference': {
-            'Test': {
-                'property_ref': 'Test',
-                'children': {
-                    'Test2Ref1': {
-                        'property_ref': 'Test2'
-                    },
-                    'Test2Ref2': {
-                        'property_ref': 'Test2'
-                    }
-                }
-            }
-        }
-    }
+- https://github.com/clauspruefer/python-dbpool
 
 .. _example-number4:
+
+4. NLAP Integration
+===================
+
+Example number 4 will be added on NLAP (Next Level Application Protocol) completion.
+
+Ongoing project status can be viewed here:
+
+- https://www.der-it-pruefer.de/network/Exemplary-HTTP-Processing-Protocol-Design
+- https://github.com/WEBcodeX1/http-1.2
