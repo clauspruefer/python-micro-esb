@@ -303,10 +303,8 @@ class ClassHandler(BaseHandler):
             self.logger.debug('processing property:{}'.format(property_id))
             self.json_dict[property_id] = getattr(self, property_id)
 
-        try:
-            del self.json_dict['SYSServiceMethod']
-        except KeyError as e:
-            pass
+        # Remove optional service method key if present; ignore if absent.
+        self.json_dict.pop('SYSServiceMethod', None)
 
         self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
 
