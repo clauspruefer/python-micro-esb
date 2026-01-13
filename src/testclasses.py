@@ -15,7 +15,6 @@ class Cert(microesb.ClassHandler):
 
     Base class for certificate types (CA, Server, Client).
     """
-    pass
 
 
 class CertCA(Cert):
