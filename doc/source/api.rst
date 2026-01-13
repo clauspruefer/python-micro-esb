@@ -59,8 +59,7 @@ Example usage:
 1.2. Property Registration
 ***************************
 
-Properties can be registered with metadata using the ``register_property()`` method. This is
-useful for defining internal system properties that should be handled specially by the framework.
+Properties can be registered with metadata using the ``register_property()`` method. This is useful for defining internal system properties that should be handled specially by the framework.
 
 Example from ``/example/02-pki-management/service_implementation.py``:
 
