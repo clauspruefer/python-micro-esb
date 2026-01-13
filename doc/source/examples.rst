@@ -618,7 +618,7 @@ Currently, the *Service Registry* feature is unimplemented. Execution is only po
 
 The following implementation demonstrates how to execute a `CertCA` type service:
 
-.. literalinclude:: ../../example/02-pki-management/main-ca.py
+.. literalinclude:: ../../example/02-pki-management/00-main-ca.py
     :linenos:
 
 To execute the script, run:
@@ -640,7 +640,7 @@ Expected output:
 
 The following implementation demonstrates how to execute a `CertServer` type service:
 
-.. literalinclude:: ../../example/02-pki-management/main-server.py
+.. literalinclude:: ../../example/02-pki-management/01-main-server.py
     :linenos:
 
 To execute the script, run:
@@ -664,7 +664,7 @@ Expected output:
 
 The following implementation demonstrates how to execute a `CertClient` type service:
 
-.. literalinclude:: ../../example/02-pki-management/main-client.py
+.. literalinclude:: ../../example/02-pki-management/02-main-client.py
     :linenos:
 
 To execute the script, run:
