@@ -89,7 +89,7 @@ Planned for upcoming releases:
 
 - Service Registry / API Server
 - Service Registry / YANG Model Export
-- Service Registry - Web Interface
-- Service API Auto Documentation
+- Service Registry / Web Interface
+- Service API / Auto Documentation
 - Extended "Encapsulated" Service Routing
 - Mincepy Integration / Metadata Mapping

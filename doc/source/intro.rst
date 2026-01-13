@@ -87,8 +87,15 @@ To run all tests (unit and integration) after the system-wide package installati
 ===================
 
 - JSON Service Metadata to Python Internal Class / Object Mapping
+- JSON Result Hierarchical Deserialization
+- Service Routing / Data Aggregation
 
 8. Planned Features
 ====================
 
-- Database Abstraction on "top" of the Object Mapping Model
+- Service Registry / API Server
+- Service Registry / YANG Model Export
+- Service Registry / Web Interface
+- Service API / Auto Documentation
+- Extended “Encapsulated” Service Routing
+- Mincepy Integration / Metadata Mapping
