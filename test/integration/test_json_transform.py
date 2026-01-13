@@ -273,14 +273,8 @@ class TestExecuteGetHierarchy:
             'id': 'testshipment1',
             'Palette': {
                 'Palette': [
-                    {
-                        'id': 1,
-                        'label': 'label1'
-                    },
-                    {
-                        'id': 2,
-                        'label': 'label2'
-                    }
+                    { 'id': 1, 'label': 'label1' },
+                    { 'id': 2, 'label': 'label2' }
                 ]
             }
         }
