@@ -221,7 +221,7 @@ The ``cert`` collection is used for simple queries by certificate ID, while ``ce
 2.0.2. MongoDB Collection Examples
 ***********************************
 
-The following examples illustrate the structure of documents stored in the ``cert`` collection.
+The following examples illustrate the structure of documents stored in the ``cert`` and ``cert_hierarchy`` collections.
 
 **CA Certificate (Flat Storage):**
 
