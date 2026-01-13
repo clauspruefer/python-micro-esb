@@ -124,8 +124,8 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         }
         return properties
 
-    def _register_property(self, property_id, property_item):
-        """ _register_property() method.
+    def register_property(self, property_id, property_item):
+        """ register_property() method.
 
         :param str property_id: property id (internal class attribute name)
         :param dict property_item: property item to be registered for internal processing only
@@ -134,8 +134,8 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         additional properties not defined in Service-Properties, e.g. generated data,
         time-stamps or similar.
 
-        Use this private method for this purpose.
-        """
+        Service-Implementation classes should call this method to register such
+        additional internal properties for processing by the Micro ESB framework.        """
         self._SYSPropertiesRegister[property_id] = property_item
 
     def _set_property(self, property_id, value):
@@ -697,11 +697,10 @@ class ServiceExecuter():
         rlist = []
         for item in service_data['data']:
             class_mapper_copy = copy.deepcopy(class_mapper)
-            sm_ref = ServiceMapper(
+            ServiceMapper(
                 class_mapper=class_mapper_copy,
                 service_call_data=item
             )
-
             rlist.append(
                 self._connect_hierarchy(class_mapper_copy)
             )
@@ -864,10 +863,10 @@ class ChildCounter():
 
     def __init__(self):
         """
-        :ivar int _children_occurences: counter for children node occurrences
+        :ivar int _children_occurrences: counter for children node occurrences
         :ivar classref logger: logging logger reference
         """
-        self._children_occurences = 0
+        self._children_occurrences = 0
         self.logger = logging.getLogger(__name__)
 
     def get_sum_child_count(self, reference_dict):
@@ -884,10 +883,10 @@ class ChildCounter():
 
         for class_name, class_properties in reference_dict.items():
             if 'children' in class_properties:
-                self._children_occurences += 1
+                self._children_occurrences += 1
                 self.get_sum_child_count(class_properties['children'])
 
-        return self._children_occurences
+        return self._children_occurrences
 
 
 # import classes into current namespace
