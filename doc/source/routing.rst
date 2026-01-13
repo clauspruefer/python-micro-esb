@@ -60,12 +60,12 @@ The ``ServiceRouter`` class does not provide built-in error handling or logging.
 
 **Encapsulated Routing** is a mechanism for hosting ESB API services securely within a network-accessible entity that provides the following features:
 
-- Load balancing and scaling
+- Load Balancing / Scaling
 - AAA (Authentication, Authorization, Accounting)
-- Service (API) registration and versioning
-- Service (API) discovery
-- Service (API) documentation
-- Service security and PKI abstraction
+- Service (API) Registration / Versioning
+- Service (API) Discovery
+- Service (API) Documentation
+- Service Security / PKI Abstraction
 
 Detailed documentation (including examples) will be available starting from release version 1.3.
 
