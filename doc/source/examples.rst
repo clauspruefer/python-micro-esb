@@ -577,7 +577,7 @@ The "Cert" base class provides three private abstract methods because the proces
 The following methods are generic template methods inherited by each Child Class:
 
 - `_gen_openssl_privkey()`
-- `_get_cert_dbdata_by_id()`
+- `_get_cert_data_by_id()`
 - `_hsm_gen_keypair()`
 
 2.7. Accessing Properties
@@ -594,7 +594,7 @@ Label as follows:
 
 In `CertClient` and `CertServer`, it is also possible to access the `CertCA's` `Smartcard`
 Properties (from Referenced Classes in Class Reference Config) to fill data from the database
-inside `_get_cert_dbdata_by_id()`:
+inside `_get_cert_data_by_id()`:
 
 .. code-block:: python
 
