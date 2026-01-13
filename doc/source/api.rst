@@ -121,6 +121,8 @@ Example: Standard `ClassHandler` vs. `MultiClassHandler` implementation:
 
 For an example *service call metadata* (Host properties), see Example 1 (:ref:`example-number1`).
 
+.. _implementation-classes:
+
 4. Implementation Classes
 =========================
 
@@ -270,7 +272,7 @@ The `ServiceMapper` class is responsible for mapping and populating the existing
 
 It requires the following as input parameters:
 - A reference to the `ClassMapper` instance
-- **Service Call Metadata Dictionary** (see "Configuration / :ref:`service-call-metadata-config`")
+- **Service Call Metadata Dictionary** (Metadata passed to the ServiceExecuter as input data)
 
 Example:
 

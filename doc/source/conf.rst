@@ -289,6 +289,8 @@ Example configuration:
         }
     }
 
+.. _example-test-execution:
+
 5.3. Test Execution
 *******************
 
@@ -322,3 +324,8 @@ Example execution:
         class_mapper=class_mapper,
         service_data=service_metadata
     )
+
+.. _class-mapping-config:
+
+3. Class Mappings
+=================
