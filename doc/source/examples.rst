@@ -547,7 +547,7 @@ The "Cert" base class provides three private abstract methods because the proces
 
 - `_load_ref_cert_data()`
 - `_gen_openssl_cert()`
-- `_insert_cert_db_data()`
+- `_store_cert_data()`
 
 .. code-block:: python
 
@@ -561,15 +561,15 @@ The "Cert" base class provides three private abstract methods because the proces
     class CertServer(Cert):
 
         def _load_ref_cert_data(self):
-            self.CertCA._get_cert_dbdata_by_id()
+            self.CertCA._get_cert_data_by_id()
 
 .. code-block:: python
 
     class CertClient(Cert):
 
         def _load_ref_cert_data(self):
-            self.CertCA._get_cert_dbdata_by_id()
-            self.CertServer._get_cert_dbdata_by_id()
+            self.CertCA._get_cert_data_by_id()
+            self.CertServer._get_cert_data_by_id()
 
 2.6.2. Generic Template Methods
 -------------------------------

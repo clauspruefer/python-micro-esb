@@ -1,8 +1,18 @@
-# Example 1: Hosting Use Case
+# Example 1: Hosting Use Case with PostgreSQL Transactions
 
-In this example, assume our "virtual" company runs a **Hosting Business**.
+This example demonstrates a **DNS Hosting Management System** using the microesb framework with a **relational PostgreSQL** database backend and transactional processing.
 
-The company's customer data, including a) Internet Domains and b) DNS Hostnames, should be manageable by different subsystems.
+## Overview
+
+Example 1 showcases how microesb can manage hierarchical customer domain and DNS hostname data using the traditional relational database model with ACID transaction guarantees. 
+
+In this example, assume our "virtual" company runs a **Hosting Business**. The company's customer data, including a) Internet Domains and b) DNS Hostnames, should be manageable by different subsystems.
+
+The example demonstrates:
+- **Relational Database Transactions** with PostgreSQL for data integrity and atomic operations
+- **Hierarchical Service Metadata Processing** to manage domain and hostname relationships
+- **ACID Compliance** ensuring commit/rollback mechanisms for data consistency
+- **1:n Relationships** between Customer → Domain → Hostname entities
 
 > **Note:** Example number 1 will only cover Local Service Mapping **without** a *Python Application Server* encapsulation.
 
