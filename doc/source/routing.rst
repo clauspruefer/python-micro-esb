@@ -11,7 +11,7 @@ The **microesb** module provides flexible routing capabilities to direct service
 
 Simple Routing allows **direct**, **unencapsulated** routing of service calls to user-defined functions. This approach is suitable for straightforward use cases where service calls map directly to backend operations without complex orchestration requirements.
 
-**Encapsulated Routing** is a methodology designed to abstract and handle each service entity as an externally callable service, encapsulated within a network-accessible container (e.g., application server) with scaling and AAA (Authentication, Authorization, Accounting) functionality, such as "Kubernetes / Nginx / HTTPS" or "FalconAS / NLAMP".
+**Encapsulated Routing** is a methodology designed to abstract and handle each service entity as an externally callable service, encapsulated within a network-accessible container (e.g., application server) with scaling and AAA (Authentication, Authorization, Accounting) functionality, such as "Kubernetes / Nginx / HTTPS" or "FalconAS / NLAP".
 
 The **Encapsulated Routing** concept is described in greater detail in section 2.
 
