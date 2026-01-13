@@ -255,10 +255,12 @@ class MultiClassHandler(BaseHandler):
         """
         :ivar str _SYSType: const internal system type to differentiate handler types
         :ivar list[object] _object_container: object instance container
+        :ivar list[tuple] _SYSChildTemplates: child class templates (name, ref) for instances
         """
         super().__init__()
         self._SYSType = 'multiclass_container'
         self._object_container = []
+        self._SYSChildTemplates = []
 
     def __add__(self, args):
         """ overloaded internal __add__() method (+ operator).
@@ -294,15 +296,12 @@ class MultiClassHandler(BaseHandler):
         :param classref class_ref: class instance reference
 
         For MultiClassHandler, children are templates that will be copied to each instance.
-        Store them separately from _SYSClassNames to avoid confusing the transformer.
+        Store them in _SYSChildTemplates to avoid confusing the transformer.
 
         Primary called by overloaded __add__() method.
         """
-        # Don't add to _SYSClassNames for MultiClassHandler - use a separate list
+        # Store child templates separately from _SYSClassNames
         # This prevents the transformer from trying to process template children
-        if not hasattr(self, '_SYSChildTemplates'):
-            self._SYSChildTemplates = []
-        
         self._SYSChildTemplates.append((class_name, class_ref))
 
         new_class = globals()[class_ref]
@@ -328,21 +327,10 @@ class MultiClassHandler(BaseHandler):
         # Copy child class structure from parent to instance
         # Use _SYSChildTemplates which contains template children
         instance_children = []
-        if hasattr(self, '_SYSChildTemplates') and len(self._SYSChildTemplates) > 0:
+        if len(self._SYSChildTemplates) > 0:
             for class_name, class_ref in self._SYSChildTemplates:
                 child_template = getattr(self, class_name)
-                # Create a new instance of the same type as the child
-                child_class = type(child_template)
-                new_child = child_class()
-                # Copy properties definition
-                if hasattr(child_template, '_SYSProperties'):
-                    setattr(new_child, '_SYSProperties', getattr(child_template, '_SYSProperties'))
-                # Set parent reference
-                setattr(new_child, '_SYSParentObject', instance)
-                # Copy child templates recursively
-                if hasattr(child_template, '_SYSChildTemplates'):
-                    self._copy_child_structure(child_template, new_child)
-                # Attach to instance
+                new_child = self._create_child_copy(child_template, instance)
                 setattr(instance, class_name, new_child)
                 instance_children.append(class_name)
         
@@ -351,6 +339,25 @@ class MultiClassHandler(BaseHandler):
 
         self._object_container.append(instance)
         return instance
+
+    def _create_child_copy(self, template, parent):
+        """ Helper method to create a copy of a child template.
+        
+        :param template: Template instance to copy from
+        :param parent: Parent instance for the new child
+        :return: New child instance
+        """
+        child_class = type(template)
+        new_child = child_class()
+        # Copy properties definition
+        if hasattr(template, '_SYSProperties'):
+            setattr(new_child, '_SYSProperties', getattr(template, '_SYSProperties'))
+        # Set parent reference
+        setattr(new_child, '_SYSParentObject', parent)
+        # Copy child templates recursively
+        if hasattr(template, '_SYSChildTemplates'):
+            self._copy_child_structure(template, new_child)
+        return new_child
 
     def _copy_child_structure(self, source, target):
         """ Helper method to recursively copy child structure.
@@ -362,14 +369,7 @@ class MultiClassHandler(BaseHandler):
             # Copy child templates recursively
             for class_name, class_ref in source._SYSChildTemplates:
                 child_template = getattr(source, class_name)
-                child_class = type(child_template)
-                new_child = child_class()
-                if hasattr(child_template, '_SYSProperties'):
-                    setattr(new_child, '_SYSProperties', getattr(child_template, '_SYSProperties'))
-                setattr(new_child, '_SYSParentObject', target)
-                # Recursively copy
-                if hasattr(child_template, '_SYSChildTemplates'):
-                    self._copy_child_structure(child_template, new_child)
+                new_child = self._create_child_copy(child_template, target)
                 setattr(target, class_name, new_child)
 
     def set_properties(self, property_list):
@@ -403,8 +403,12 @@ class MultiClassHandler(BaseHandler):
     def set_json_dict(self):
         """ set_json_dict() method.
 
-        Preprare self.json_dict from self (self._object_container)).
+        Prepare self.json_dict from self (self._object_container)).
         For multiclass instances, delegates to set_instance_json_dict().
+        
+        Note: Empty arrays are kept in the json_dict for container instances to maintain
+        proper structure for the transformer, but are filtered out in set_instance_json_dict()
+        for multiclass instances to avoid empty entries in the final JSON output.
         """
         # Multiclass instances should use set_instance_json_dict, not this method
         if hasattr(self, '_SYSType') and self._SYSType == 'multiclass_instance':
@@ -419,9 +423,6 @@ class MultiClassHandler(BaseHandler):
             self.logger.debug('Loop class instance:{}'.format(dir(class_instance)))
             class_instance.set_instance_json_dict()
             self.json_dict[class_name].append(class_instance.json_dict)
-        # Don't delete empty arrays - they're still valid and needed by the transformer
-        # if len(self.json_dict[class_name]) == 0:
-        #     del self.json_dict[class_name]
 
     def set_instance_json_dict(self):
         """ set_instance_json_dict() method.
