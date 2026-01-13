@@ -13,7 +13,7 @@ RUN apt-get -qq update -y
 
 RUN apt-get -qq install python3-pip python3-sphinx python3-sphinx-rtd-theme -y
 RUN apt-get -qq install python3-pytest python3-pytest-pep8 -y
-RUN apt-get -qq install python3-psycopg2 -y
+RUN apt-get -qq install python3-psycopg2 python3-pymongo -y
 RUN apt-get -qq install curl -y
 
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
