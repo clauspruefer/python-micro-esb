@@ -6,6 +6,7 @@ import_classes = {
         'Smartcard',
         'SmartcardContainer',
         'Shipment',
-        'Palette'
+        'Palette',
+        'Box'
     ],
 }

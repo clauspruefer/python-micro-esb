@@ -41,3 +41,8 @@ class Shipment(microesb.ClassHandler):
 class Palette(microesb.MultiClassHandler):
     def __init__(self):
         super().__init__()
+
+
+class Box(microesb.MultiClassHandler):
+    def __init__(self):
+        super().__init__()

@@ -290,3 +290,171 @@ class TestMapping:
                 {'id': 2, 'label': 'label2'}
             ]
         }
+
+    def test_recursive_multi_item_object(self):
+        """Test nested MultiClassHandler: Shipment -> Palette (multi) -> Box (multi)"""
+        
+        config_class = {
+            'class_mapping': {
+                'Shipment': 'Shipment',
+                'Palette': 'Palette',
+                'Box': 'Box',
+            },
+            'class_reference': {
+                'Shipment': {
+                    'property_ref': 'Shipment',
+                    'children': {
+                        'Palette': {
+                            'property_ref': 'Palette',
+                            'children': {
+                                'Box': {
+                                    'property_ref': 'Box',
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        config_properties = {
+            'Shipment': {
+                'properties': {
+                    'id': {
+                        'type': 'str',
+                        'default': None,
+                        'required': True,
+                        'description': '',
+                    }
+                }
+            },
+            'Palette': {
+                'properties': {
+                    'id': {
+                        'type': 'str',
+                        'default': None,
+                        'required': True,
+                        'description': '',
+                    },
+                    'weight': {
+                        'type': 'int',
+                        'default': None,
+                        'required': False,
+                        'description': '',
+                    }
+                }
+            },
+            'Box': {
+                'properties': {
+                    'id': {
+                        'type': 'str',
+                        'default': None,
+                        'required': True,
+                        'description': '',
+                    },
+                    'contents': {
+                        'type': 'str',
+                        'default': None,
+                        'required': False,
+                        'description': '',
+                    }
+                }
+            }
+        }
+        
+        config_service = {
+            'id': 'processShipment',
+            'data': [
+                {
+                    'Shipment': {
+                        'id': 'ship-001',
+                        'Palette': [
+                            {
+                                'id': 'pal-001',
+                                'weight': 100,
+                                'Box': [
+                                    {'id': 'box-001', 'contents': 'electronics'},
+                                    {'id': 'box-002', 'contents': 'books'},
+                                ]
+                            },
+                            {
+                                'id': 'pal-002',
+                                'weight': 150,
+                                'Box': [
+                                    {'id': 'box-003', 'contents': 'furniture'},
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+        
+        class_mapper = microesb.ClassMapper(
+            class_references=config_class['class_reference'],
+            class_mappings=config_class['class_mapping'],
+            class_properties=config_properties
+        )
+        
+        s = microesb.ServiceExecuter().execute(
+            class_mapper=class_mapper,
+            service_data=config_service
+        )
+        
+        shipment = getattr(s[0]._class_mapper, 'Shipment')
+        palette = getattr(shipment, 'Palette')
+        
+        # Check first palette
+        p1 = palette._object_container[0]
+        assert getattr(p1, 'id') == 'pal-001'
+        assert getattr(p1, 'weight') == 100
+        
+        # Check first palette's boxes
+        p1_box = getattr(p1, 'Box')
+        assert hasattr(p1_box, '_object_container')
+        assert len(p1_box._object_container) == 2
+        
+        p1_b1 = p1_box._object_container[0]
+        p1_b2 = p1_box._object_container[1]
+        assert getattr(p1_b1, 'id') == 'box-001'
+        assert getattr(p1_b1, 'contents') == 'electronics'
+        assert getattr(p1_b2, 'id') == 'box-002'
+        assert getattr(p1_b2, 'contents') == 'books'
+        
+        # Check second palette
+        p2 = palette._object_container[1]
+        assert getattr(p2, 'id') == 'pal-002'
+        assert getattr(p2, 'weight') == 150
+        
+        # Check second palette's boxes
+        p2_box = getattr(p2, 'Box')
+        assert hasattr(p2_box, '_object_container')
+        assert len(p2_box._object_container) == 1
+        
+        p2_b1 = p2_box._object_container[0]
+        assert getattr(p2_b1, 'id') == 'box-003'
+        assert getattr(p2_b1, 'contents') == 'furniture'
+        
+        # Test JSON transformation
+        shipment.json_transform()
+        assert shipment.json_dict == {
+            'id': 'ship-001',
+            'SYSServiceMethod': None,
+            'Palette': [
+                {
+                    'id': 'pal-001',
+                    'weight': 100,
+                    'Box': [
+                        {'id': 'box-001', 'contents': 'electronics'},
+                        {'id': 'box-002', 'contents': 'books'}
+                    ]
+                },
+                {
+                    'id': 'pal-002',
+                    'weight': 150,
+                    'Box': [
+                        {'id': 'box-003', 'contents': 'furniture'}
+                    ]
+                }
+            ]
+        }
