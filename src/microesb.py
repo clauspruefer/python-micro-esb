@@ -725,7 +725,7 @@ class ServiceExecuter():
         Recursive connect all generated json_dicts to its parents.
         """
 
-        self.logger.info('Parent dict:{}'.format(parent_dict))
+        self.logger.debug('Parent dict:{}'.format(parent_dict))
 
         if parent_class is not None:
             self._class_hierarchy[self._hierarchy_level] = parent_class
@@ -764,11 +764,11 @@ class ServiceExecuter():
             self._class_hierarchy_comp[self._hierarchy_level_comp] = parent_class
 
         if self._class_hierarchy == self._class_hierarchy_comp:
-            self.logger.info('Match rename_dict:{}'.format(rename_dict))
+            self.logger.debug('Match rename_dict:{}'.format(rename_dict))
 
             # only remove when all 'children' keys have been altered to 'children_processed'
             if ChildCounter().get_sum_child_count(dict(rename_dict)) == 0:
-                self.logger.info('Parent dict:{}'.format(parent_dict))
+                self.logger.debug('Parent dict:{}'.format(parent_dict))
                 set_dict = parent_dict[parent_class].pop('children')
                 parent_dict[parent_class]['children_processed'] = set_dict
 
@@ -798,7 +798,7 @@ class ChildCounter():
         Count children nodes recursive and return sum.
         """
 
-        self.logger.info('Sum count ref-dict:{}'.format(reference_dict))
+        self.logger.debug('Sum count ref-dict:{}'.format(reference_dict))
 
         for class_name, class_properties in reference_dict.items():
             if 'children' in class_properties:

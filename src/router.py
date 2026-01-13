@@ -32,7 +32,7 @@ class ServiceRouter():
         Execute method with given id in `send_id` from imported user_routing.py module
         and return result dict or None.
         """
-        logger.info('ServiceRouter send_id:{} metadata:{}'.format(send_id, metadata))
+        logger.debug('ServiceRouter send_id:{} metadata:{}'.format(send_id, metadata))
         func_ref = getattr(mod_ref, send_id)
         logger.debug('FuncRef:{}'.format(func_ref))
         return func_ref(metadata)
