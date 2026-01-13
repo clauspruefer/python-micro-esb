@@ -668,7 +668,7 @@ class ServiceExecuter():
         Execute service calls by creating ServiceMapper instances for each data item.
 
         :param classref class_mapper: class mapper instance reference
-        :param dict service_data: service call data dictionary with 'data' key containing list of items
+        :param dict service_data: data dictionary with 'data' key containing list of items
         :return: list of ServiceMapper instances
         :rtype: list
         """
@@ -689,7 +689,7 @@ class ServiceExecuter():
         Execute service calls and return connected class hierarchies with json_dicts.
 
         :param classref class_mapper: class mapper instance reference
-        :param dict service_data: service call data dictionary with 'data' key containing list of items
+        :param dict service_data: data dictionary with 'data' key containing list of items
         :return: list of connected class hierarchy dictionaries
         :rtype: list
         """
