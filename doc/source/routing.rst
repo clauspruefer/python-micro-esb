@@ -4,7 +4,7 @@
 Routing
 =======
 
-The **microesb** module provides flexible routing capabilities to direct service calls to appropriate backend implementations. This enables data aggregation (routing) to multiple data-sources like traditional relational databases or modern NoSQL platforms.
+The **microesb** module provides flexible routing capabilities to direct service calls to appropriate backend implementations. This enables data aggregation (esb terminology calls this *routing*) to multiple data-sources like traditional relational databases, modern NoSQL platforms or similar.
 
 1. Simple Routing
 =================
@@ -13,10 +13,12 @@ Simple Routing allows **direct**, **unencapsulated** routing of service calls to
 
 **Encapsulated Routing** is a methodology to abstract / handle each single service entity as an external callable service, encapsulated inside a network-callable container (e.g. application server) with scaling and AAA functionality like using "Kubernetes / NginX / https" or "FalconAS / NLAMP".
 
+The **Encapsulated Routing** concept is described under 2.x more detailed.
+
 1.1. Overview
 *************
 
-Simple routing uses the ``ServiceRouter`` class to dynamically invoke functions defined in a ``user_routing.py`` module. Each routing function receives metadata from the service call and returns the result of the backend operation.
+Simple routing uses the ``ServiceRouter`` class to dynamically invoke functions defined in a ``user_routing.py`` module. Each routing function receives metadata from the service call and is able to return user modified results (as any type) of the backend operation.
 
 1.2. Implementation
 *******************
@@ -28,61 +30,55 @@ Example from ``/example/02-pki-management/user_routing.py``:
 .. literalinclude:: ../../example/02-pki-management/user_routing.py
     :linenos:
 
-1.3. Implementation
-*******************
+1.3. Service Calls
+******************
 
-Simply insert
+A service call must be placed inside the *service implementation*. The micro-esb's ServiceRouter class places a reference there (self._ServiceRouter), so it is easily callable like this:
 
-self._ServiceRouter.send(
-'CertGetById', metadata=self.id)` inside the service_implementation.py class definitions.
+``self._ServiceRouter.send('MethodId', metadata=metadata)`.
+
+A good approach is to pass metadata as a dictionary type into the routing function (JSON serializable) and also expect a dictionary type as result (JSON serializable) to be conform to modern software development practices.
 
 1.4. Common Use Cases
 *********************
 
-Simple routing should be used for net-internal trusted operations / systems where no authentication security is required.
+Simple routing is suitable for example:
 
-1.5. Error Handling
-*******************
+- to aggregate data from internal systems (centralized DB with NoSQL data sources)
+- to route / propagate service calls (e.g. certificate generation) to network-attached sub-systems
 
-The ``ServiceRouter`` class provides no error handling, the user is responsible implementing error / exception handling by himself.
+> [!WARNING]
+> Authenticaton, Accouting and Load-Balancing has to be implemented by the user itself.
+
+1.5. Error Handling / Logging
+*****************************
+
+The ``ServiceRouter`` class provides no error handling nor logging, the user is responsible implementing error / exception handling / logging by himself.
 
 2. Encapsulated Routing
 =======================
 
-Encapsulated Routing provides a more sophisticated approach with service registry integration,
-authentication, authorization, and load balancing capabilities.
+**Encapsulated Routing** is a mechanism to host ESB API services securely inside an network-accesible entity which provides the following:
 
-.. note::
+- Load Balancing / Scaling
+- AAA (Authentication, Authorization, Accounting)
+- Service (API) Registration / Versioning
+- Service (API) Discovery
+- Service (API) Documentation
+- Service Security / PKI Abstraction
 
-    Encapsulated Routing will be integrated in a future release and will include:
-    
-    - Service Registry integration for dynamic service discovery
-    - Built-in Authentication and Authorization (AAA) mechanisms
-    - Load balancing across multiple service instances
-    - Service versioning and compatibility management
-    - Centralized logging and monitoring
-    - Circuit breaker patterns for fault tolerance
+Detailed documentation (including examples) starting from release version 1.3 upwards.
 
-2.1. Planned Features
-*********************
+3. Operating Modes
+==================
 
-The encapsulated routing implementation will provide:
+There are **no** strict configurable modes, the micro-esb's concept is to be extraordinary flexible in class abstraction / modeling from the users point of view; the *implementation mode* results from the users program code.
 
-**Service Registry:**
-  Centralized registry for service endpoint discovery and metadata management.
+Nevertheless between two different **logical** modes can be distinguished:
 
-**AAA Integration:**
-  Authentication, Authorization, and Accounting for secure service access control.
+- Native Routing Mode
+- Non Native Routing Mode
 
-**Load Balancing:**
-  Distribute service calls across multiple backend instances for scalability.
+**Native Routing** is the concept of decapsulate any service *calculations* (CPU) to external entities / application server; the ESB's service_implementation exclusively routes data to external services and **does not** process data internally which strongly enhances security.
 
-**Service Mesh:**
-  Advanced service-to-service communication with retry logic, timeouts, and fallbacks.
-
-2.2. Migration Path
-*******************
-
-Applications using Simple Routing will be able to migrate to Encapsulated Routing with minimal
-code changes. The routing interface will remain backwards compatible while providing optional
-advanced features through configuration.
+**Non Native Routing** does not encapsulate data calls so data fetching is directly executed inside the ESB's service_implementation (e.g. direct MongoDB driver). This concept should not be adapted on high security requirements / non-reverse-proxied access.
