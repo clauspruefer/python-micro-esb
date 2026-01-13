@@ -10,7 +10,7 @@ def CertGetById(metadata):
     )
 
 def CertStore(metadata):
-    mongodb.cert.insert_one(metadata)
+    return mongodb.cert.insert_one(metadata)
 
 def KeypairGenerate(metadata):
     return True
