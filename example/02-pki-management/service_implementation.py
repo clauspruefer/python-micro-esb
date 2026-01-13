@@ -12,7 +12,7 @@ class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
     def __init__(self):
         super().__init__()
 
-        self._register_property(
+        self.register_property(
             'generation_timestamp',
             {
                 'type': 'str',
@@ -22,7 +22,7 @@ class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
             }
         )
 
-        self._register_property(
+        self.register_property(
             'cert_data',
             {
                 'type': 'str',
@@ -152,7 +152,7 @@ class Smartcard(microesb.ClassHandler):
     def __init__(self):
         super().__init__()
 
-        self._register_property(
+        self.register_property(
             'gen_status',
             {
                 'type': bool,
