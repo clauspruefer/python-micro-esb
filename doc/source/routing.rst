@@ -4,21 +4,21 @@
 Routing
 =======
 
-The **microesb** module provides flexible routing capabilities to direct service calls to appropriate backend implementations. This enables data aggregation (esb terminology calls this *routing*) to multiple data-sources like traditional relational databases, modern NoSQL platforms or similar.
+The **microesb** module provides flexible routing capabilities to direct service calls to appropriate backend implementations. This enables data aggregation (in ESB terminology, this is referred to as *routing*) from multiple data sources, including traditional relational databases, modern NoSQL platforms, and similar systems.
 
 1. Simple Routing
 =================
 
 Simple Routing allows **direct**, **unencapsulated** routing of service calls to user-defined functions. This approach is suitable for straightforward use cases where service calls map directly to backend operations without complex orchestration requirements.
 
-**Encapsulated Routing** is a methodology to abstract / handle each single service entity as an external callable service, encapsulated inside a network-callable container (e.g. application server) with scaling and AAA functionality like using "Kubernetes / NginX / https" or "FalconAS / NLAMP".
+**Encapsulated Routing** is a methodology designed to abstract and handle each service entity as an externally callable service, encapsulated within a network-accessible container (e.g., application server) with scaling and AAA (Authentication, Authorization, Accounting) functionality, such as "Kubernetes / Nginx / HTTPS" or "FalconAS / NLAMP".
 
-The **Encapsulated Routing** concept is described under 2.x more detailed.
+The **Encapsulated Routing** concept is described in greater detail in section 2.
 
 1.1. Overview
 *************
 
-Simple routing uses the ``ServiceRouter`` class to dynamically invoke functions defined in a ``user_routing.py`` module. Each routing function receives metadata from the service call and is able to return user modified results (as any type) of the backend operation.
+Simple routing uses the ``ServiceRouter`` class to dynamically invoke functions defined in a ``user_routing.py`` module. Each routing function receives metadata from the service call and can return user-modified results (of any type) representing the outcome of the backend operation.
 
 1.2. Implementation
 *******************
@@ -33,52 +33,52 @@ Example from ``/example/02-pki-management/user_routing.py``:
 1.3. Service Calls
 ******************
 
-A service call must be placed inside the *service implementation*. The micro-esb's ServiceRouter class places a reference there (self._ServiceRouter), so it is easily callable like this:
+A service call must be placed within the *service implementation*. The micro-esb's ServiceRouter class provides a reference there (self._ServiceRouter), making it easily callable as follows:
 
-``self._ServiceRouter.send('MethodId', metadata=metadata)`.
+``self._ServiceRouter.send('MethodId', metadata=metadata)``.
 
-A good approach is to pass metadata as a dictionary type into the routing function (JSON serializable) and also expect a dictionary type as result (JSON serializable) to be conform to modern software development practices.
+A recommended approach is to pass metadata as a dictionary type (JSON serializable) into the routing function and expect a dictionary type as a result (JSON serializable), conforming to modern software development best practices.
 
 1.4. Common Use Cases
 *********************
 
-Simple routing is suitable for example:
+Simple routing is particularly suitable for:
 
-- to aggregate data from internal systems (centralized DB with NoSQL data sources)
-- to route / propagate service calls (e.g. certificate generation) to network-attached sub-systems
+- Aggregating data from internal systems (e.g., centralized databases with NoSQL data sources)
+- Routing and propagating service calls (e.g., certificate generation) to network-attached subsystems
 
-> [!WARNING]
-> Authenticaton, Accouting and Load-Balancing has to be implemented by the user itself.
+.. warning::
+   Authentication, accounting, and load balancing must be implemented by the user.
 
-1.5. Error Handling / Logging
-*****************************
+1.5. Error Handling and Logging
+*******************************
 
-The ``ServiceRouter`` class provides no error handling nor logging, the user is responsible implementing error / exception handling / logging by himself.
+The ``ServiceRouter`` class does not provide built-in error handling or logging. Users are responsible for implementing their own error and exception handling, as well as logging mechanisms.
 
 2. Encapsulated Routing
 =======================
 
-**Encapsulated Routing** is a mechanism to host ESB API services securely inside an network-accesible entity which provides the following:
+**Encapsulated Routing** is a mechanism for hosting ESB API services securely within a network-accessible entity that provides the following features:
 
-- Load Balancing / Scaling
+- Load balancing and scaling
 - AAA (Authentication, Authorization, Accounting)
-- Service (API) Registration / Versioning
-- Service (API) Discovery
-- Service (API) Documentation
-- Service Security / PKI Abstraction
+- Service (API) registration and versioning
+- Service (API) discovery
+- Service (API) documentation
+- Service security and PKI abstraction
 
-Detailed documentation (including examples) starting from release version 1.3 upwards.
+Detailed documentation (including examples) will be available starting from release version 1.3.
 
 3. Operating Modes
 ==================
 
-There are **no** strict configurable modes, the micro-esb's concept is to be extraordinary flexible in class abstraction / modeling from the users point of view; the *implementation mode* results from the users program code.
+There are **no** strictly configurable modes. The micro-esb framework is designed to be extraordinarily flexible in class abstraction and modeling from the user's perspective; the *implementation mode* results from the user's program code.
 
-Nevertheless between two different **logical** modes can be distinguished:
+Nevertheless, two different **logical** modes can be distinguished:
 
 - Native Routing Mode
-- Non Native Routing Mode
+- Non-Native Routing Mode
 
-**Native Routing** is the concept of decapsulate any service *calculations* (CPU) to external entities / application server; the ESB's service_implementation exclusively routes data to external services and **does not** process data internally which strongly enhances security.
+**Native Routing** is the concept of delegating all service *computations* (CPU-intensive operations) to external entities or application servers. The ESB's service_implementation exclusively routes data to external services and **does not** process data internally, thereby strongly enhancing security.
 
-**Non Native Routing** does not encapsulate data calls so data fetching is directly executed inside the ESB's service_implementation (e.g. direct MongoDB driver). This concept should not be adapted on high security requirements / non-reverse-proxied access.
+**Non-Native Routing** does not encapsulate data calls, so data fetching is executed directly within the ESB's service_implementation (e.g., direct MongoDB driver usage). This approach should not be adopted in environments with high security requirements or non-reverse-proxied access.
