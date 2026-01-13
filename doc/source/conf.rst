@@ -291,7 +291,7 @@ Example configuration:
 
 .. _example-test-execution:
 
-5.3. Test Execution
+2.7. Test Execution
 *******************
 
 Before executing the configuration, ensure all referenced files are correctly provided:
