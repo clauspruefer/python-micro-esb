@@ -74,6 +74,9 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
 
     def iterate(self):
         """ Recursive iterate through hierarchical class instances.
+
+        :return: generator yielding class instances in hierarchy
+        :rtype: generator
         """
         yield self
         for x in self:
@@ -172,6 +175,11 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         """ property_dict() method.
 
         Return all classes self._SYSProperties property_id, value dictionary.
+
+        :return: dictionary of all properties excluding 'SYSServiceMethod'
+        :rtype: dict
+
+        Decorated with @property so direct property access possible
         """
 
         return_dict = {}
@@ -203,7 +211,12 @@ class BaseHandler(JSONTransformer, metaclass=abc.ABCMeta):
         return self.__class__.__name__
 
     def get_value_by_property_id(self, property_id):
-        """ get_value_by_property_id() method."""
+        """ get_value_by_property_id() method.
+
+        :param str property_id: property identifier
+        :return: attribute value for given property_id
+        :rtype: dynamic
+        """
         return getattr(self, property_id)
 
 
@@ -214,6 +227,7 @@ class ClassHandler(BaseHandler):
     def __init__(self):
         """
         :ivar str _SYSType: const internal system type to differentiate handler types
+        :ivar classref _ServiceRouter: ServiceRouter instance reference
         """
         super().__init__()
         self._SYSType = 'class_instance'
@@ -238,6 +252,9 @@ class ClassHandler(BaseHandler):
         """ overloaded internal __iter__() method.
 
         Overloaded for using iter() on class references.
+
+        :return: generator yielding class instances from _SYSClassNames
+        :rtype: generator
         """
         for class_name in self._SYSClassNames:
             yield getattr(self, class_name)
@@ -278,6 +295,8 @@ class ClassHandler(BaseHandler):
 
         Propagate self.json_dict with current class instance attribute values (self._SYSProperties)
         and with empty (None) class instance references (processed from JSONTransformer).
+
+        Removes 'SYSServiceMethod' from json_dict and initializes child class references to None.
         """
 
         for property_id in self._SYSProperties:
@@ -314,6 +333,9 @@ class MultiClassHandler(BaseHandler):
         """ overloaded internal __iter__() method.
 
         Overloaded for using iter() on class references.
+
+        :return: generator yielding class instances from _object_container
+        :rtype: generator
         """
         for class_instance in self._object_container:
             yield class_instance
@@ -351,7 +373,10 @@ class MultiClassHandler(BaseHandler):
     def set_json_dict(self):
         """ set_json_dict() method.
 
-        Preprare self.json_dict from self (self._object_container)).
+        Prepare self.json_dict from self._object_container.
+
+        Iterates through all instances in _object_container and appends their
+        json_dict to create a list. Removes empty entries.
         """
         self.logger.debug('Object container:{}'.format(self._object_container))
         class_name = self.class_name
@@ -366,7 +391,10 @@ class MultiClassHandler(BaseHandler):
     def set_instance_json_dict(self):
         """ set_instance_json_dict() method.
 
-        Preprare self.json_dict from self._SYSProperties (used by JSONTransformer).
+        Prepare self.json_dict from self._SYSProperties (used by JSONTransformer).
+
+        Extracts all property values and populates json_dict, ignoring any errors
+        from missing or inaccessible attributes.
         """
         for property_id in self._SYSProperties:
             try:
@@ -415,6 +443,9 @@ class ClassMapper(ClassHandler):
         """ overloaded __repr__() method.
 
         Print out class mappings, properties and references.
+
+        :return: formatted string with class mappings, properties and references
+        :rtype: str
         """
         return 'Class mappings:{} properties:{} references:{}'.format(
             self._class_mappings,
@@ -608,6 +639,17 @@ class ServiceExecuter():
     """
 
     def __init__(self):
+        """
+        :ivar classref logger: logging logger reference
+        :ivar classref _cm_ref: class mapper reference
+        :ivar dict _con_ref_dict: connection reference dictionary
+        :ivar dict _class_hierarchy: class hierarchy dictionary
+        :ivar list _class_hierarchy_list: list of class hierarchy items
+        :ivar int _hierarchy_level: current hierarchy level counter
+        :ivar int _map_hierarchy_level: mapping hierarchy level counter
+        :ivar dict _class_hierarchy_comp: class hierarchy comparison dictionary
+        :ivar int _hierarchy_level_comp: hierarchy level comparison counter
+        """
 
         self.logger = logging.getLogger(__name__)
 
@@ -621,9 +663,14 @@ class ServiceExecuter():
         self._hierarchy_level_comp = None
 
     def execute(self, class_mapper, service_data):
-        """
+        """ execute() method.
+
+        Execute service calls by creating ServiceMapper instances for each data item.
+
         :param classref class_mapper: class mapper instance reference
-        :param list service_data: list of service call metadata dictionary items
+        :param dict service_data: service call data dictionary with 'data' key containing list of items
+        :return: list of ServiceMapper instances
+        :rtype: list
         """
 
         rlist = []
@@ -637,9 +684,14 @@ class ServiceExecuter():
         return rlist
 
     def execute_get_hierarchy(self, class_mapper, service_data):
-        """
+        """ execute_get_hierarchy() method.
+
+        Execute service calls and return connected class hierarchies with json_dicts.
+
         :param classref class_mapper: class mapper instance reference
-        :param list service_data: list of service call metadata dictionary items
+        :param dict service_data: service call data dictionary with 'data' key containing list of items
+        :return: list of connected class hierarchy dictionaries
+        :rtype: list
         """
 
         rlist = []
@@ -659,6 +711,10 @@ class ServiceExecuter():
         """ _connect_hierarchy() method.
 
         Init method for connecting all generated json_dicts.
+
+        :param classref class_mapper_ref: class mapper instance reference
+        :return: connected class hierarchy reference dictionary
+        :rtype: dict
         """
 
         self._cm_ref = class_mapper_ref
@@ -701,6 +757,12 @@ class ServiceExecuter():
         return cm_ref_dict
 
     def _map_object_instances(self, ref_dict):
+        """ _map_object_instances() method.
+
+        Recursively map object instances to reference dictionary and perform JSON transform on root.
+
+        :param dict ref_dict: reference dictionary to process
+        """
 
         for class_name, class_props in ref_dict.items():
 
@@ -722,7 +784,11 @@ class ServiceExecuter():
     def _connect_hierarchy_recursive(self, reference_dict, parent_class=None, parent_dict=None):
         """ _connect_hierarchy_recursive() method.
 
-        Recursive connect all generated json_dicts to its parents.
+        Recursively connect all generated json_dicts to their parents.
+
+        :param dict reference_dict: reference dictionary to process
+        :param str parent_class: parent class name (optional)
+        :param dict parent_dict: parent dictionary reference (optional)
         """
 
         self.logger.debug('Parent dict:{}'.format(parent_dict))
@@ -756,6 +822,14 @@ class ServiceExecuter():
                 )
 
     def _rename_dict_key(self, rename_dict, parent_dict=None, parent_class=None):
+        """ _rename_dict_key() method.
+
+        Recursively rename 'children' keys to 'children_processed' when hierarchy matches.
+
+        :param dict rename_dict: dictionary to process
+        :param dict parent_dict: parent dictionary reference (optional)
+        :param str parent_class: parent class name (optional)
+        """
 
         self.logger.debug('Parent class:{}'.format(parent_class))
         self.logger.debug('RenameDict:{}'.format(rename_dict))
@@ -789,13 +863,21 @@ class ChildCounter():
     """
 
     def __init__(self):
+        """
+        :ivar int _children_occurences: counter for children node occurrences
+        :ivar classref logger: logging logger reference
+        """
         self._children_occurences = 0
         self.logger = logging.getLogger(__name__)
 
     def get_sum_child_count(self, reference_dict):
         """ get_sum_child_count() method.
 
-        Count children nodes recursive and return sum.
+        Count children nodes recursively and return sum.
+
+        :param dict reference_dict: reference dictionary to process
+        :return: total count of 'children' keys in hierarchy
+        :rtype: int
         """
 
         self.logger.debug('Sum count ref-dict:{}'.format(reference_dict))

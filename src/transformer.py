@@ -11,19 +11,24 @@ import json
 
 
 class JSONTransformer():
-    """ JSON transfomer class.
+    """ JSON transformer class.
+
+    Provides JSON transformation functionality for class hierarchies.
     """
 
     def __init__(self):
         """
-        :ivar dict[dict] _json_dict: recursive internal properties processing dict
+        :ivar dict _json_dict: recursive internal properties processing dict
         """
         self._json_dict = {}
 
     def json_transform(self):
         """ json_transform() method.
 
-        Recursive generate _json_dict for complete object hierarchy.
+        Recursively generate _json_dict for complete object hierarchy.
+
+        Iterates through all elements in the hierarchy and calls set_json_dict()
+        on each to populate their json_dict representation.
         """
 
         for element in self.iterate():
