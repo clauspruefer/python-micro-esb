@@ -50,7 +50,7 @@ Using the **microesb** module generally does not require the **psycopg2** Postgr
 4. Build Dependencies
 =====================
 
-On current Debian 12 / Ubuntu 22.04.3 or 24.04.1, install the following additional packages (for documentation rendering and testing purposes).
+On Debian 12 / Ubuntu 22.04 or 24.04, install the following additional packages (for documentation rendering and testing purposes).
 
 .. code-block:: bash
 
