@@ -85,10 +85,11 @@ For the full example, see :ref:`example-number2`.
 5. Planned Features
 ====================
 
-The following features are planned for future releases:
+Planned for upcoming releases:
 
-- Service Registry
-- Service Registry Management
-- Service-Based AAA (HSM / Smartcard)
-- Automatic Service Interface Documentation Generation
-- Integration with the x0 JavaScript Framework
+- Service Registry / API Server
+- Service Registry / YANG Model Export
+- Service Registry / Web Interface
+- Service API / Auto Documentation
+- Extended "Encapsulated" Service Routing
+- Mincepy Integration / Metadata Mapping

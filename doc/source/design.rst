@@ -22,10 +22,6 @@ The following diagram illustrates the *Base Layout / Model* of a **scalable SOA 
 
     The **microesb** module focuses on the "Service Mapping / Abstraction Layer" (4).
 
-.. note::
-
-    The "Load Balancing Layer" and the "Transport Layer Security Layer" can be easily adapted using a Kubernetes Cluster / Ingress-nginx (see Example 2).
-
 2. Centralized Service Management
 =================================
 
@@ -81,7 +77,7 @@ The primary focus of the Python **microesb** module is to map a clean JSON metad
 
 .. note::
 
-    For a detailed example that includes transactional database access, refer to Example 1.
+    For a detailed example that includes transactional database access, refer to Example 1. Example 2 demonstrates a NoSQL approach using MongoDB.
 
 4. Platform As A Service
 ========================

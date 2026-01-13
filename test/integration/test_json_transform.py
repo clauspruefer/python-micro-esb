@@ -4,7 +4,7 @@ from microesb import microesb
 
 
 @pytest.fixture
-def config_class_multiobject():
+def config_class_listobject():
     config = {
         'class_mapping': {
             'Shipment': 'Shipment',
@@ -15,7 +15,7 @@ def config_class_multiobject():
                 'property_ref': 'Shipment',
                 'children': {
                     'Palette': {
-                        'property_ref': 'Palette',
+                        'property_ref': 'Palette'
                     }
                 }
             }
@@ -25,7 +25,7 @@ def config_class_multiobject():
 
 
 @pytest.fixture
-def config_properties_multiobject():
+def config_properties_listobject():
     config = {
         'Shipment': {
             'properties': {
@@ -33,7 +33,7 @@ def config_properties_multiobject():
                     'type': 'int',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': ''
                 }
             }
         },
@@ -43,13 +43,13 @@ def config_properties_multiobject():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': ''
                 },
                 'label': {
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': ''
                 }
             }
         }
@@ -58,7 +58,7 @@ def config_properties_multiobject():
 
 
 @pytest.fixture
-def config_service_multiobject():
+def config_service_listobject():
     config = {
         'id': 'processScan',
         'data': [
@@ -68,11 +68,11 @@ def config_service_multiobject():
                     'Palette': [
                         {
                             'id': 1,
-                            'label': 'label1',
+                            'label': 'label1'
                         },
                         {
                             'id': 2,
-                            'label': 'label2',
+                            'label': 'label2'
                         }
                     ]
                 }
@@ -83,7 +83,7 @@ def config_service_multiobject():
 
 
 @pytest.fixture
-def config_class_extended_service():
+def config_class_pki_service():
     config = {
         'class_mapping': {
             'CertCA': 'CertCA',
@@ -115,7 +115,7 @@ def config_class_extended_service():
 
 
 @pytest.fixture
-def config_properties_extended_service():
+def config_properties_pki_service():
     config = {
         'Cert': {
             'properties': {
@@ -123,13 +123,19 @@ def config_properties_extended_service():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': 'cert id'
                 },
                 'country': {
                     'type': 'str',
                     'default': 'DE',
                     'required': True,
-                    'description': '',
+                    'description': 'country'
+                },
+                'state': {
+                    'type': 'str',
+                    'default': None,
+                    'required': True,
+                    'description': ''
                 }
             }
         },
@@ -139,7 +145,13 @@ def config_properties_extended_service():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': 'label'
+                },
+                'user_pin': {
+                    'type': 'str',
+                    'default': None,
+                    'required': True,
+                    'description': 'user pin'
                 }
             }
         },
@@ -149,7 +161,7 @@ def config_properties_extended_service():
                     'type': 'str',
                     'default': None,
                     'required': True,
-                    'description': '',
+                    'description': 'label'
                 }
             }
         }
@@ -158,14 +170,9 @@ def config_properties_extended_service():
 
 
 @pytest.fixture
-def config_service_extended_service():
+def config_service_pki():
     config = {
         'id': 'addCACertificate',
-        'global': {
-            'CertCA': {
-                'FipsMode': False
-            }
-        },
         'data': [
             {
                 'CertCA': {
@@ -200,85 +207,74 @@ def config_service_extended_service():
     return config
 
 
-class TestMapping:
+class TestExecuteGetHierarchy:
 
-    def test_class_mapping(self, config_class_extended_service, config_properties_extended_service):
+    def test_transform_pki(
+            self,
+            config_class_pki_service,
+            config_properties_pki_service,
+            config_service_pki
+        ):
 
-        i = microesb.ClassMapper(
-            class_references=config_class_extended_service['class_reference'],
-            class_mappings=config_class_extended_service['class_mapping'],
-            class_properties=config_properties_extended_service
+        class_mapper = microesb.ClassMapper(
+            class_references=config_class_pki_service['class_reference'],
+            class_mappings=config_class_pki_service['class_mapping'],
+            class_properties=config_properties_pki_service
         )
 
-        cert_ca = getattr(i, 'CertCA')
-        smartcard_ca = getattr(cert_ca, 'SmartcardCA')
-        smartcard_container_ca = getattr(smartcard_ca, 'SmartcardContainer')
-        smartcard_req = getattr(cert_ca, 'SmartcardREQ')
-        smartcard_container_req = getattr(smartcard_req, 'SmartcardContainer')
+        r = microesb.ServiceExecuter().execute_get_hierarchy(
+            class_mapper=class_mapper,
+            service_data=config_service_pki
+        )
 
-        assert getattr(cert_ca, 'id') is None
-        assert getattr(smartcard_ca, 'label') is None
-        assert getattr(smartcard_req, 'label') is None
-        assert getattr(smartcard_container_ca, 'label') is None
-        assert getattr(smartcard_container_req, 'label') is None
+        root_object = r[0]['CertCA']['object_instance']
 
-    def test_service_mapping(
+        assert root_object.json_dict == {
+            'id': 'testid1',
+            'country': 'DE',
+            'state': 'Berlin',
+            'SmartcardCA': {
+                'label': 'label1',
+                'user_pin': 'pin1',
+                'SmartcardContainer': {
+                    'label': 'container_label1'
+                }
+            },
+            'SmartcardREQ': {
+                'label': 'label2',
+                'user_pin': 'pin2',
+                'SmartcardContainer': {
+                    'label': 'container_label2'
+                }
+            }
+        }
+
+    def test_list_object(
         self,
-        config_service_extended_service,
-        config_class_extended_service,
-        config_properties_extended_service
+        config_service_listobject,
+        config_class_listobject,
+        config_properties_listobject
     ):
 
         class_mapper = microesb.ClassMapper(
-            class_references=config_class_extended_service['class_reference'],
-            class_mappings=config_class_extended_service['class_mapping'],
-            class_properties=config_properties_extended_service
+            class_references=config_class_listobject['class_reference'],
+            class_mappings=config_class_listobject['class_mapping'],
+            class_properties=config_properties_listobject
         )
 
-        s = microesb.ServiceExecuter().execute(
+        r = microesb.ServiceExecuter().execute_get_hierarchy(
             class_mapper=class_mapper,
-            service_data=config_service_extended_service
+            service_data=config_service_listobject
         )
 
-        cert_ca = getattr(s[0]._class_mapper, 'CertCA')
-        smartcard_ca = getattr(cert_ca, 'SmartcardCA')
-        smartcard_container_ca = getattr(smartcard_ca, 'SmartcardContainer')
-        smartcard_req = getattr(cert_ca, 'SmartcardREQ')
-        smartcard_container_req = getattr(smartcard_req, 'SmartcardContainer')
+        root_object = r[0]['Shipment']['object_instance']
 
-        assert getattr(cert_ca, 'id') == 'testid1'
-        assert getattr(smartcard_ca, 'label') == 'label1'
-        assert getattr(smartcard_req, 'label') == 'label2'
-        assert getattr(smartcard_container_ca, 'label') == 'container_label1'
-        assert getattr(smartcard_container_req, 'label') == 'container_label2'
-
-    def test_multi_item_object(
-        self,
-        config_service_multiobject,
-        config_class_multiobject,
-        config_properties_multiobject
-    ):
-
-        class_mapper = microesb.ClassMapper(
-            class_references=config_class_multiobject['class_reference'],
-            class_mappings=config_class_multiobject['class_mapping'],
-            class_properties=config_properties_multiobject
-        )
-
-        s = microesb.ServiceExecuter().execute(
-            class_mapper=class_mapper,
-            service_data=config_service_multiobject
-        )
-
-        shipment = getattr(s[0]._class_mapper, 'Shipment')
-        palette = getattr(shipment, 'Palette')
-
-        assert getattr(shipment, 'id') == 'testshipment1'
-
-        p1 = palette._object_container[0]
-        p2 = palette._object_container[1]
-
-        assert getattr(p1, 'id') == 1
-        assert getattr(p1, 'label') == 'label1'
-        assert getattr(p2, 'id') == 2
-        assert getattr(p2, 'label') == 'label2'
+        assert root_object.json_dict == {
+            'id': 'testshipment1',
+            'Palette': {
+                'Palette': [
+                    { 'id': 1, 'label': 'label1' },
+                    { 'id': 2, 'label': 'label2' }
+                ]
+            }
+        }

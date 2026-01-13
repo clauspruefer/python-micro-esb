@@ -15,13 +15,15 @@ In this example, assume our "virtual" company runs a **Hosting Business**.
 
 The company's customer data, including a) Internet Domains and b) DNS Hostnames, should be manageable by different subsystems.
 
+This example demonstrates the integration with **PostgreSQL database transactions**, showcasing how the microesb framework handles atomic operations across multiple related entities while maintaining data integrity through commit/rollback mechanisms.
+
 .. note::
 
     Example number 1 will only cover Local Service Mapping **without** *Python Application Server* encapsulation.
 
 .. note::
 
-    In example number 4, we will explore these aspects further, including *Service Scaling* and *Load Balancing*.
+    In example number 4, we will explore these aspects further, including *Service Scaling*, *Load Balancing* and *Service Authentication*.
 
 1.1. Basic OOP Relations
 *************************
@@ -194,11 +196,253 @@ After execution, the newly created domain will be in the `sys_core."domain"` tab
 2. PKI Provisioning / Class Types
 =================================
 
-Example number 1 only covers a "plain" database model without local (e.g., bash) or remote (web service) invocations.
+This example demonstrates PKI (Public Key Infrastructure) certificate provisioning with a focus on class type hierarchies and **NoSQL MongoDB backend integration**.
 
-.. note::
+Unlike Example 1's relational database approach, this example showcases how the microesb framework seamlessly integrates with document-based NoSQL databases. MongoDB is used for storing and retrieving certificate metadata, demonstrating the framework's flexibility in handling both traditional and modern database paradigms.
 
-    Example number 2 is a stripped-down excerpt from PKI management to demonstrate how *virtual class types* and a *clean OOP model setup* work.
+The example implements a complete certificate generation workflow for:
+
+- **Certificate Authority (CA)** certificates
+- **Server** certificates
+- **Client** certificates
+
+Each certificate type can optionally use Hardware Security Module (HSM) / Smartcard integration for secure key pair generation. The implementation uses user-defined routing functions to interact with MongoDB for certificate storage and retrieval operations.
+
+2.0.1. MongoDB Collections
+***************************
+
+The example uses two MongoDB collections within the ``microesb`` database:
+
+a) **cert** - Stores certificate properties as *flat* key/value pairs for basic certificate metadata
+b) **cert_hierarchy** - Contains complete hierarchical JSON data representing the full certificate object graph including relationships to CA, Server, and Smartcard entities
+
+The ``cert`` collection is used for simple queries by certificate ID, while ``cert_hierarchy`` stores the complete object hierarchy for complex certificate relationships and dependency tracking.
+
+2.0.2. MongoDB Collection Examples
+***********************************
+
+The following examples illustrate the structure of documents stored in the ``cert`` and ``cert_hierarchy`` collections.
+
+**CA Certificate (Flat Storage):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b5c65ceda39b9c5388e"
+      },
+      "id": "test-ca1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testca@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:10:52.927127",
+      "cert_data": "dummy_cacert_data"
+    }
+
+**CA Certificate (Hierarchical Storage with Smartcard):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b5c65ceda39b9c5388f"
+      },
+      "id": "test-ca1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testca@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:10:52.927127",
+      "cert_data": "dummy_cacert_data",
+      "SmartcardContainer": null,
+      "Smartcard": {
+        "label": "smartcard_ca_card",
+        "user_pin": "pin1",
+        "gen_status": true,
+        "SmartcardContainer": {
+          "label": "keypair_ca1"
+        }
+      }
+    }
+
+**Server Certificate (Flat Storage):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b69bfa5128f5c1890f2"
+      },
+      "id": "test-server1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testserver@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:05.030076",
+      "cert_data": "dummy_servercert_data"
+    }
+
+**Server Certificate (Hierarchical Storage with CA Reference):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b69bfa5128f5c1890f3"
+      },
+      "id": "test-server1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testserver@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:05.030076",
+      "cert_data": "dummy_servercert_data",
+      "SmartcardContainer": null,
+      "Smartcard": {
+        "label": "smartcard_customer1",
+        "user_pin": "pin2",
+        "gen_status": true,
+        "SmartcardContainer": {
+          "label": "testserver1_keypair"
+        }
+      },
+      "CertCA": {
+        "id": "test-ca1",
+        "country": "DE",
+        "state": "Berlin",
+        "locality": "Berlin",
+        "org": "WEBcodeX",
+        "org_unit": "Security",
+        "common_name": "testca@domain.com",
+        "email": "pki@webcodex.de",
+        "valid_days": 365,
+        "generation_timestamp": "2026-01-07T14:10:52.927127",
+        "cert_data": "dummy_cacert_data",
+        "SmartcardContainer": null,
+        "Smartcard": {
+          "label": null,
+          "user_pin": null,
+          "gen_status": false,
+          "SmartcardContainer": {
+            "label": null
+          }
+        }
+      }
+    }
+
+**Client Certificate (Flat Storage):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b81fa0258fe59b9461d"
+      },
+      "id": "test-client1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testclient1@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:29.750133",
+      "cert_data": "dummy_clientcert_data"
+    }
+
+**Client Certificate (Hierarchical Storage with Full References):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b81fa0258fe59b9461e"
+      },
+      "id": "test-client1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testclient1@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:29.750133",
+      "cert_data": "dummy_clientcert_data",
+      "SmartcardContainer": null,
+      "Smartcard": {
+        "label": "smartcard_customer1",
+        "user_pin": "pin2",
+        "gen_status": true,
+        "SmartcardContainer": {
+          "label": "testserver1_client1_keypair"
+        }
+      },
+      "CertCA": {
+        "id": "test-ca1",
+        "country": "DE",
+        "state": "Berlin",
+        "locality": "Berlin",
+        "org": "WEBcodeX",
+        "org_unit": "Security",
+        "common_name": "testca@domain.com",
+        "email": "pki@webcodex.de",
+        "valid_days": 365,
+        "generation_timestamp": "2026-01-07T14:10:52.927127",
+        "cert_data": "dummy_cacert_data",
+        "SmartcardContainer": null,
+        "Smartcard": {
+          "label": null,
+          "user_pin": null,
+          "gen_status": false,
+          "SmartcardContainer": {
+            "label": null
+          }
+        }
+      },
+      "CertServer": {
+        "id": "test-server1",
+        "country": "DE",
+        "state": "Berlin",
+        "locality": "Berlin",
+        "org": "WEBcodeX",
+        "org_unit": "Security",
+        "common_name": "testserver@domain.com",
+        "email": "pki@webcodex.de",
+        "valid_days": 365,
+        "generation_timestamp": "2026-01-07T14:11:05.030076",
+        "cert_data": "dummy_servercert_data",
+        "SmartcardContainer": null,
+        "Smartcard": {
+          "label": null,
+          "user_pin": null,
+          "gen_status": false,
+          "SmartcardContainer": {
+            "label": null
+          }
+        }
+      }
+    }
+
+These examples demonstrate how the microesb framework stores both flat certificate data and hierarchical relationships in MongoDB, enabling efficient querying and complete object graph reconstruction.
 
 2.1. CA Certificate Relations
 ******************************
@@ -303,7 +547,7 @@ The "Cert" base class provides three private abstract methods because the proces
 
 - `_load_ref_cert_data()`
 - `_gen_openssl_cert()`
-- `_insert_cert_db_data()`
+- `_store_cert_data()`
 
 .. code-block:: python
 
@@ -317,15 +561,15 @@ The "Cert" base class provides three private abstract methods because the proces
     class CertServer(Cert):
 
         def _load_ref_cert_data(self):
-            self.CertCA._get_cert_dbdata_by_id()
+            self.CertCA._get_cert_data_by_id()
 
 .. code-block:: python
 
     class CertClient(Cert):
 
         def _load_ref_cert_data(self):
-            self.CertCA._get_cert_dbdata_by_id()
-            self.CertServer._get_cert_dbdata_by_id()
+            self.CertCA._get_cert_data_by_id()
+            self.CertServer._get_cert_data_by_id()
 
 2.6.2. Generic Template Methods
 -------------------------------
@@ -333,7 +577,7 @@ The "Cert" base class provides three private abstract methods because the proces
 The following methods are generic template methods inherited by each Child Class:
 
 - `_gen_openssl_privkey()`
-- `_get_cert_dbdata_by_id()`
+- `_get_cert_data_by_id()`
 - `_hsm_gen_keypair()`
 
 2.7. Accessing Properties
@@ -350,7 +594,7 @@ Label as follows:
 
 In `CertClient` and `CertServer`, it is also possible to access the `CertCA's` `Smartcard`
 Properties (from Referenced Classes in Class Reference Config) to fill data from the database
-inside `_get_cert_dbdata_by_id()`:
+inside `_get_cert_data_by_id()`:
 
 .. code-block:: python
 
@@ -374,7 +618,7 @@ Currently, the *Service Registry* feature is unimplemented. Execution is only po
 
 The following implementation demonstrates how to execute a `CertCA` type service:
 
-.. literalinclude:: ../../example/02-pki-management/main-ca.py
+.. literalinclude:: ../../example/02-pki-management/00-main-ca.py
     :linenos:
 
 To execute the script, run:
@@ -396,7 +640,7 @@ Expected output:
 
 The following implementation demonstrates how to execute a `CertServer` type service:
 
-.. literalinclude:: ../../example/02-pki-management/main-server.py
+.. literalinclude:: ../../example/02-pki-management/01-main-server.py
     :linenos:
 
 To execute the script, run:
@@ -420,7 +664,7 @@ Expected output:
 
 The following implementation demonstrates how to execute a `CertClient` type service:
 
-.. literalinclude:: ../../example/02-pki-management/main-client.py
+.. literalinclude:: ../../example/02-pki-management/02-main-client.py
     :linenos:
 
 To execute the script, run:
@@ -488,53 +732,23 @@ The following is an example of the *Service Call Metadata* for all certificate t
 
 .. _example-number3:
 
-3. Alias Class Mapping
-======================
+3. Hosting Use Case (Using DBPool)
+==================================
 
-Alias Class Mapping **must** be used when setting up multiple *Child Class Instances*.
+Example number 3 is an exact copy of example number 1 with the difference that a database pooling mechanism `python-dbpool` is used.
 
-3.1. Requirements
-*****************
+Project information:
 
-The *Alias Definition* must exist in the *Class Mapping Config* and map to an existing *Implementation Class*.
-
-Children of classes defined in the *Class Reference Config* must map to the *Alias Class(es)*.
-
-The *Alias Class* `property_ref` property in the *Class Reference Config* must always reference an existing *Implementation Class*.
-
-3.2. Example
-************
-
-Here is an example configuration for Alias Class Mapping:
-
-.. code-block:: python
-
-    config = {
-        'class_mapping': {
-            'Test': 'Test',
-            'Test2Ref1': 'Test2',
-            'Test2Ref2': 'Test2'
-        },
-        'class_reference': {
-            'Test': {
-                'property_ref': 'Test',
-                'children': {
-                    'Test2Ref1': {
-                        'property_ref': 'Test2'
-                    },
-                    'Test2Ref2': {
-                        'property_ref': 'Test2'
-                    }
-                }
-            }
-        }
-    }
+- https://github.com/clauspruefer/python-dbpool
 
 .. _example-number4:
 
-4. SOA on Kubernetes
-====================
+4. NLAP Integration
+===================
 
-This example includes a working Docker container and Kubernetes Minikube setup. It will be implemented after the FalconAS milestone *HTTP/1.1 implementation* is completed.
+Example number 4 will be added on NLAP (Next Level Application Protocol) completion.
 
-For more information, see: https://github.com/WEBcodeX1/http-1.2.
+Ongoing project status can be viewed here:
+
+- https://www.der-it-pruefer.de/network/Exemplary-HTTP-Processing-Protocol-Design
+- https://github.com/WEBcodeX1/http-1.2

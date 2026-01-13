@@ -1,12 +1,36 @@
 import abc
+import logging
+import datetime
 
 from microesb import microesb
+
+logger = logging.getLogger(__name__)
 
 
 class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
 
     def __init__(self):
         super().__init__()
+
+        self.register_property(
+            'generation_timestamp',
+            {
+                'type': 'str',
+                'default': None,
+                'required': False,
+                'description': 'SysInternal Certificate Generation Date'
+            }
+        )
+
+        self.register_property(
+            'cert_data',
+            {
+                'type': 'str',
+                'default': None,
+                'required': False,
+                'description': 'SysInternal Generated Certificate Base64 encoded'
+            }
+        )
 
     @abc.abstractmethod
     def _load_ref_cert_data(self):
@@ -19,8 +43,8 @@ class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def _insert_cert_db_data(self):
-        """ Abstract _insert_cert_db_data() method.
+    def _store_cert_data(self):
+        """ Abstract _store_cert_data() method.
         """
 
     def gen_cert(self):
@@ -28,27 +52,38 @@ class Cert(microesb.ClassHandler, metaclass=abc.ABCMeta):
         self._load_ref_cert_data()
 
         if getattr(self, 'Smartcard') is not None:
+            logger.info('Gen HSM Keypair')
             self._hsm_gen_keypair()
-        else:
+        if getattr(self, 'Smartcard') is None:
+            logger.info('Gen OpenSSL PrivKey')
             self._gen_openssl_privkey()
 
         self._gen_openssl_cert()
-        self._insert_cert_db_data()
+        self.generation_timestamp = datetime.datetime.now().isoformat('T')
+        self._store_cert_data()
 
     def _gen_openssl_privkey(self):
-        print('Gen openssl private key.')
+        logger.info('Gen openssl private key.')
 
-    def _get_cert_dbdata_by_id(self):
-        print('Get cert data from db. Type: {}.'.format(self.type))
+    def _get_cert_data_by_id(self):
+        logger.info('Get cert data from ESB. Type:{}.'.format(self.type))
+        self.set_properties(
+            self._ServiceRouter.send('CertGetById', metadata=self.id)
+        )
 
     def _hsm_gen_keypair(self):
-        print('Smartcard container label:{}'.format(
+        logger.info('Smartcard container label:{}'.format(
             self.Smartcard.SmartcardContainer.label)
         )
         self.Smartcard.gen_keypair()
 
+    def _store_cert_data(self):
+        logger.info('Store {} cert metadata.'.format(self.type))
+        self._ServiceRouter.send('CertStore', metadata=self.property_dict)
+
 
 class CertCA(Cert):
+
     def __init__(self):
         self.type = 'ca'
         super().__init__()
@@ -57,54 +92,91 @@ class CertCA(Cert):
         pass
 
     def _gen_openssl_cert(self):
-        print('Gen openssl cert type:{}.'.format(self.type))
+        logger.info('Generating {} cert.'.format(self.type))
 
-    def _insert_cert_db_data(self):
-        print('Insert cert data type:{} into db.'.format(self.type))
+        srv_metadata = {
+            "CertCA": self.property_dict
+        }
+
+        self.cert_data = 'dummy_cacert_data'
+        logger.info('Generating cert with metadata:{}'.format(srv_metadata))
 
 
 class CertServer(Cert):
+
     def __init__(self):
         self.type = 'server'
         super().__init__()
 
     def _load_ref_cert_data(self):
-        self.CertCA._get_cert_dbdata_by_id()
+        self.CertCA._get_cert_data_by_id()
 
     def _gen_openssl_cert(self):
-        print('Gen openssl cert type:{}, rel to CA.'.format(self.type))
+        logger.info('Generating {} cert.'.format(self.type))
 
-    def _insert_cert_db_data(self):
-        print('Insert cert data type:{} into db.'.format(self.type))
+        srv_metadata = {
+            "CertServer": self.property_dict,
+            "CertCA": self.CertCA.property_dict
+        }
+
+        logger.info('Generating cert with metadata:{}'.format(srv_metadata))
+
+        self.cert_data = 'dummy_servercert_data'
 
 
 class CertClient(Cert):
+
     def __init__(self):
         self.type = 'client'
         super().__init__()
 
     def _load_ref_cert_data(self):
-        self.CertCA._get_cert_dbdata_by_id()
-        self.CertServer._get_cert_dbdata_by_id()
+        self.CertCA._get_cert_data_by_id()
+        self.CertServer._get_cert_data_by_id()
 
     def _gen_openssl_cert(self):
-        print('Gen openssl cert type:{}, rel to cCA and cServer.'.format(self.type))
+        logger.info('Generating {} cert.'.format(self.type))
 
-    def _insert_cert_db_data(self):
-        print('Insert cert data type:{} into db.'.format(self.type))
+        srv_metadata = {
+            "CertClient": self.property_dict,
+            "CertServer": self.CertServer.property_dict,
+            "CertCA": self.CertCA.property_dict
+        }
+
+        logger.info('Generating cert with metadata:{}'.format(srv_metadata))
+        self.cert_data = 'dummy_clientcert_data'
 
 
 class Smartcard(microesb.ClassHandler):
+
     def __init__(self):
         super().__init__()
 
+        self.register_property(
+            'gen_status',
+            {
+                'type': bool,
+                'default': False,
+                'required': False,
+                'description': 'SysInternal Generated Smartcard Keypair Status'
+            }
+        )
+
     def gen_keypair(self):
-        print('Gen keypair on smartcard:{} with keypair label:{}'.format(
+        logger.info('Gen keypair on smartcard:{} with keypair label:{}'.format(
             self.label,
             self.SmartcardContainer.label
         ))
 
+        srv_metadata = {
+            "SmartcardID": self.label,
+            "SmartcardContainerLabel": self.SmartcardContainer.label
+        }
+
+        self.gen_status = self._ServiceRouter.send('KeypairGenerate', metadata=srv_metadata)
+
 
 class SmartcardContainer(microesb.ClassHandler):
+
     def __init__(self):
         super().__init__()

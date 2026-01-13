@@ -289,7 +289,9 @@ Example configuration:
         }
     }
 
-5.3. Test Execution
+.. _example-test-execution:
+
+2.7. Test Execution
 *******************
 
 Before executing the configuration, ensure all referenced files are correctly provided:
@@ -322,3 +324,101 @@ Example execution:
         class_mapper=class_mapper,
         service_data=service_metadata
     )
+
+.. _class-mapping-config:
+
+3. Class Mappings
+=================
+
+The *Class Mapping Config* dictionary defines the mapping between class names used in the *Class Reference Config* and the actual *Implementation Classes*.
+
+3.1. Dictionary Format
+**********************
+
+The *Class Mapping Config* is a simple dictionary where each key represents a class name used in the configuration, and each value represents the corresponding *Implementation Class* name.
+
+.. code-block:: python
+
+    class_mapping = {
+        '$config_class_name1': '$implementation_class_name1',
+        '$config_class_name2': '$implementation_class_name2',
+        '$config_class_name3': '$implementation_class_name3'
+    }
+
+3.2. Flat Mappings
+******************
+
+In most cases, a "flat" mapping is used where each class name maps directly to itself. This is a 1:1 mapping without any aliasing.
+
+.. note::
+
+    All examples in this documentation use flat mappings without aliasing.
+
+Example from :ref:`example-number1`:
+
+.. literalinclude:: ../../example/01-hosting-use-case/class_mapping.py
+    :linenos:
+
+Example from :ref:`example-number2`:
+
+.. literalinclude:: ../../example/02-pki-management/class_mapping.py
+    :linenos:
+
+3.3. Aliasing
+*************
+
+**Aliasing** is a more advanced technique that **must** be used when adding multiple classes with the same name as child classes to a parent class.
+
+With aliasing, multiple different configuration class names can map to the same *Implementation Class*. This allows you to instantiate the same class type multiple times with different property values in a hierarchical structure.
+
+.. warning::
+
+    Aliasing is only necessary when you need multiple child instances of the same class type under a single parent. For simple hierarchies, use flat mappings.
+
+3.4. Aliasing Example
+*********************
+
+The integration test `TestMapping.test_class_mapping` in `/test/integration/test_base.py` demonstrates the use of aliasing:
+
+.. code-block:: python
+
+    class_mapping = {
+        'CertCA': 'CertCA',
+        'SmartcardCA': 'Smartcard',
+        'SmartcardREQ': 'Smartcard',
+        'SmartcardContainer': 'SmartcardContainer'
+    }
+
+In this example:
+
+- `SmartcardCA` and `SmartcardREQ` are aliases that both map to the `Smartcard` implementation class.
+- This allows the `CertCA` parent class to have two separate child instances of the `Smartcard` class with different configurations.
+- Each alias can be referenced independently in the *Class Reference Config* and *Service Call Metadata*.
+
+The corresponding *Class Reference Config* shows how these aliases are used:
+
+.. code-block:: python
+
+    class_reference = {
+        'CertCA': {
+            'property_ref': 'Cert',
+            'children': {
+                'SmartcardCA': {
+                    'property_ref': 'Smartcard',
+                    'children': {
+                        'SmartcardContainer': {'property_ref': 'SmartcardContainer'}
+                    }
+                },
+                'SmartcardREQ': {
+                    'property_ref': 'Smartcard',
+                    'children': {
+                        'SmartcardContainer': {'property_ref': 'SmartcardContainer'}
+                    }
+                }
+            }
+        }
+    }
+
+.. note::
+
+    For more information on aliasing in practical use, see :ref:`example-number3` in the Examples documentation.

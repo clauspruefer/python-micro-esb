@@ -2,52 +2,43 @@
 #  .                  Micro ESB transformer Python Module                    .
 # ]*[ --------------------------------------------------------------------- ]*[
 #  .                                                                         .
-#  .  Copyright Claus Prüfer 2016-2025                                       .
+#  .  Copyright Claus Prüfer 2016-2026                                       .
 #  .                                                                         .
 #  .                                                                         .
 # ]*[ --------------------------------------------------------------------- ]*[
 
 import json
-import copy
 
 
 class JSONTransformer():
-    """ JSON transfomer class.
+    """ JSON transformer class.
+
+    Provides JSON transformation functionality for class hierarchies.
     """
 
     def __init__(self):
         """
-        :ivar dict[dict] _json_dict: recursive internal properties processing dict
+        :ivar dict _json_dict: recursive internal properties processing dict
         """
         self._json_dict = {}
 
     def json_transform(self):
         """ json_transform() method.
 
-        Recursive generate _json_dict for complete object hierarchy.
+        Recursively generate _json_dict for complete object hierarchy.
+
+        Iterates through all elements in the hierarchy and calls set_json_dict()
+        on each to populate their json_dict representation.
         """
 
-        root_instance = copy.copy(self)
-
-        for element in root_instance.iterate():
+        for element in self.iterate():
             element.set_json_dict()
-            self.logger.debug('JSON:{} properties:{}'.format(
+            self.logger.debug(
+                'JSON:{} properties:{}'.format(
                     element.json_dict,
                     element._SYSProperties
                 )
             )
-
-        while root_instance.class_count > 0:
-            for element in root_instance.iterate():
-                if element.class_count == 0 and element._SYSType != 'multiclass_instance':
-                    cname = element.class_name
-                    parent_element = element.parent_object
-                    parent_element._json_dict[cname] = element.json_dict[cname]
-                    class_names_list = parent_element._SYSClassNames
-                    del class_names_list[class_names_list.index(cname)]
-
-        self._json_dict = root_instance.json_dict
-        del root_instance
 
     @property
     def json(self):
