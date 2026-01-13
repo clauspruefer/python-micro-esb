@@ -201,11 +201,248 @@ This example demonstrates PKI (Public Key Infrastructure) certificate provisioni
 Unlike Example 1's relational database approach, this example showcases how the microesb framework seamlessly integrates with document-based NoSQL databases. MongoDB is used for storing and retrieving certificate metadata, demonstrating the framework's flexibility in handling both traditional and modern database paradigms.
 
 The example implements a complete certificate generation workflow for:
+
 - **Certificate Authority (CA)** certificates
 - **Server** certificates
 - **Client** certificates
 
 Each certificate type can optionally use Hardware Security Module (HSM) / Smartcard integration for secure key pair generation. The implementation uses user-defined routing functions to interact with MongoDB for certificate storage and retrieval operations.
+
+2.0.1. MongoDB Collections
+***************************
+
+The example uses two MongoDB collections within the ``microesb`` database:
+
+a) **cert** - Stores certificate properties as *flat* key/value pairs for basic certificate metadata
+b) **cert_hierarchy** - Contains complete hierarchical JSON data representing the full certificate object graph including relationships to CA, Server, and Smartcard entities
+
+The ``cert`` collection is used for simple queries by certificate ID, while ``cert_hierarchy`` stores the complete object hierarchy for complex certificate relationships and dependency tracking.
+
+2.0.2. MongoDB Collection Examples
+***********************************
+
+The following examples illustrate the structure of documents stored in the ``cert`` collection.
+
+**CA Certificate (Flat Storage):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b5c65ceda39b9c5388e"
+      },
+      "id": "test-ca1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testca@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:10:52.927127",
+      "cert_data": "dummy_cacert_data"
+    }
+
+**CA Certificate (Hierarchical Storage with Smartcard):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b5c65ceda39b9c5388f"
+      },
+      "id": "test-ca1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testca@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:10:52.927127",
+      "cert_data": "dummy_cacert_data",
+      "SmartcardContainer": null,
+      "Smartcard": {
+        "label": "smartcard_ca_card",
+        "user_pin": "pin1",
+        "gen_status": true,
+        "SmartcardContainer": {
+          "label": "keypair_ca1"
+        }
+      }
+    }
+
+**Server Certificate (Flat Storage):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b69bfa5128f5c1890f2"
+      },
+      "id": "test-server1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testserver@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:05.030076",
+      "cert_data": "dummy_servercert_data"
+    }
+
+**Server Certificate (Hierarchical Storage with CA Reference):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b69bfa5128f5c1890f3"
+      },
+      "id": "test-server1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testserver@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:05.030076",
+      "cert_data": "dummy_servercert_data",
+      "SmartcardContainer": null,
+      "Smartcard": {
+        "label": "smartcard_customer1",
+        "user_pin": "pin2",
+        "gen_status": true,
+        "SmartcardContainer": {
+          "label": "testserver1_keypair"
+        }
+      },
+      "CertCA": {
+        "id": "test-ca1",
+        "country": "DE",
+        "state": "Berlin",
+        "locality": "Berlin",
+        "org": "WEBcodeX",
+        "org_unit": "Security",
+        "common_name": "testca@domain.com",
+        "email": "pki@webcodex.de",
+        "valid_days": 365,
+        "generation_timestamp": "2026-01-07T14:10:52.927127",
+        "cert_data": "dummy_cacert_data",
+        "SmartcardContainer": null,
+        "Smartcard": {
+          "label": null,
+          "user_pin": null,
+          "gen_status": false,
+          "SmartcardContainer": {
+            "label": null
+          }
+        }
+      }
+    }
+
+**Client Certificate (Flat Storage):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b81fa0258fe59b9461d"
+      },
+      "id": "test-client1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testclient1@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:29.750133",
+      "cert_data": "dummy_clientcert_data"
+    }
+
+**Client Certificate (Hierarchical Storage with Full References):**
+
+.. code-block:: json
+
+    {
+      "_id": {
+        "$oid": "695e5b81fa0258fe59b9461e"
+      },
+      "id": "test-client1",
+      "country": "DE",
+      "state": "Berlin",
+      "locality": "Berlin",
+      "org": "WEBcodeX",
+      "org_unit": "Security",
+      "common_name": "testclient1@domain.com",
+      "email": "pki@webcodex.de",
+      "valid_days": 365,
+      "generation_timestamp": "2026-01-07T14:11:29.750133",
+      "cert_data": "dummy_clientcert_data",
+      "SmartcardContainer": null,
+      "Smartcard": {
+        "label": "smartcard_customer1",
+        "user_pin": "pin2",
+        "gen_status": true,
+        "SmartcardContainer": {
+          "label": "testserver1_client1_keypair"
+        }
+      },
+      "CertCA": {
+        "id": "test-ca1",
+        "country": "DE",
+        "state": "Berlin",
+        "locality": "Berlin",
+        "org": "WEBcodeX",
+        "org_unit": "Security",
+        "common_name": "testca@domain.com",
+        "email": "pki@webcodex.de",
+        "valid_days": 365,
+        "generation_timestamp": "2026-01-07T14:10:52.927127",
+        "cert_data": "dummy_cacert_data",
+        "SmartcardContainer": null,
+        "Smartcard": {
+          "label": null,
+          "user_pin": null,
+          "gen_status": false,
+          "SmartcardContainer": {
+            "label": null
+          }
+        }
+      },
+      "CertServer": {
+        "id": "test-server1",
+        "country": "DE",
+        "state": "Berlin",
+        "locality": "Berlin",
+        "org": "WEBcodeX",
+        "org_unit": "Security",
+        "common_name": "testserver@domain.com",
+        "email": "pki@webcodex.de",
+        "valid_days": 365,
+        "generation_timestamp": "2026-01-07T14:11:05.030076",
+        "cert_data": "dummy_servercert_data",
+        "SmartcardContainer": null,
+        "Smartcard": {
+          "label": null,
+          "user_pin": null,
+          "gen_status": false,
+          "SmartcardContainer": {
+            "label": null
+          }
+        }
+      }
+    }
+
+These examples demonstrate how the microesb framework stores both flat certificate data and hierarchical relationships in MongoDB, enabling efficient querying and complete object graph reconstruction.
 
 2.1. CA Certificate Relations
 ******************************
