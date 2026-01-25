@@ -33,13 +33,13 @@ except Exception as e:
 
 service_metadata['data'][0]['User']['dbcon'] = dbcon
 
-#try:
-microesb.ServiceExecuter().execute(
-    class_mapper=class_mapper,
-    service_data=service_metadata
-)
-#except Exception as e:
-#    print('Service execution error: {}'.format(e))
+try:
+    microesb.ServiceExecuter().execute(
+        class_mapper=class_mapper,
+        service_data=service_metadata
+    )
+except Exception as e:
+    print('Service execution error: {}'.format(e))
 
 try:
     dbcon.commit()
