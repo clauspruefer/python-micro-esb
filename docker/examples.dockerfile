@@ -2,7 +2,7 @@ FROM postgres:18-bookworm
 MAINTAINER Claus Prüfer
 
 ADD ./example /
-COPY ./dist/microesb-1.1.tar.gz /
+COPY ./dist/microesb-1.1.1.tar.gz /
 
 COPY ./example/01-hosting-use-case/01-create-schema-sequence.sql /docker-entrypoint-initdb.d/
 COPY ./example/01-hosting-use-case/02-create-table.sql /docker-entrypoint-initdb.d/
@@ -11,8 +11,7 @@ COPY ./example/01-hosting-use-case/04-insert-user-data.sql /docker-entrypoint-in
 
 RUN apt-get -qq update -y
 
-RUN apt-get -qq install python3-pip python3-sphinx python3-sphinx-rtd-theme -y
-RUN apt-get -qq install python3-pytest python3-pytest-pep8 -y
+RUN apt-get -qq install python3-pip -y
 RUN apt-get -qq install python3-psycopg2 python3-pymongo -y
 RUN apt-get -qq install curl -y
 
@@ -25,7 +24,7 @@ RUN apt-get -qq install mongodb-org -y
 
 RUN mkdir -p /data/db
 
-RUN pip3 install /microesb-1.1.tar.gz --break-system-packages
+RUN pip3 install /microesb-1.1.1.tar.gz --break-system-packages
 
 ENV POSTGRES_USER postgres
 ENV POSTGRES_PASSWORD password

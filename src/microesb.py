@@ -303,7 +303,7 @@ class ClassHandler(BaseHandler):
             self.logger.debug('processing property:{}'.format(property_id))
             self.json_dict[property_id] = getattr(self, property_id)
 
-        # Remove optional service method key if present; ignore if absent.
+        # remove optional service method key if present; ignore if absent.
         self.json_dict.pop('SYSServiceMethod', None)
 
         self.logger.debug('self._SYSProperties:{}'.format(self._SYSProperties))
@@ -482,6 +482,16 @@ class ClassMapper(ClassHandler):
         """
         return self._class_hierarchy
 
+    def get_class_properties(self):
+        """ get_class_properties() method.
+
+        :return: self._class_properties
+        :rtype: dict
+
+        Get class properties dictionary.
+        """
+        return self._class_properties
+
     def _map(
         self,
         *,
@@ -564,17 +574,24 @@ class ServiceMapper(ClassHandler):
 
         self._map(**call_dict)
 
-        try:
-            for class_ref, class_props in class_references.items():
-                for method_def in class_mapper._class_properties['SYSBackendMethods']:
-                    if method_def[1] == 'on_recursion_finish':
-                        self.logger.debug('SYSBackendMethod:{}'.format(method_def[0]))
-                        try:
-                            getattr(getattr(self._class_mapper, class_ref), method_def[0])()
-                        except (TypeError, AttributeError) as e:
-                            pass
-        except (KeyError, TypeError, AttributeError) as e:
-            self.logger.debug('SYSBackendMethods processing exception:{}'.format(e))
+        class_properties = self._class_mapper.get_class_properties()
+
+        if 'SYSBackendMethod' in service_call_data:
+
+            bm_root = service_call_data['SYSBackendMethod']
+            self.logger.debug('SYSBackendMethod:{}'.format(bm_root))
+            bm_class_id, bm_method = next(iter(bm_root.items()))
+            bm_class_call_id = copy.deepcopy(bm_class_id)
+
+            try:
+                bm_class_id = class_references[bm_class_id]['property_ref']
+            except KeyError as e:
+                self.logger.debug(
+                    'BackendMethod no class_ref:{} exception:{}'.format(bm_class_id, e)
+                )
+
+            if bm_method in class_properties[bm_class_id]['methods']:
+                getattr(getattr(self._class_mapper, bm_class_call_id), bm_method)()
 
     def _map(
         self,

@@ -23,7 +23,7 @@ jobs:
         run: python3 setup.py sdist
 
       - name: Install Python module
-        run: pip3 install ./dist/microesb-1.1.tar.gz
+        run: pip3 install ./dist/microesb-1.1.1.tar.gz
 
       - name: Run tests
         run: pytest --cov --cov-branch --cov-report=xml

@@ -2,6 +2,7 @@ service_metadata_ca = {
     'SYSServiceID': 'generateCertCA',
     'data': [
         {
+            'SYSBackendMethod': { 'CertCA': 'gen_cert' },
             'CertCA': {
                 'id': 'test-ca1',
                 'Smartcard': {
@@ -28,6 +29,7 @@ service_metadata_server = {
     'SYSServiceID': 'generateCertServer',
     'data': [
         {
+            'SYSBackendMethod': { 'CertServer': 'gen_cert' },
             'CertServer': {
                 'id': 'test-server1',
                 'CertCA': {
@@ -57,6 +59,7 @@ service_metadata_client = {
     'SYSServiceID': 'generateCertClient',
     'data': [
         {
+            'SYSBackendMethod': { 'CertClient': 'gen_cert' },
             'CertClient': {
                 'id': 'test-client1',
                 'CertCA': {
