@@ -588,7 +588,7 @@ class ServiceMapper(ClassHandler):
             except KeyError as e:
                 self.logger.debug('SYSBackendMethod no class_ref class_id:{} exception:{}'.format(bm_class_id, e))
 
-            if bm_method in class_properties[bm_class_id]['methods']
+            if bm_method in class_properties[bm_class_id]['methods']:
                 getattr(getattr(self._class_mapper, bm_class_id), bm_method)()
 
     def _map(
