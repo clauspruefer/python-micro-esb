@@ -586,7 +586,9 @@ class ServiceMapper(ClassHandler):
             try:
                 bm_class_id = class_references[bm_class_id]['property_ref']
             except KeyError as e:
-                self.logger.debug('SYSBackendMethod no class_ref class_id:{} exception:{}'.format(bm_class_id, e))
+                self.logger.debug(
+                    'BackendMethod no class_ref:{} exception:{}'.format(bm_class_id, e)
+                )
 
             if bm_method in class_properties[bm_class_id]['methods']:
                 getattr(getattr(self._class_mapper, bm_class_id), bm_method)()
