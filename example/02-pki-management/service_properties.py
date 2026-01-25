@@ -1,7 +1,4 @@
 service_properties = {
-    'SYSBackendMethods': [
-        ('gen_cert', 'on_recursion_finish')
-    ],
     'Cert': {
         'properties': {
             'id': {
