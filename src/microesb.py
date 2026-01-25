@@ -583,15 +583,17 @@ class ServiceMapper(ClassHandler):
             self.logger.debug('SYSBackendMethod:{}'.format(bm_root))
             bm_class_id, bm_method = next(iter(bm_root.items()))
 
+            backend_class_id = bm_class_id
+            class_properties_id = bm_class_id
             try:
-                bm_class_id = class_references[bm_class_id]['property_ref']
+                class_properties_id = class_references[bm_class_id]['property_ref']
             except KeyError as e:
                 self.logger.debug(
                     'BackendMethod no class_ref:{} exception:{}'.format(bm_class_id, e)
                 )
 
-            if bm_method in class_properties[bm_class_id]['methods']:
-                getattr(getattr(self._class_mapper, bm_class_id), bm_method)()
+            if bm_method in class_properties[class_properties_id]['methods']:
+                getattr(getattr(self._class_mapper, backend_class_id), bm_method)()
 
     def _map(
         self,
