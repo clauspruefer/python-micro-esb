@@ -10,9 +10,9 @@ from service_call_metadata import service_metadata_ca as service_metadata
 
 from pymongo import MongoClient
 
+
 client = MongoClient('mongodb://127.0.0.1/')
 mongodb = client.get_database('microesb')
-
 
 logging.getLogger().addHandler(
     logging.StreamHandler(sys.stdout)

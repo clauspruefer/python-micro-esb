@@ -560,7 +560,6 @@ class ServiceMapper(ClassHandler):
 
         self._class_mapper = class_mapper
 
-        sc_data_orig = copy.deepcopy(service_call_data)
         class_references = self._class_mapper.get_references()
 
         root_class = next(iter(class_references))
@@ -577,11 +576,12 @@ class ServiceMapper(ClassHandler):
 
         class_properties = self._class_mapper.get_class_properties()
 
-        if 'SYSBackendMethod' in sc_data_orig:
+        if 'SYSBackendMethod' in service_call_data:
 
-            bm_root = sc_data_orig['SYSBackendMethod']
+            bm_root = service_call_data['SYSBackendMethod']
             self.logger.debug('SYSBackendMethod:{}'.format(bm_root))
             bm_class_id, bm_method = next(iter(bm_root.items()))
+            bm_class_call_id = copy.deepcopy(bm_class_id)
 
             try:
                 bm_class_id = class_references[bm_class_id]['property_ref']
@@ -591,7 +591,7 @@ class ServiceMapper(ClassHandler):
                 )
 
             if bm_method in class_properties[bm_class_id]['methods']:
-                getattr(getattr(self._class_mapper, bm_class_id), bm_method)()
+                getattr(getattr(self._class_mapper, bm_class_call_id), bm_method)()
 
     def _map(
         self,
